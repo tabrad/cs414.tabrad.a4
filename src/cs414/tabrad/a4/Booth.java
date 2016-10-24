@@ -53,6 +53,9 @@ public class Booth
 
 	public boolean payTicket(Ticket ticket, float payment) 
 	{
+		if(!isExit)
+			return false;
+		
 		if(payment != getAmountDue(ticket))
 			return false;
 			

@@ -26,7 +26,7 @@ public class GarageTest {
 	{
 		//add some booths
 		Rate rates = new Rate(3, 3, 20);
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), true, rates);
+		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
 		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 		
 		//enter the garage
@@ -35,12 +35,6 @@ public class GarageTest {
 		assertTrue(location.x == 0);
 		assertTrue(location.y == 0);
 		
-		//get the nearest booth and go there
-		Booth booth = garage.getNearestBooth(driver.getLocation());
-		assertTrue(booth != null);
-		driver.move(garage, booth.getLocation());
-		assertTrue(driver.getLocation().equals(booth.getLocation()));
-		
 		//get a new ticket from the booth
 		driver.enterGarage(garage);
 		System.out.println(driver.getLocation().toString());
@@ -48,11 +42,9 @@ public class GarageTest {
 		Driver driver2 = new Driver("JJJ-983", 0, 0);
 		driver2.move(garage, 0, 0);
 
-		driver2.driveToBooth(garage);
 		driver2.enterGarage(garage);
 		System.out.println(driver2.getLocation().toString());
 		
-		driver2.driveToBooth(garage);
 		driver2.exitGarage(garage);
 		
 	}

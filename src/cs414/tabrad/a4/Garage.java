@@ -25,18 +25,7 @@ public class Garage
 	public void removeVehicle(Location location)
 	{
 		grid[location.x][location.y] = null;
-		getBooth(location).closeGate();
-	}
-	
-	private Booth getBooth(Location location)
-	{
-		for(Booth booth : activeBooths)
-		{
-			if(booth.getLocation().equals(location))
-				return booth;
-		}
-		
-		return null;
+		getNearestBooth(location, true).closeGate();
 	}
 	
 	public Boolean isClear(Location location)
@@ -57,20 +46,27 @@ public class Garage
 		return booth;
 	}
 	
-	public Booth getNearestBooth(Location location)
+	public Booth getNearestBooth(Location location, boolean isExit)
 	{
 		Booth booth = null;
-		int distance = 0;
+		int closestDistance = 0;
 		
 		for(Booth b : activeBooths)
 		{	
-			if(distance == 0)
+			if(b.isExit() != isExit)
+				continue;
+			
+			int boothDistance = Math.abs(b.getLocation().x - location.x) + Math.abs(b.getLocation().y - location.y);
+			
+			//if we have not selected a booth yet, use this booth
+			if(closestDistance == 0)
 			{
 				booth = b;
+				closestDistance = boothDistance;
 				continue;
 			}
 			
-			if(Math.abs(b.getLocation().x - location.x) + Math.abs(b.getLocation().y - location.y) < distance)
+			if(boothDistance < closestDistance)
 				booth = b;
 		}
 		

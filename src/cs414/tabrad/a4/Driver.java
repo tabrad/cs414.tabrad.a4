@@ -20,7 +20,7 @@ public class Driver
 	
 	public void enterGarage(Garage garage)
 	{
-		Booth booth = garage.getNearestBooth(location);
+		Booth booth = garage.getNearestBooth(location, false);
 		pushTicketButton(booth);
 		
 		Location stall = garage.getOpenStall();
@@ -30,18 +30,13 @@ public class Driver
 	
 	public void exitGarage(Garage garage) 
 	{
-		Booth booth = garage.getNearestBooth(location);
+		Booth booth = garage.getNearestBooth(location, true);
 		float paymentDue = booth.getAmountDue(myTicket);
 		
 		System.out.println("PAyment Due: " + paymentDue);
 		
 		if(booth.payTicket(myTicket, paymentDue))
 			garage.removeVehicle(location);
-	}
-	
-	public void driveToBooth(Garage garage)
-	{
-		move(garage, garage.getNearestBooth(location).getLocation());
 	}
 	
 	public void move(Garage garage, Location location)
