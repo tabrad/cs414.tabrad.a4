@@ -63,6 +63,7 @@ public class Booth
 		if(!adminMode && !paymentProcessor.processPayment())
 			return false;
 		
+		ticket.markPaid(boothId, payment);
 		ticketTracker.markTicketPaid(ticket);
 		gate.open();
 		

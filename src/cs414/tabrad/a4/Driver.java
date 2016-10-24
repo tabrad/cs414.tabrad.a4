@@ -5,6 +5,7 @@ public class Driver
 	private String licensePlate;
 	private Ticket myTicket;
 	private Location location = new Location();
+	private boolean isParked = false;
 	
 	public Driver(String licensePlate, int x, int y)
 	{
@@ -21,29 +22,27 @@ public class Driver
 	public void enterGarage(Garage garage)
 	{
 		Booth booth = garage.getNearestBooth(location, false);
+		move(garage, booth.getLocation());
 		pushTicketButton(booth);
 		
 		Location stall = garage.getOpenStall();
-		System.out.println("Nearest Stall: " + stall.toString());
 		move(garage, stall);
+		isParked = true;
 	}
 	
 	public void exitGarage(Garage garage) 
 	{
 		Booth booth = garage.getNearestBooth(location, true);
+		move(garage, booth.getLocation());
 		float paymentDue = booth.getAmountDue(myTicket);
 		
 		System.out.println("PAyment Due: " + paymentDue);
 		
-		if(booth.payTicket(myTicket, paymentDue))
-		{
-			garage.removeVehicle(location);
-			return;
-		}
-		else //payment failed we should just request an admin to handle this
-		{
+		if(!booth.payTicket(myTicket, paymentDue))
 			booth.requestAdmin(this, myTicket);
-		}
+		
+		garage.removeVehicle(location);
+		isParked = false;
 	}
 	
 	public void move(Garage garage, Location location)
@@ -73,5 +72,15 @@ public class Driver
 	public float pay(float amountDue) 
 	{
 		return amountDue;
+	}
+
+	public boolean isParked() 
+	{
+		return isParked;
+	}
+	
+	public Ticket getTicket()
+	{
+		return myTicket;
 	}
 }
