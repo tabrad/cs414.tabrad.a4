@@ -50,4 +50,9 @@ public class TicketTracker
 		
 		return tickets;
 	}
+	
+	public int getOccupancy()
+	{
+		return unPaidTickets.size();
+	}
 }
