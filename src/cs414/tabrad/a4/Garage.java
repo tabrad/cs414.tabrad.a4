@@ -10,6 +10,7 @@ public class Garage
 	private Location parkingEnd = new Location(80, 80);
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
+	private HashSet<Admin> admins = new HashSet<Admin>();
 	
 	public Boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
@@ -83,6 +84,25 @@ public class Garage
 					continue;
 				
 				return new Location(x, y);
+			}
+		}
+		
+		return null;
+	}
+
+	public Boolean isAdmin(Admin admin)
+	{
+		return admins.contains(admin);
+	}
+
+	public Admin getAdmin() 
+	{
+		if(!admins.isEmpty())
+		{
+			for(Admin admin : admins)
+			{
+				//return the first available admin for now.
+				return admin; 
 			}
 		}
 		

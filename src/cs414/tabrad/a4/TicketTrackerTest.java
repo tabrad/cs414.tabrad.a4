@@ -9,11 +9,14 @@ import org.junit.Test;
 
 public class TicketTrackerTest {
 
+	Garage garage;
 	TicketTracker ticketTracker;
+	
 	
 	@Before public void inititialize()
 	{
-		ticketTracker = new TicketTracker();
+		garage = new Garage();
+		ticketTracker = new TicketTracker(garage);
 	}
 	
 	@Test public void testAddingTickets() 

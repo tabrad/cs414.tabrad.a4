@@ -36,7 +36,14 @@ public class Driver
 		System.out.println("PAyment Due: " + paymentDue);
 		
 		if(booth.payTicket(myTicket, paymentDue))
+		{
 			garage.removeVehicle(location);
+			return;
+		}
+		else //payment failed we should just request an admin to handle this
+		{
+			booth.requestAdmin(this, myTicket);
+		}
 	}
 	
 	public void move(Garage garage, Location location)
@@ -61,5 +68,10 @@ public class Driver
 	@Override public String toString()
 	{
 		return licensePlate;
+	}
+
+	public float pay(float amountDue) 
+	{
+		return amountDue;
 	}
 }

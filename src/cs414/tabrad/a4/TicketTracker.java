@@ -5,8 +5,14 @@ import java.util.Set;
 
 public class TicketTracker 
 {
+	private Garage garage;
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
 	private HashSet<Ticket> paidTickets = new HashSet<Ticket>();
+	
+	public TicketTracker(Garage garage)
+	{
+		this.garage = garage;
+	}
 	
 	public void addTicket(Ticket ticket)
 	{
@@ -76,5 +82,10 @@ public class TicketTracker
 	public int getOccupancy()
 	{
 		return unPaidTickets.size();
+	}
+
+	public Garage getGarage() 
+	{
+		return garage;
 	}
 }

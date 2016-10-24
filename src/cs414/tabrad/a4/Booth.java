@@ -7,8 +7,9 @@ public class Booth
 	private Boolean isExit;
 	private Gate gate = new Gate();
 	private Rate rates = new Rate();
-	private TicketTracker ticketTracker = new TicketTracker();
+	private TicketTracker ticketTracker;
 	private PaymentProcessor paymentProcessor = new PaymentProcessor();
+	private Boolean adminMode = false;
 	
 	public Booth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
 	{
@@ -56,10 +57,10 @@ public class Booth
 		if(!isExit)
 			return false;
 		
-		if(payment != getAmountDue(ticket))
+		if(!adminMode  && payment != getAmountDue(ticket))
 			return false;
 			
-		if(!paymentProcessor.processPayment())
+		if(!adminMode && !paymentProcessor.processPayment())
 			return false;
 		
 		ticketTracker.markTicketPaid(ticket);
@@ -71,5 +72,28 @@ public class Booth
 	public void closeGate() 
 	{
 		gate.close();
+	}
+
+	public boolean login(Admin admin) 
+	{
+		if(!ticketTracker.getGarage().isAdmin(admin))
+			return false;
+		
+		adminMode = true;
+		return true;
+	}
+	
+	public void logout() 
+	{
+		adminMode = false;
+	}
+	
+	public void requestAdmin(Driver driver, Ticket ticket) 
+	{
+		Admin admin = ticketTracker.getGarage().getAdmin();
+		if(!admin.accessBooth(this))
+			return;
+		
+		admin.settlePayment(this, driver, ticket);
 	}
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 public class GarageTest {
 
 	Garage garage = new Garage();
-	TicketTracker ticketTracker = new TicketTracker();
+	TicketTracker ticketTracker = new TicketTracker(garage);
 	Driver driver = new Driver("XYZ-TTR", 0, 0);
 	
 	@Test public void testGrid()
