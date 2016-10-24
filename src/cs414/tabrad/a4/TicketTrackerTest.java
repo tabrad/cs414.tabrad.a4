@@ -62,7 +62,18 @@ public class TicketTrackerTest {
 		
 		booth1Tickets.clear();
 		booth1Tickets = ticketTracker.getTicketsProcessedByBooth(1, false, true);
-		assertTrue(booth1Tickets.size() == 0);
-		
+		assertTrue(booth1Tickets.size() == 0);	
 	}
+	
+	@Test public void testGettingTicketsByTime()
+	{
+		for(int i = 0; i < 20; i++)
+		{
+			Ticket ticket = new Ticket((int)System.currentTimeMillis() - (1000 * 20) + (1000 * i), 1);
+			ticketTracker.addTicket(ticket);
+		}
+		
+		Set<Ticket> tickets = ticketTracker.getTicketsByTimePeriod((int)System.currentTimeMillis() - (1000 * 10), (int)System.currentTimeMillis());
+		assertTrue(tickets.size() == 10);
+	} 
 }

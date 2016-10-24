@@ -51,6 +51,28 @@ public class TicketTracker
 		return tickets;
 	}
 	
+	public Set<Ticket> getTicketsByTimePeriod(int begin, int end)
+	{
+		HashSet<Ticket> tickets = new HashSet<Ticket>();
+		for(Ticket ticket : unPaidTickets)
+		{
+			if(ticket.getTimeEntered() < begin || ticket.getTimeEntered() > end)
+				continue;
+			
+			tickets.add(ticket);
+		}
+		
+		for(Ticket ticket : paidTickets)
+		{
+			if(ticket.getTimeEntered() < begin || ticket.getTimeEntered() > end)
+				continue;
+			
+			tickets.add(ticket);
+		}
+
+		return tickets;
+	}
+	
 	public int getOccupancy()
 	{
 		return unPaidTickets.size();
