@@ -16,7 +16,24 @@ public class Driver
 	
 	private void pushTicketButton(Booth booth)
 	{
-		this.myTicket = booth.getTicket();
+		booth.ticketButtonPressed(this);
+	}
+	
+	public void setTicket(Ticket ticket) 
+	{
+		myTicket = ticket;	
+	}
+	
+	public void promptPayment(Booth booth, float amountDue) 
+	{
+		if(!booth.insertPayment(this, myTicket, amountDue))
+				booth.requestAdmin(this, myTicket);
+	}
+	
+	public void promtExit(Garage garage)
+	{
+		isParked = false;
+		garage.removeVehicle(location);
 	}
 	
 	public void enterGarage(Garage garage)
@@ -34,15 +51,7 @@ public class Driver
 	{
 		Booth booth = garage.getNearestBooth(location, true);
 		move(garage, booth.getLocation());
-		float paymentDue = booth.getAmountDue(myTicket);
-		
-		System.out.println("PAyment Due: " + paymentDue);
-		
-		if(!booth.payTicket(myTicket, paymentDue))
-			booth.requestAdmin(this, myTicket);
-		
-		garage.removeVehicle(location);
-		isParked = false;
+		booth.insertTicket(this, myTicket);
 	}
 	
 	public void move(Garage garage, Location location)

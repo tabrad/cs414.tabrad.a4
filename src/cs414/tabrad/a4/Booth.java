@@ -30,12 +30,14 @@ public class Booth
 		return isExit;
 	}
 
-	public Ticket getTicket() 
+	private Ticket getTicket() 
 	{
+		if(isExit)
+			return null;
+		
 		Ticket ticket = new Ticket((int)System.currentTimeMillis(), boothId);
 		ticketTracker.addTicket(ticket);
 		
-		gate.open();
 		return ticket;
 	}
 	
@@ -43,31 +45,74 @@ public class Booth
 	{
 		return location;
 	}
+	
+	public void ticketButtonPressed(Driver driver)
+	{
+		Ticket ticket = getTicket();
+		driver.setTicket(ticket);
+		openGate();
 
-	public float getAmountDue(Ticket ticket) 
+		//wait for driver to move before closing the gate
+		try
+		{
+			while(driver.getLocation() == location)
+				Thread.sleep(250);
+		} 
+		catch(Exception e)
+		{
+			return;
+		}
+		
+		gate.close();
+	}
+	
+	private float getAmountDue(Ticket ticket) 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticket))
 			return rates.maxCharge;
 		
 		return (System.currentTimeMillis() - ticket.getTimeEntered()) / 1000 / 60 * rates.hourlyRate;
 	}
-
-	public boolean payTicket(Ticket ticket, float payment) 
+	
+	private void requestPayment(Driver driver, Ticket ticket)
 	{
-		if(!isExit)
+		float amountDue = getAmountDue(ticket);
+		driver.promptPayment(this, amountDue);
+		
+	}
+	
+	public boolean insertPayment(Driver driver, Ticket ticket, float amount)
+	{
+		if(!adminMode && amount != getAmountDue(ticket))
 			return false;
 		
-		if(!adminMode  && payment != getAmountDue(ticket))
-			return false;
-			
 		if(!adminMode && !paymentProcessor.processPayment())
 			return false;
 		
-		ticket.markPaid(boothId, payment);
+		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
 		gate.open();
+		driver.promtExit(ticketTracker.getGarage());
 		
 		return true;
+	}
+
+	public void insertTicket(Driver driver, Ticket ticket) 
+	{
+		if(!isExit)
+			return;
+		
+		requestPayment(driver, ticket);
+	}
+	
+	public Gate getGate() 
+	{
+		return gate;
+	}
+	
+	public void openGate()
+	{
+		gate.open();
 	}
 
 	public void closeGate() 
