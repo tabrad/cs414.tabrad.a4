@@ -18,10 +18,7 @@ public class Admin
 
 	public void settlePayment(Booth booth, Driver driver, Ticket ticket) 
 	{
-		float amountDue = booth.getAmountDue(ticket);
-		float payment = driver.pay(amountDue);
-		booth.payTicket(ticket, payment);
-		booth.logout();
+		booth.insertTicket(driver, ticket);
 	}
 	
 	@Override public boolean equals(Object o)

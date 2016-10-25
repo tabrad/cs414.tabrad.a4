@@ -2,13 +2,21 @@ package cs414.tabrad.a4;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class GarageTest {
 
-	Garage garage = new Garage();
-	TicketTracker ticketTracker = new TicketTracker(garage);
-	Driver driver = new Driver("XYZ-TTR", 0, 0);
+	Garage garage;
+	TicketTracker ticketTracker;
+	Driver driver;
+	
+	@Before public void initialize()
+	{
+		garage = new Garage();
+		ticketTracker = new TicketTracker(garage);
+		driver = new Driver("XYZ-TTR", 0, 0);
+	}
 	
 	@Test public void testGrid()
 	{
@@ -18,6 +26,13 @@ public class GarageTest {
 		assertFalse(garage.isClear(10, 10));
 		
 		driver.move(garage, 11, 11);
+		assertTrue(garage.isClear(10, 10));
+	}
+	
+	@Test public void testRemoveVehicle()
+	{
+		driver.move(garage, 10, 10);
+		garage.removeVehicle(driver.getLocation());
 		assertTrue(garage.isClear(10, 10));
 	}
 	
@@ -37,14 +52,10 @@ public class GarageTest {
 		
 		//get a new ticket from the booth
 		driver.enterGarage(garage);
-		System.out.println(driver.getLocation().toString());
 		
 		Driver driver2 = new Driver("JJJ-983", 0, 0);
 		driver2.move(garage, 0, 0);
-
 		driver2.enterGarage(garage);
-		System.out.println(driver2.getLocation().toString());
-		
 		driver2.exitGarage(garage);
 		
 	}

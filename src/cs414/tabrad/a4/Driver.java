@@ -30,7 +30,7 @@ public class Driver
 				booth.requestAdmin(this, myTicket);
 	}
 	
-	public void promtExit(Garage garage)
+	public void promptExit(Garage garage)
 	{
 		isParked = false;
 		garage.removeVehicle(location);

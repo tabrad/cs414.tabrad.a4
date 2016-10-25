@@ -26,7 +26,6 @@ public class Garage
 	public void removeVehicle(Location location)
 	{
 		grid[location.x][location.y] = null;
-		getNearestBooth(location, true).closeGate();
 	}
 	
 	public Boolean isClear(Location location)
@@ -107,5 +106,10 @@ public class Garage
 		}
 		
 		return null;
+	}
+	
+	public void addAdmin(Admin admin)
+	{
+		admins.add(admin);
 	}
 }

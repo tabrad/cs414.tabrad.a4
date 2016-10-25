@@ -8,13 +8,14 @@ import org.junit.Test;
 public class DriverTest {
 
 	Garage garage;
-	TicketTracker ticketTracker = new TicketTracker(garage);
+	TicketTracker ticketTracker;
 	Rate rates;
 	Driver driver;
 	
 	@Before public void initialize()
 	{
 		garage = new Garage();
+		ticketTracker = new TicketTracker(garage);
 		rates = new Rate(3, 3, 20);
 		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
 		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);

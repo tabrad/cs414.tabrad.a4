@@ -23,6 +23,8 @@ public class BoothTest {
 		ticketTracker = new TicketTracker(garage);
 		driver = new Driver("XYZ-TTR", 0, 0);
 		driver2 = new Driver("YYZ-T45", 0, 0);
+		admin = new Admin("jfiwkls", "or023kf9");
+		garage.addAdmin(admin);
 		
 		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
 		boothEntrance = garage.getNearestBooth(new Location(0, 0), false);
@@ -66,4 +68,14 @@ public class BoothTest {
 		assertFalse(driver2.isParked());
 	}
 	
+	@Test public void testAdminTicketInserted()
+	{
+		driver.enterGarage(garage);
+		boothExit.login(admin);
+		Ticket ticket = driver.getTicket();
+		boothExit.insertTicket(driver, ticket);
+		assertTrue(ticket.isPaid());
+		assertFalse(driver2.isParked());
+	}
+
 }

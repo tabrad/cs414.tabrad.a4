@@ -78,7 +78,6 @@ public class Booth
 	{
 		float amountDue = getAmountDue(ticket);
 		driver.promptPayment(this, amountDue);
-		
 	}
 	
 	public boolean insertPayment(Driver driver, Ticket ticket, float amount)
@@ -92,7 +91,7 @@ public class Booth
 		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
 		gate.open();
-		driver.promtExit(ticketTracker.getGarage());
+		driver.promptExit(ticketTracker.getGarage());
 		
 		return true;
 	}
