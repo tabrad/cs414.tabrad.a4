@@ -2,6 +2,9 @@ package cs414.tabrad.a4;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,6 +79,39 @@ public class BoothTest {
 		boothExit.insertTicket(driver, ticket);
 		assertTrue(ticket.isPaid());
 		assertFalse(driver2.isParked());
+	}
+	
+	@Test public void testTicketCharge()
+	{
+		Calendar calendar = Calendar.getInstance();
+		Date currentDate = new Date();
+		calendar.setTimeInMillis(currentDate.getTime() - (1000*60*60*5)); // five hours ago
+		Ticket ticket = new Ticket(calendar.getTime(), 1);
+		ticketTracker.addTicket(ticket);
+		float boothAmount = boothExit.getAmountDue(ticket);
+		long seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
+		long hours = seconds / 60 / 60;
+		float neededAmount = 5 * rates.hourlyRate;
+		assertTrue(boothAmount == neededAmount);
+		
+		calendar.setTimeInMillis(currentDate.getTime() - (1000*60*60*1000)); // 1000 hours ago
+		Ticket ticket2 = new Ticket(calendar.getTime(), 1);
+		ticketTracker.addTicket(ticket2);
+		boothAmount = boothExit.getAmountDue(ticket2);
+		seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
+		hours = seconds / 60 / 60;
+		neededAmount = rates.maxCharge;
+		assertTrue(boothAmount == neededAmount);
+		
+		calendar.setTimeInMillis(currentDate.getTime() - (1000*60*60*1/2)); // 30 minutes ago
+		Ticket ticket3 = new Ticket(calendar.getTime(), 1);
+		ticketTracker.addTicket(ticket3);
+		boothAmount = boothExit.getAmountDue(ticket3);
+		System.out.println(boothAmount);
+		seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
+		hours = seconds / 60 / 60;
+		neededAmount = rates.minCharge;
+		assertTrue(boothAmount == neededAmount);
 	}
 
 }

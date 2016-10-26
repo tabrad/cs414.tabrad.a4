@@ -68,12 +68,24 @@ public class Booth
 		gate.close();
 	}
 	
-	private float getAmountDue(Ticket ticket) 
+	public float getAmountDue(Ticket ticket) 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticket))
 			return rates.maxCharge;
 		
-		return (new Date().getTime() - ticket.getTimeEntered().getTime()) / 1000 / 60 * rates.hourlyRate;
+		long currentTime = new Date().getTime() / 1000;
+		long ticketTime = ticket.getTimeEntered().getTime() / 1000;
+		long hoursParked = (currentTime - ticketTime) / 60 / 60;
+		float amountDue = hoursParked * rates.hourlyRate;
+		if(amountDue < 0)
+			return rates.maxCharge; // wrapped the data structure boundary
+		
+		if(amountDue > rates.maxCharge)
+			amountDue = rates.maxCharge;
+		else if(amountDue < rates.minCharge)
+			amountDue = rates.minCharge;
+		
+		return amountDue;
 	}
 	
 	private void requestPayment(Driver driver, Ticket ticket)
