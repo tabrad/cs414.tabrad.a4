@@ -84,7 +84,17 @@ public class DriverDialog
 			int result = JOptionPane.showConfirmDialog(driverFrame, message, "Entrance Booth", JOptionPane.YES_NO_OPTION);
 			if(result == JOptionPane.YES_OPTION)
 			{
-				booth.ticketButtonPressed(driver);
+				driver.goToEntrance(garage);
+				driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false));
+				
+				if(!driver.hasTicket())
+				{
+					//show a dialog that garage is full
+				}
+				else
+				{
+					driver.parkCar(garage);
+				}
 			}
 			
 			updateLabels();

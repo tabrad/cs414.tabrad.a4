@@ -14,7 +14,7 @@ public class Driver
 		location.y = y;
 	}
 	
-	private void pushTicketButton(Booth booth)
+	public void pushTicketButton(Booth booth)
 	{
 		booth.ticketButtonPressed(this);
 	}
@@ -36,15 +36,25 @@ public class Driver
 		garage.removeVehicle(location);
 	}
 	
-	public void enterGarage(Garage garage)
+	public void goToEntrance(Garage garage)
 	{
 		Booth booth = garage.getNearestBooth(location, false);
 		move(garage, booth.getLocation());
-		pushTicketButton(booth);
-		
+	}
+	
+	
+	public void parkCar(Garage garage)
+	{
 		Location stall = garage.getOpenStall();
 		move(garage, stall);
 		isParked = true;
+	}
+	
+	public void enterGarage(Garage garage)
+	{
+		goToEntrance(garage);
+		pushTicketButton(garage.getNearestBooth(location, false));
+		parkCar(garage);
 	}
 	
 	public void exitGarage(Garage garage) 
