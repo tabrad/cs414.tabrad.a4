@@ -31,6 +31,7 @@ public class OverviewDialog implements Observer
 	private JLabel statusLabel;
 	private JLabel boothGateLabel;
 	private JLabel occupancyLabel;
+	private JLabel signLabel;
 	private JPanel controlPanel;
 	
 	private Garage garage;
@@ -81,6 +82,7 @@ public class OverviewDialog implements Observer
 	     statusLabel = new JLabel("",JLabel.CENTER);
 	     occupancyLabel = new JLabel();
 	     boothGateLabel = new JLabel();
+	     signLabel = new JLabel();
 
 	     statusLabel.setSize(350,100);
 	     mainFrame.addWindowListener(new WindowAdapter() {
@@ -94,6 +96,7 @@ public class OverviewDialog implements Observer
 	     controlPanel.setLayout(new FlowLayout());	     
 
 	     mainFrame.add(headerLabel);
+	     mainFrame.add(signLabel);
 	     mainFrame.add(occupancyLabel);
 	     mainFrame.add(boothGateLabel);
 	     mainFrame.add(controlPanel);
@@ -105,6 +108,7 @@ public class OverviewDialog implements Observer
 	private void updateLabels()
 	{
 		occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
+		signLabel.setText("Garage is: " + (ticketTracker.getOccupancy() == garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
 		boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
 	}
 	
