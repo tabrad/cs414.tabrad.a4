@@ -11,7 +11,8 @@ public class Garage
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private HashSet<Admin> admins = new HashSet<Admin>();
-	
+	private HashSet<Driver> drivers = new HashSet<Driver>();
+
 	public Boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
 		if(grid[toX][toY] != null)
@@ -36,6 +37,14 @@ public class Garage
 	public Boolean isClear(int x, int y)
 	{
 		return grid[x][y] == null;
+	}
+	
+	public Driver createDriver(String license)
+	{
+		Driver driver = new Driver(license, 0, 0);
+		drivers.add(driver);
+		
+		return driver;
 	}
 	
 	public Booth createBooth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
