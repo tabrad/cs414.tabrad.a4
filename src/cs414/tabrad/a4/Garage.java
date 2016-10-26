@@ -8,7 +8,7 @@ public class Garage
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
 	private Location parkingEnd = new Location(80, 80);
-	private int maxOccupancy = 50;
+	private int maxOccupancy = 2;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private HashSet<Admin> admins = new HashSet<Admin>();
@@ -141,8 +141,8 @@ public class Garage
 		return maxOccupancy;
 	}
 
-	public int getBoothCount() {
-		
+	public int getBoothCount() 
+	{
 		return activeBooths.size();
 	}
 

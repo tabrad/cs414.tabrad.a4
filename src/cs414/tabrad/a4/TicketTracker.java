@@ -132,5 +132,8 @@ public class TicketTracker extends Observable
 		return getMax(ticketHour);
 	}
 	
-	
+	public boolean isFull()
+	{
+		return getOccupancy() == garage.getMaxOccupancy();
+	}
 }

@@ -35,7 +35,7 @@ public class Booth extends Observable
 
 	private Ticket getTicket() 
 	{
-		if(isExit)
+		if(isExit || ticketTracker.isFull())
 			return null;
 		
 		Ticket ticket = new Ticket(new Date(), boothId);
@@ -52,6 +52,8 @@ public class Booth extends Observable
 	public void ticketButtonPressed(Driver driver)
 	{
 		Ticket ticket = getTicket();
+		if(ticket == null)
+			return;
 		driver.setTicket(ticket);
 		openGate();
 	}

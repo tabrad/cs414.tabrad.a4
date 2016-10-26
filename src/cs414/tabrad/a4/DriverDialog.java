@@ -95,15 +95,27 @@ public class DriverDialog
 				
 				if(!driver.hasTicket())
 				{
-					//show a dialog that garage is full
+					result = JOptionPane.showOptionDialog(driverFrame, 
+							"The garage is full, do you want to wait for an open spot?", 
+							"Entrance Booth", 
+							JOptionPane.YES_NO_OPTION, 
+							JOptionPane.INFORMATION_MESSAGE,
+							null,
+							new String[]{"Wait", "Leave"},
+							"default");
+					
+					if(result == JOptionPane.NO_OPTION)
+					{
+						garage.removeVehicle(driver.getLocation());
+						shutDialog();
+					}
 				}
 				else
 				{
 					JOptionPane.showMessageDialog(driverFrame, "You may now enter the garage");
 					driver.parkCar(garage);
-					garage.getNearestBooth(driver.getLocation(), false).closeGate();;
+					garage.getNearestBooth(driver.getLocation(), false).closeGate();
 				}
-					
 			}
 			
 			updateLabels();
