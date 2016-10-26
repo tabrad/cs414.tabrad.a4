@@ -1,6 +1,9 @@
 package cs414.tabrad.a4;
 
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +40,24 @@ public class TicketTracker
 	public Set<Ticket> getPaidTickets()
 	{
 		return paidTickets;
+	}
+	
+	public int getOccupancy()
+	{
+		return unPaidTickets.size();
+	}
+
+	public Garage getGarage() 
+	{
+		return garage;
+	}
+	
+	public Set<Ticket> getAllTickets()
+	{
+		HashSet<Ticket> tickets = unPaidTickets;
+		tickets.addAll(paidTickets);
+		
+		return tickets;
 	}
 
 	public Set<Ticket> getTicketsProcessedByBooth(int boothId, boolean asEntrance, boolean asExit) 
@@ -80,13 +101,33 @@ public class TicketTracker
 		return tickets;
 	}
 	
-	public int getOccupancy()
+	private int getMax(int[] list)
 	{
-		return unPaidTickets.size();
+		int max = 0;
+		
+		for(int i = 0; i < list.length; i++)
+		{
+			if(list[i] > max)
+				max = i;
+		}
+		
+		return max;
 	}
+	
+	public int getMostPopularHour(Date begin, Date end)
+	{
+		Set<Ticket> tickets = getAllTickets();
+		int[] ticketHour = new int[24];
+		
+		Calendar calendar = Calendar.getInstance();
+		for(Ticket ticket : tickets)
+		{
+			calendar.setTime(ticket.getTimeEntered());
+			ticketHour[calendar.get(Calendar.HOUR_OF_DAY)]++;
+		}
 
-	public Garage getGarage() 
-	{
-		return garage;
+		return getMax(ticketHour);
 	}
+	
+	
 }

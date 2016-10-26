@@ -2,6 +2,7 @@ package cs414.tabrad.a4;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -80,4 +81,34 @@ public class TicketTrackerTest {
 		Set<Ticket> tickets = ticketTracker.getTicketsByTimePeriod(new Date(System.currentTimeMillis() - (1000 * 10)), new Date());
 		assertTrue(tickets.size() == 10);
 	} 
+	
+	@Test public void testGetMostPopularHour()
+	{
+		Calendar calendar = Calendar.getInstance();
+		
+		for(int i = 0; i < 20; i++)
+		{
+			calendar.set(2016, 10, 10, 15, 5);
+			Ticket ticket = new Ticket(calendar.getTime(), 1);
+			ticketTracker.addTicket(ticket);
+		}
+		
+		calendar.set(2016, 1, 1);
+		assertTrue(ticketTracker.getMostPopularHour(calendar.getTime(), new Date()) == 15);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
