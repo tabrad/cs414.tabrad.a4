@@ -19,6 +19,7 @@ public class DriverDialog
 	private JLabel licenseLabel = new JLabel();
 	private JLabel locationLabel = new JLabel();
 	private JLabel parkedLabel = new JLabel();
+	private JLabel ticketLabel = new JLabel();
 	
 	public DriverDialog(Garage garage, Driver driver)
 	{
@@ -39,6 +40,7 @@ public class DriverDialog
 		updateLabels();
 		infoPanel.add(licenseLabel);
 		infoPanel.add(locationLabel);
+		infoPanel.add(ticketLabel);
 		infoPanel.add(parkedLabel);
 		
 	    
@@ -63,6 +65,7 @@ public class DriverDialog
 	{
 		licenseLabel.setText("Driver ID: " + driver.getLicense());
 		locationLabel.setText("X-Location: " + driver.getLocation().x + " Y-Location: " + driver.getLocation().y);
+		ticketLabel.setText("Has Ticket: " + (driver.hasTicket() ? "Yes" : "No"));
 		parkedLabel.setText("Driver Parked: " + (driver.isParked() ? "Yes" : "No"));
 	}
 	

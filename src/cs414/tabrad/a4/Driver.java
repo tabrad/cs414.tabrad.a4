@@ -3,7 +3,7 @@ package cs414.tabrad.a4;
 public class Driver 
 {
 	private String licensePlate;
-	private Ticket myTicket;
+	private Ticket myTicket = null;
 	private Location location = new Location();
 	private boolean isParked = false;
 	
@@ -96,5 +96,10 @@ public class Driver
 	public String getLicense() 
 	{
 		return licensePlate;
+	}
+
+	public boolean hasTicket() 
+	{
+		return myTicket != null;
 	}
 }
