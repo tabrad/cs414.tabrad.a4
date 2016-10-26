@@ -1,5 +1,7 @@
 package cs414.tabrad.a4;
 
+import java.util.Date;
+
 public class Booth 
 {
 	private int boothId;
@@ -35,7 +37,7 @@ public class Booth
 		if(isExit)
 			return null;
 		
-		Ticket ticket = new Ticket((int)System.currentTimeMillis(), boothId);
+		Ticket ticket = new Ticket(new Date(), boothId);
 		ticketTracker.addTicket(ticket);
 		
 		return ticket;
@@ -71,7 +73,7 @@ public class Booth
 		if(!ticketTracker.hasUnpaidTicket(ticket))
 			return rates.maxCharge;
 		
-		return (System.currentTimeMillis() - ticket.getTimeEntered()) / 1000 / 60 * rates.hourlyRate;
+		return (new Date().getTime() - ticket.getTimeEntered().getTime()) / 1000 / 60 * rates.hourlyRate;
 	}
 	
 	private void requestPayment(Driver driver, Ticket ticket)

@@ -1,5 +1,6 @@
 package cs414.tabrad.a4;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,12 +58,12 @@ public class TicketTracker
 		return tickets;
 	}
 	
-	public Set<Ticket> getTicketsByTimePeriod(int begin, int end)
+	public Set<Ticket> getTicketsByTimePeriod(Date begin, Date end)
 	{
 		HashSet<Ticket> tickets = new HashSet<Ticket>();
 		for(Ticket ticket : unPaidTickets)
 		{
-			if(ticket.getTimeEntered() < begin || ticket.getTimeEntered() > end)
+			if(ticket.getTimeEntered().before(begin) || ticket.getTimeEntered().after(end))
 				continue;
 			
 			tickets.add(ticket);
@@ -70,7 +71,7 @@ public class TicketTracker
 		
 		for(Ticket ticket : paidTickets)
 		{
-			if(ticket.getTimeEntered() < begin || ticket.getTimeEntered() > end)
+			if(ticket.getTimeEntered().before(begin) || ticket.getTimeEntered().after(end))
 				continue;
 			
 			tickets.add(ticket);

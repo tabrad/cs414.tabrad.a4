@@ -1,15 +1,17 @@
 package cs414.tabrad.a4;
 
+import java.util.Date;
+
 public class Ticket 
 {
-	private int timeEntered;
-	private int timeExited;
+	private Date timeEntered;
+	private Date timeExited;
 	private Boolean isPaid;
 	private int boothEntered;
 	private int boothExited;
 	private float paymentAmount;
 	
-	public Ticket(int timeEntered, int boothEntered)
+	public Ticket(Date timeEntered, int boothEntered)
 	{
 		this.timeEntered = timeEntered;
 		this.boothEntered = boothEntered;
@@ -33,12 +35,12 @@ public class Ticket
 		return paymentAmount;
 	}
 	
-	public int getTimeEntered()
+	public Date getTimeEntered()
 	{
 		return timeEntered;
 	}
 	
-	public int getTimeExited()
+	public Date getTimeExited()
 	{
 		return timeExited;
 	}

@@ -2,6 +2,7 @@ package cs414.tabrad.a4;
 
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class TicketTrackerTest {
 	{
 		for(int i = 0; i < 10; i++)
 		{
-			Ticket ticket = new Ticket((int)System.currentTimeMillis(), i);
+			Ticket ticket = new Ticket(new Date(), i);
 			ticketTracker.addTicket(ticket);
 			assertTrue(ticketTracker.hasUnpaidTicket(ticket));
 		}
@@ -31,7 +32,7 @@ public class TicketTrackerTest {
 
 	@Test public void testPayingTicket()
 	{
-		Ticket ticket = new Ticket((int)10000, 1);
+		Ticket ticket = new Ticket(new Date(), 1);
 		ticketTracker.addTicket(ticket);
 		
 		ticket.markPaid(1, 100f);
@@ -46,13 +47,13 @@ public class TicketTrackerTest {
 	{
 		for(int i = 0; i < 10; i++)
 		{
-			Ticket ticket = new Ticket((int)System.currentTimeMillis(), 1);
+			Ticket ticket = new Ticket(new Date(), 1);
 			ticketTracker.addTicket(ticket);
 		}
 		
 		for(int i = 0; i < 10; i++)
 		{
-			Ticket ticket = new Ticket((int)System.currentTimeMillis(), 2);
+			Ticket ticket = new Ticket(new Date(), 2);
 			ticketTracker.addTicket(ticket);
 		}
 		
@@ -72,11 +73,11 @@ public class TicketTrackerTest {
 	{
 		for(int i = 0; i < 20; i++)
 		{
-			Ticket ticket = new Ticket((int)System.currentTimeMillis() - (1000 * 20) + (1000 * i), 1);
+			Ticket ticket = new Ticket(new Date(System.currentTimeMillis() - (1000 * 20) + (1000 * i)), 1);
 			ticketTracker.addTicket(ticket);
 		}
 		
-		Set<Ticket> tickets = ticketTracker.getTicketsByTimePeriod((int)System.currentTimeMillis() - (1000 * 10), (int)System.currentTimeMillis());
+		Set<Ticket> tickets = ticketTracker.getTicketsByTimePeriod(new Date(System.currentTimeMillis() - (1000 * 10)), new Date());
 		assertTrue(tickets.size() == 10);
 	} 
 }
