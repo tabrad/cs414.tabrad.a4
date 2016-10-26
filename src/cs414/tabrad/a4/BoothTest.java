@@ -61,12 +61,12 @@ public class BoothTest {
 		assertFalse(boothExit.getGate().isOpen());
 		
 		Ticket ticket = driver.getTicket();
-		boothExit.insertTicket(driver, ticket);
+		//boothExit.insertTicket(driver, ticket);
 		assertTrue(ticket.isPaid());
 		assertFalse(driver.isParked());
 		
 		ticket = driver2.getTicket();
-		boothExit.insertTicket(driver2, ticket);
+		//boothExit.insertTicket(driver2, ticket);
 		assertTrue(ticket.isPaid());
 		assertFalse(driver2.isParked());
 	}
@@ -76,7 +76,7 @@ public class BoothTest {
 		driver.enterGarage(garage);
 		boothExit.login(admin);
 		Ticket ticket = driver.getTicket();
-		boothExit.insertTicket(driver, ticket);
+		//boothExit.insertTicket(driver, ticket);
 		assertTrue(ticket.isPaid());
 		assertFalse(driver2.isParked());
 	}

@@ -24,12 +24,6 @@ public class Driver
 		myTicket = ticket;	
 	}
 	
-	public void promptPayment(Booth booth, float amountDue) 
-	{
-		if(!booth.insertPayment(this, myTicket, amountDue))
-				booth.requestAdmin(this, myTicket);
-	}
-	
 	public void promptExit(Garage garage)
 	{
 		isParked = false;

@@ -83,18 +83,12 @@ public class Booth extends Observable
 		return amountDue;
 	}
 	
-	private void requestPayment(Driver driver, Ticket ticket)
-	{
-		float amountDue = getAmountDue(ticket);
-		driver.promptPayment(this, amountDue);
-	}
-	
-	public boolean insertPayment(Driver driver, Ticket ticket, float amount)
+	public boolean insertPayment(Driver driver, Ticket ticket, float amount, boolean isCreditCard)
 	{
 		if(!adminMode && amount != getAmountDue(ticket))
 			return false;
 		
-		if(!adminMode && !paymentProcessor.processPayment())
+		if(!adminMode && !paymentProcessor.processPayment(isCreditCard))
 			return false;
 		
 		ticket.markPaid(boothId, amount);
@@ -102,14 +96,6 @@ public class Booth extends Observable
 		openGate();
 		
 		return true;
-	}
-
-	public void insertTicket(Driver driver, Ticket ticket) 
-	{
-		if(!isExit)
-			return;
-		
-		requestPayment(driver, ticket);
 	}
 	
 	public Gate getGate() 

@@ -172,14 +172,21 @@ public class DriverDialog
 			
 			if(result == JOptionPane.YES_OPTION)
 			{
-				booth.insertPayment(driver, driver.getTicket(), amountDue);
+				booth.insertPayment(driver, driver.getTicket(), amountDue, false);
 				JOptionPane.showMessageDialog(driverFrame, "Payment accepted. You may exit the garage.");
 			}
 			else
 			{
 				//add a delay here
-				booth.insertPayment(driver, driver.getTicket(), amountDue);
-				JOptionPane.showMessageDialog(driverFrame, "Payment accepted. You may exit the garage");
+				boolean isPaid = booth.insertPayment(driver, driver.getTicket(), amountDue, true);
+				
+				if(isPaid)
+					JOptionPane.showMessageDialog(driverFrame, "Payment accepted. You may exit the garage");
+				else
+				{
+					JOptionPane.showMessageDialog(driverFrame, "Payment failed.");
+					return;
+				}
 			}
 			driver.exitGarage(garage);
 			shutDialog();
