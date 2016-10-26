@@ -47,6 +47,17 @@ public class Garage
 		return driver;
 	}
 	
+	public Driver getDriver(String license) 
+	{
+		for(Driver d : drivers)
+		{
+			if(d.getLicense() == license)
+				return d;
+		}
+		
+		return null;
+	}
+	
 	public Booth createBooth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
 	{
 		Booth booth = new Booth(ticketTracker, boothId, location, isExit, rates);
@@ -121,4 +132,5 @@ public class Garage
 	{
 		admins.add(admin);
 	}
+
 }

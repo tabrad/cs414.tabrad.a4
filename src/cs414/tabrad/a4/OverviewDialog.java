@@ -1,6 +1,5 @@
 package cs414.tabrad.a4;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,13 +8,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 
 /**
@@ -53,6 +49,7 @@ public class OverviewDialog
 	{
 		garage = new Garage();
 		rates = new Rate(3, 3, 20);
+		ticketTracker = new TicketTracker(garage);
 		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
 		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 	}
@@ -114,7 +111,7 @@ public class OverviewDialog
          if( command.equals( "New Car" ))  
          {
             showNewCarDialog();
-        	 statusLabel.setText("New Car  Button clicked.");
+        	statusLabel.setText("New Car  Button clicked.");
          }
          else if( command.equals( "Submit" ) )  
          {
@@ -131,19 +128,15 @@ public class OverviewDialog
 	{
 		JPanel message = new JPanel();           
         message.add(new JLabel("Create a New Car?"));
-        int result = JOptionPane.showConfirmDialog(mainFrame, message, "Default made dialog", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showConfirmDialog(mainFrame, message, "Create Car", JOptionPane.YES_NO_OPTION);
 	
         if(result == JOptionPane.YES_OPTION)
         {
         	String license = "CXJF" + System.currentTimeMillis();
         	Driver driver = garage.createDriver(license);
+
+        	DriverDialog driverDialog = new DriverDialog(garage, driver);
+        	driverDialog.showDialog();
         }
 	}
-	
-	private void showDriverDialog(Driver driver)
-	{
-		
-	}
-	
-	
 }

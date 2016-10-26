@@ -92,4 +92,9 @@ public class Driver
 	{
 		return myTicket;
 	}
+
+	public String getLicense() 
+	{
+		return licensePlate;
+	}
 }
