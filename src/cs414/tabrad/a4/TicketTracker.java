@@ -1,13 +1,12 @@
 package cs414.tabrad.a4;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
-public class TicketTracker 
+public class TicketTracker extends Observable
 {
 	private Garage garage;
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
@@ -21,6 +20,9 @@ public class TicketTracker
 	public void addTicket(Ticket ticket)
 	{
 		unPaidTickets.add(ticket);
+		setChanged();
+		notifyObservers();
+		System.out.println("Ticket Added");
 	}
 	
 	public boolean hasUnpaidTicket(Ticket ticket)

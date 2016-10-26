@@ -2,12 +2,13 @@ package cs414.tabrad.a4;
 
 import java.util.HashSet;
 
-public class Garage 
+public class Garage
 {
 	private int xSize = 100;
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
 	private Location parkingEnd = new Location(80, 80);
+	private int maxOccupancy = 50;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private HashSet<Admin> admins = new HashSet<Admin>();
@@ -131,6 +132,16 @@ public class Garage
 	public void addAdmin(Admin admin)
 	{
 		admins.add(admin);
+	}
+
+	public int getMaxOccupancy() 
+	{
+		return maxOccupancy;
+	}
+
+	public int getBoothCount() {
+		
+		return activeBooths.size();
 	}
 
 }

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,11 +24,13 @@ import javax.swing.JPanel;
  */
 
 
-public class OverviewDialog 
+public class OverviewDialog implements Observer
 {
 	private JFrame mainFrame;
 	private JLabel headerLabel;
 	private JLabel statusLabel;
+	private JLabel boothCountLabel;
+	private JLabel occupancyLabel;
 	private JPanel controlPanel;
 	
 	private Garage garage;
@@ -37,6 +41,13 @@ public class OverviewDialog
 	{
 		prepareModel();
 		prepareGUI();
+	}
+	
+	@Override
+	public void update(Observable observable, Object arg)
+	{
+		System.out.println("update called");
+		updateLabels();
 	}
 	
 	public static void main(String[] args)
@@ -50,6 +61,7 @@ public class OverviewDialog
 		garage = new Garage();
 		rates = new Rate(3, 3, 20);
 		ticketTracker = new TicketTracker(garage);
+		ticketTracker.addObserver(this);
 		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
 		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 	}
@@ -58,10 +70,12 @@ public class OverviewDialog
     {
 		 mainFrame = new JFrame("Java SWING Examples");
 	     mainFrame.setSize(400,400);
-	     mainFrame.setLayout(new GridLayout(3, 1));
+	     mainFrame.setLayout(new GridLayout(7, 1));
 
 	     headerLabel = new JLabel("",JLabel.CENTER );
-	     statusLabel = new JLabel("",JLabel.CENTER);        
+	     statusLabel = new JLabel("",JLabel.CENTER);
+	     occupancyLabel = new JLabel();
+	     boothCountLabel = new JLabel();
 
 	     statusLabel.setSize(350,100);
 	     mainFrame.addWindowListener(new WindowAdapter() {
@@ -73,16 +87,27 @@ public class OverviewDialog
 	      
 	     controlPanel = new JPanel();
 	     controlPanel.setLayout(new FlowLayout());
+	     
 
 	     mainFrame.add(headerLabel);
+	     mainFrame.add(occupancyLabel);
+	     mainFrame.add(boothCountLabel);
 	     mainFrame.add(controlPanel);
 	     mainFrame.add(statusLabel);
+	     
 	     mainFrame.setVisible(true);  
     }
 	
+	private void updateLabels()
+	{
+		occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
+		boothCountLabel.setText("Booth Count: " + garage.getBoothCount());
+	}
+	
 	private void showDialog()
 	{
-		 headerLabel.setText("Parking Garage Overview"); 
+		 headerLabel.setText("Parking Garage Overview");
+		 updateLabels();
 
 		 JButton newCarButton = new JButton("New Car");
 		 JButton submitButton = new JButton("Submit");
@@ -98,8 +123,8 @@ public class OverviewDialog
 		
 		 controlPanel.add(newCarButton);
 		 controlPanel.add(submitButton);
-		 controlPanel.add(cancelButton);       
-		
+		 controlPanel.add(cancelButton);
+		 
 		 mainFrame.setVisible(true);  
 	}
 	

@@ -73,8 +73,6 @@ public class DriverDialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			String license = e.getActionCommand();
-			Driver driver = garage.getDriver(license);
 			Booth booth = garage.getNearestBooth(driver.getLocation(), false);
 			
 			//show dialog that says driver drove to booth, have option to push ticket button or to leave
@@ -85,7 +83,7 @@ public class DriverDialog
 			if(result == JOptionPane.YES_OPTION)
 			{
 				driver.goToEntrance(garage);
-				driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false));
+				driver.pushTicketButton(booth);
 				
 				if(!driver.hasTicket())
 				{
