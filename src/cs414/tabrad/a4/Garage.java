@@ -28,6 +28,8 @@ public class Garage
 	public void removeVehicle(Location location)
 	{
 		grid[location.x][location.y] = null;
+		Booth booth = getNearestBooth(location, true);
+		booth.closeGate();
 	}
 	
 	public Boolean isClear(Location location)

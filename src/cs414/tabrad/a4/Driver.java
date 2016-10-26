@@ -64,9 +64,7 @@ public class Driver
 	
 	public void exitGarage(Garage garage) 
 	{
-		Booth booth = garage.getNearestBooth(location, true);
-		move(garage, booth.getLocation());
-		booth.insertTicket(this, myTicket);
+		garage.removeVehicle(location);
 	}
 	
 	public void move(Garage garage, Location location)

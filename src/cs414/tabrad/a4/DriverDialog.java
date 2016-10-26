@@ -98,7 +98,12 @@ public class DriverDialog
 					//show a dialog that garage is full
 				}
 				else
+				{
+					JOptionPane.showMessageDialog(driverFrame, "You may now enter the garage");
 					driver.parkCar(garage);
+					garage.getNearestBooth(driver.getLocation(), false).closeGate();;
+				}
+					
 			}
 			
 			updateLabels();
@@ -149,7 +154,7 @@ public class DriverDialog
 				booth.insertPayment(driver, driver.getTicket(), amountDue);
 				JOptionPane.showMessageDialog(driverFrame, "Payment accepted. You may exit the garage");
 			}
-			
+			driver.exitGarage(garage);
 			shutDialog();
 		}
 	}

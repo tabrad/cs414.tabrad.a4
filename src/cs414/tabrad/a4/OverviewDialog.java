@@ -29,11 +29,13 @@ public class OverviewDialog implements Observer
 	private JFrame mainFrame;
 	private JLabel headerLabel;
 	private JLabel statusLabel;
-	private JLabel boothCountLabel;
+	private JLabel boothGateLabel;
 	private JLabel occupancyLabel;
 	private JPanel controlPanel;
 	
 	private Garage garage;
+	private Booth entranceBooth;
+	private Booth exitBooth;
 	private TicketTracker ticketTracker;
 	private Rate rates; 
 	   
@@ -59,10 +61,14 @@ public class OverviewDialog implements Observer
 	{
 		garage = new Garage();
 		rates = new Rate(3, 3, 20);
+		
 		ticketTracker = new TicketTracker(garage);
 		ticketTracker.addObserver(this);
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
-		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
+		
+		entranceBooth = garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
+		entranceBooth.addObserver(this);
+		exitBooth = garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
+		exitBooth.addObserver(this);
 	}
 	
 	private void prepareGUI()
@@ -74,7 +80,7 @@ public class OverviewDialog implements Observer
 	     headerLabel = new JLabel("",JLabel.CENTER );
 	     statusLabel = new JLabel("",JLabel.CENTER);
 	     occupancyLabel = new JLabel();
-	     boothCountLabel = new JLabel();
+	     boothGateLabel = new JLabel();
 
 	     statusLabel.setSize(350,100);
 	     mainFrame.addWindowListener(new WindowAdapter() {
@@ -85,12 +91,11 @@ public class OverviewDialog implements Observer
 	      });    
 	      
 	     controlPanel = new JPanel();
-	     controlPanel.setLayout(new FlowLayout());
-	     
+	     controlPanel.setLayout(new FlowLayout());	     
 
 	     mainFrame.add(headerLabel);
 	     mainFrame.add(occupancyLabel);
-	     mainFrame.add(boothCountLabel);
+	     mainFrame.add(boothGateLabel);
 	     mainFrame.add(controlPanel);
 	     mainFrame.add(statusLabel);
 	     
@@ -100,7 +105,7 @@ public class OverviewDialog implements Observer
 	private void updateLabels()
 	{
 		occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
-		boothCountLabel.setText("Booth Count: " + garage.getBoothCount());
+		boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
 	}
 	
 	private void showDialog()
@@ -132,10 +137,9 @@ public class OverviewDialog implements Observer
       public void actionPerformed(ActionEvent e) 
       {
          String command = e.getActionCommand();  
-         if( command.equals( "New Car" ))  
+         if(command.equals( "New Car" ))  
          {
             showNewCarDialog();
-        	statusLabel.setText("New Car  Button clicked.");
          }
          else if( command.equals( "Submit" ) )  
          {
@@ -156,7 +160,7 @@ public class OverviewDialog implements Observer
 	
         if(result == JOptionPane.YES_OPTION)
         {
-        	String license = "CXJF" + System.currentTimeMillis();
+        	String license = ""+System.currentTimeMillis();
         	Driver driver = garage.createDriver(license);
 
         	DriverDialog driverDialog = new DriverDialog(garage, driver);

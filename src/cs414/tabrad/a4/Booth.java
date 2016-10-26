@@ -1,8 +1,9 @@
 package cs414.tabrad.a4;
 
 import java.util.Date;
+import java.util.Observable;
 
-public class Booth 
+public class Booth extends Observable 
 {
 	private int boothId;
 	private Location location = new Location();
@@ -53,19 +54,6 @@ public class Booth
 		Ticket ticket = getTicket();
 		driver.setTicket(ticket);
 		openGate();
-
-		//wait for driver to move before closing the gate
-		try
-		{
-			while(driver.getLocation() == location)
-				Thread.sleep(250);
-		} 
-		catch(Exception e)
-		{
-			return;
-		}
-		
-		gate.close();
 	}
 	
 	public float getAmountDue() 
@@ -109,7 +97,7 @@ public class Booth
 		
 		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
-		gate.open();
+		openGate();
 		
 		return true;
 	}
@@ -130,11 +118,15 @@ public class Booth
 	public void openGate()
 	{
 		gate.open();
+		setChanged();
+		notifyObservers();
 	}
 
 	public void closeGate() 
 	{
 		gate.close();
+		setChanged();
+		notifyObservers();
 	}
 
 	public boolean login(Admin admin) 
