@@ -22,7 +22,6 @@ public class TicketTracker extends Observable
 		unPaidTickets.add(ticket);
 		setChanged();
 		notifyObservers();
-		System.out.println("Ticket Added");
 	}
 	
 	public boolean hasUnpaidTicket(Ticket ticket)
@@ -37,6 +36,8 @@ public class TicketTracker extends Observable
 	{
 		paidTickets.add(ticket);
 		unPaidTickets.remove(ticket);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Set<Ticket> getPaidTickets()

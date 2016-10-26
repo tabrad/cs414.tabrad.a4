@@ -68,6 +68,11 @@ public class Booth
 		gate.close();
 	}
 	
+	public float getAmountDue() 
+	{
+		return rates.maxCharge;
+	}
+	
 	public float getAmountDue(Ticket ticket) 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticket))
@@ -105,7 +110,6 @@ public class Booth
 		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
 		gate.open();
-		driver.promptExit(ticketTracker.getGarage());
 		
 		return true;
 	}

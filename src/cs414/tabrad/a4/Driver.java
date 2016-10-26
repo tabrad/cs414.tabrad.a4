@@ -42,6 +42,11 @@ public class Driver
 		move(garage, booth.getLocation());
 	}
 	
+	public void goToExit(Garage garage) 
+	{
+		Booth booth = garage.getNearestBooth(location, true);
+		move(garage, booth.getLocation());
+	}
 	
 	public void parkCar(Garage garage)
 	{

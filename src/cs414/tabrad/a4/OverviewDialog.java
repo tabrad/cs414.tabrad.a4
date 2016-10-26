@@ -46,7 +46,6 @@ public class OverviewDialog implements Observer
 	@Override
 	public void update(Observable observable, Object arg)
 	{
-		System.out.println("update called");
 		updateLabels();
 	}
 	
