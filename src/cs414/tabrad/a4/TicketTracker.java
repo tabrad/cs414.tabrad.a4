@@ -24,6 +24,17 @@ public class TicketTracker extends Observable
 		notifyObservers();
 	}
 	
+	public Ticket findTicket(String id)
+	{
+		for(Ticket ticket : unPaidTickets)
+		{
+			if(ticket.getId().equals(id))
+				return ticket;
+		}
+		
+		return null;
+	}
+	
 	public boolean hasUnpaidTicket(Ticket ticket)
 	{
 		if(unPaidTickets.contains(ticket))

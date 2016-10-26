@@ -153,4 +153,9 @@ public class Booth extends Observable
 		
 		admin.settlePayment(this, driver, ticket);
 	}
+
+	public Ticket findTicket(String id) 
+	{
+		return ticketTracker.findTicket(id);
+	}
 }

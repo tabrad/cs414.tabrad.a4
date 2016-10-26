@@ -70,4 +70,9 @@ public class Ticket
 		
 		return (boothEntered == boothId || boothExited == boothId);
 	}
+
+	public String getId() 
+	{
+		return "T" + timeEntered + "B" + boothEntered;
+	}
 }

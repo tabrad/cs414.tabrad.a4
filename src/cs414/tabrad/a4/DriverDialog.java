@@ -134,15 +134,30 @@ public class DriverDialog
 			int result = JOptionPane.showOptionDialog(driverFrame, 
 					"Please Insert Your Ticket Before Exiting the Garage", 
 					"Exit Booth", 
-					JOptionPane.YES_NO_OPTION, 
+					JOptionPane.YES_NO_CANCEL_OPTION, 
 					JOptionPane.INFORMATION_MESSAGE,
 					null,
-					new String[]{"Insert Ticket", "Lost Ticket"},
+					new String[]{"Insert Ticket", "Lost Ticket", "Enter Ticket ID"},
 					"default");
 			
 			float amountDue;
 			if(result == JOptionPane.YES_OPTION)
 				amountDue = booth.getAmountDue(driver.getTicket());
+			else if(result == JOptionPane.CANCEL_OPTION)
+			{
+				String id = JOptionPane.showInputDialog("Enter Ticket ID");
+				Ticket ticket = booth.findTicket(id);
+				
+				if(ticket == null)
+				{
+					JOptionPane.showMessageDialog(driverFrame, "Invalid Ticket. Maximum Charge.");
+					amountDue = booth.getAmountDue();
+				}
+				else
+				{
+					amountDue = booth.getAmountDue(ticket);
+				}
+			}
 			else
 				amountDue = booth.getAmountDue();
 			
