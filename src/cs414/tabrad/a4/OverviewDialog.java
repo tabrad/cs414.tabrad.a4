@@ -1,0 +1,115 @@
+package cs414.tabrad.a4;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+
+/**
+ * 
+ * @author Tom
+ *	NOTE: the structure of the swing elements is largely inspired by the swing tutorial on tutorialspoint
+ *	https://www.tutorialspoint.com/swing/swing_event_handling.htm
+ */
+
+
+public class OverviewDialog 
+{
+	private JFrame mainFrame;
+	   private JLabel headerLabel;
+	   private JLabel statusLabel;
+	   private JPanel controlPanel;
+	   
+	public OverviewDialog()
+	{
+		prepareGUI();
+	}
+	
+	public static void main(String[] args)
+    {
+        OverviewDialog overviewDialog = new OverviewDialog();
+        overviewDialog.showDialog();
+    }
+	
+	private void prepareGUI()
+    {
+		 mainFrame = new JFrame("Java SWING Examples");
+	      mainFrame.setSize(400,400);
+	      mainFrame.setLayout(new GridLayout(3, 1));
+
+	      headerLabel = new JLabel("",JLabel.CENTER );
+	      statusLabel = new JLabel("",JLabel.CENTER);        
+
+	      statusLabel.setSize(350,100);
+	      mainFrame.addWindowListener(new WindowAdapter() {
+	         public void windowClosing(WindowEvent windowEvent){
+		        System.exit(0);
+	         }        
+	      });    
+	      controlPanel = new JPanel();
+	      controlPanel.setLayout(new FlowLayout());
+
+	      mainFrame.add(headerLabel);
+	      mainFrame.add(controlPanel);
+	      mainFrame.add(statusLabel);
+	      mainFrame.setVisible(true);  
+    }
+	
+	private void showDialog()
+	{
+		 headerLabel.setText("Parking Garage Overview"); 
+
+	      JButton newCarButton = new JButton("New Car");
+	      JButton submitButton = new JButton("Submit");
+	      JButton cancelButton = new JButton("Cancel");
+
+	      newCarButton.setActionCommand("New Car");
+	      submitButton.setActionCommand("Submit");
+	      cancelButton.setActionCommand("Cancel");
+
+	      newCarButton.addActionListener(new ButtonClickListener()); 
+	      submitButton.addActionListener(new ButtonClickListener()); 
+	      cancelButton.addActionListener(new ButtonClickListener()); 
+
+	      controlPanel.add(newCarButton);
+	      controlPanel.add(submitButton);
+	      controlPanel.add(cancelButton);       
+
+	      mainFrame.setVisible(true);  
+	}
+	
+	private class ButtonClickListener implements ActionListener
+	{
+	      public void actionPerformed(ActionEvent e) 
+	      {
+	         String command = e.getActionCommand();  
+	         if( command.equals( "New Car" ))  
+	         {
+	            statusLabel.setText("New Car  Button clicked.");
+	         }
+	         else if( command.equals( "Submit" ) )  
+	         {
+	            statusLabel.setText("Submit Button clicked."); 
+	         }
+	         else  
+	         {
+	            statusLabel.setText("Cancel Button clicked.");
+	         }  	
+	      }		
+	   }
+	
+	
+}
