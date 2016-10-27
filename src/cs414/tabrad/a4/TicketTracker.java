@@ -147,4 +147,32 @@ public class TicketTracker extends Observable
 	{
 		return getOccupancy() == garage.getMaxOccupancy();
 	}
+
+	public Date getEarliestDate() 
+	{
+		Set<Ticket> tickets = getAllTickets();
+		Date earliestDate = new Date();
+		for(Ticket ticket : tickets)
+		{
+			if(ticket.getTimeEntered().before(earliestDate))
+				earliestDate = ticket.getTimeEntered();
+		}
+		
+		return earliestDate;
+	}
+	
+	public Date getLatestDate()
+	{
+		Set<Ticket> tickets = getAllTickets();
+		Date latestDate = new Date();
+		latestDate.setTime(0);
+		
+		for(Ticket ticket : tickets)
+		{
+			if(ticket.getTimeEntered().after(latestDate))
+				latestDate = ticket.getTimeEntered();
+		}
+		
+		return latestDate;
+	}
 }

@@ -46,7 +46,6 @@ public class DriverDialog
 		infoPanel.add(ticketLabel);
 		infoPanel.add(parkedLabel);
 		
-	    
 	    enterButton = new JButton("Enter Garage");
 	    enterButton.addActionListener(new EnterGarageListener()); 
 	    exitButton = new JButton("Exit Garage");

@@ -74,7 +74,7 @@ public class OverviewDialog implements Observer
 	
 	private void prepareGUI()
     {
-		 mainFrame = new JFrame("Java SWING Examples");
+		 mainFrame = new JFrame("Parking Garage");
 	     mainFrame.setSize(400,400);
 	     mainFrame.setLayout(new GridLayout(7, 1));
 
@@ -118,11 +118,11 @@ public class OverviewDialog implements Observer
 		 updateLabels();
 
 		 JButton newCarButton = new JButton("New Car");
-		 JButton submitButton = new JButton("Submit");
+		 JButton submitButton = new JButton("Reports");
 		 JButton cancelButton = new JButton("Cancel");
 		
 		 newCarButton.setActionCommand("New Car");
-		 submitButton.setActionCommand("Submit");
+		 submitButton.setActionCommand("Reports");
 		 cancelButton.setActionCommand("Cancel");
 		
 		 newCarButton.addActionListener(new ButtonClickListener()); 
@@ -145,9 +145,10 @@ public class OverviewDialog implements Observer
          {
             showNewCarDialog();
          }
-         else if( command.equals( "Submit" ) )  
+         else if(command.equals( "Reports" ))  
          {
-            statusLabel.setText("Submit Button clicked."); 
+            ReportDialog reportDialog = new ReportDialog(ticketTracker);
+            reportDialog.showDialog();
          }
          else  
          {
