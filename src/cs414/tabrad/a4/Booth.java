@@ -1,5 +1,6 @@
 package cs414.tabrad.a4;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
@@ -33,12 +34,20 @@ public class Booth extends Observable
 		return isExit;
 	}
 
-	private Ticket getTicket() 
+	private Ticket getTicket(boolean isSimulation) 
 	{
 		if(isExit || ticketTracker.isFull())
 			return null;
 		
-		Ticket ticket = new Ticket(new Date(), boothId);
+		
+		Date date = new Date();
+		if(isSimulation)
+		{
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(2016, (int)(Math.random() * 13), (int)(Math.random() * 28), (int)(Math.random() * 60), 0);
+			date.setTime(calendar.getTimeInMillis());
+		}
+		Ticket ticket = new Ticket(date, boothId);
 		ticketTracker.addTicket(ticket);
 		
 		return ticket;
@@ -49,9 +58,9 @@ public class Booth extends Observable
 		return location;
 	}
 	
-	public void ticketButtonPressed(Driver driver)
+	public void ticketButtonPressed(Driver driver, boolean isSimulation)
 	{
-		Ticket ticket = getTicket();
+		Ticket ticket = getTicket(isSimulation);
 		if(ticket == null)
 			return;
 		driver.setTicket(ticket);

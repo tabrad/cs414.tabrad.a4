@@ -90,7 +90,7 @@ public class DriverDialog
 			
 			if(result == JOptionPane.YES_OPTION)
 			{
-				driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false));
+				driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), false);
 				
 				if(!driver.hasTicket())
 				{

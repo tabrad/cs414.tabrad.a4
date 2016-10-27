@@ -39,17 +39,17 @@ public class BoothTest {
 	@Test public void testTicketButtonPressed()
 	{
 		assertFalse(boothEntrance.getGate().isOpen());
-		boothEntrance.ticketButtonPressed(driver);
+		boothEntrance.ticketButtonPressed(driver, false);
 		assertTrue(driver.getTicket() != null);
 		
 		assertFalse(boothEntrance.getGate().isOpen());
-		boothEntrance.ticketButtonPressed(driver2);
+		boothEntrance.ticketButtonPressed(driver2, false);
 		assertTrue(driver2.getTicket() != null);
 	}
 	
 	@Test public void testTicketButtonPressedNotEntrance()
 	{
-		boothExit.ticketButtonPressed(driver);
+		boothExit.ticketButtonPressed(driver, false);
 		assertFalse(boothExit.getGate().isOpen());
 		assertFalse(driver.isParked());
 	}

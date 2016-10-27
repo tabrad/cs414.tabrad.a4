@@ -14,9 +14,9 @@ public class Driver
 		location.y = y;
 	}
 	
-	public void pushTicketButton(Booth booth)
+	public void pushTicketButton(Booth booth, boolean isSimulation)
 	{
-		booth.ticketButtonPressed(this);
+		booth.ticketButtonPressed(this, isSimulation);
 	}
 	
 	public void setTicket(Ticket ticket) 
@@ -52,7 +52,7 @@ public class Driver
 	public void enterGarage(Garage garage)
 	{
 		goToEntrance(garage);
-		pushTicketButton(garage.getNearestBooth(location, false));
+		pushTicketButton(garage.getNearestBooth(location, false), false);
 		parkCar(garage);
 	}
 	

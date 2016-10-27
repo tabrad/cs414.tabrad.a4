@@ -119,11 +119,11 @@ public class OverviewDialog implements Observer
 
 		 JButton newCarButton = new JButton("New Car");
 		 JButton submitButton = new JButton("Reports");
-		 JButton cancelButton = new JButton("Cancel");
+		 JButton cancelButton = new JButton("Simulate");
 		
 		 newCarButton.setActionCommand("New Car");
 		 submitButton.setActionCommand("Reports");
-		 cancelButton.setActionCommand("Cancel");
+		 cancelButton.setActionCommand("Simulate");
 		
 		 newCarButton.addActionListener(new ButtonClickListener()); 
 		 submitButton.addActionListener(new ButtonClickListener()); 
@@ -145,14 +145,27 @@ public class OverviewDialog implements Observer
          {
             showNewCarDialog();
          }
-         else if(command.equals( "Reports" ))  
+         else if(command.equals("Reports"))  
          {
             ReportDialog reportDialog = new ReportDialog(ticketTracker);
             reportDialog.showDialog();
          }
          else  
          {
-            statusLabel.setText("Cancel Button clicked.");
+            for(int i = 0; i < 100; i++)
+            {
+            	Driver driver = garage.createDriver("" + i);
+            	driver.goToEntrance(garage);
+            	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
+            	driver.parkCar(garage);
+				garage.getNearestBooth(driver.getLocation(), false).closeGate();
+				
+				driver.goToExit(garage);
+				Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+				Float amountDue = booth.getAmountDue(driver.getTicket());
+				booth.insertPayment(driver, driver.getTicket(), amountDue, false);
+				driver.exitGarage(garage);
+            }
          }  	
       }		
 	}

@@ -67,18 +67,23 @@ public class ReportDialog
 	        {
     			if(granularityBox.getSelectedIndex() == 0) //day
     			{
-    				Object[][] days = {{0f,0f,0f,0f,0f,0f,0f}};
+    				float days[] = {0f,0f,0f,0f,0f,0f,0f};
     				for(Ticket ticket : tickets)
     	        	{
     					calendar.setTime(ticket.getTimeEntered());
     					int day = calendar.get(Calendar.DAY_OF_WEEK);
-    					float current = 0;
-    					if(days[0][day] != null)
-    						current = (float)days[0][day - 1];
-    					days[0][day] = ticket.getPaymentAmount() + current;
+    					
+    					
+    					days[day - 1] = ticket.getPaymentAmount() + days[day - 1];
+    					System.out.println(days[day - 1]);
     	        	}
+    				
+    				Object[][] data = {{0f,0f,0f,0f,0f,0f,0f}};
+    				for(int i = 0; i < days.length; i++)
+    					data[0][i] = days[i];
+    				
     				String[] columnNames = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-        			table = new JTable(days, columnNames);
+        			table = new JTable(data, columnNames);
         			
         			JFrame tableFrame = new JFrame("Report");
         			tableFrame.setSize(400, 400);
