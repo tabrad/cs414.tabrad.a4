@@ -82,22 +82,6 @@ public class TicketTrackerTest {
 		assertTrue(tickets.size() == 10);
 	} 
 	
-	@Test public void testGetMostPopularHour()
-	{
-		Calendar calendar = Calendar.getInstance();
-		
-		for(int i = 0; i < 20; i++)
-		{
-			calendar.set(2016, 10, 10, 15, 5);
-			Ticket ticket = new Ticket(calendar.getTime(), 1);
-			ticketTracker.addTicket(ticket);
-		}
-		
-		calendar.set(2016, 1, 1);
-		assertTrue(ticketTracker.getMostPopularHour(calendar.getTime(), new Date()) == 15);
-	}
-	
-	
 	
 	
 	

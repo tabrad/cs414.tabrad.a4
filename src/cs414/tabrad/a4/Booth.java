@@ -145,8 +145,6 @@ public class Booth extends Observable
 		Admin admin = ticketTracker.getGarage().getAdmin();
 		if(!admin.accessBooth(this))
 			return;
-		
-		admin.settlePayment(this, driver, ticket);
 	}
 
 	public Ticket findTicket(String id) 

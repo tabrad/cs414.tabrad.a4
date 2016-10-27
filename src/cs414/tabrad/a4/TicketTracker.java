@@ -51,19 +51,24 @@ public class TicketTracker extends Observable
 		notifyObservers();
 	}
 	
-	public Set<Ticket> getPaidTickets()
-	{
-		return paidTickets;
-	}
-	
 	public int getOccupancy()
 	{
 		return unPaidTickets.size();
 	}
 
+	public boolean isFull()
+	{
+		return getOccupancy() == garage.getMaxOccupancy();
+	}
+	
 	public Garage getGarage() 
 	{
 		return garage;
+	}
+	
+	public Set<Ticket> getPaidTickets()
+	{
+		return paidTickets;
 	}
 	
 	public Set<Ticket> getAllTickets()
@@ -115,64 +120,6 @@ public class TicketTracker extends Observable
 		return tickets;
 	}
 	
-	private int getMax(int[] list)
-	{
-		int max = 0;
-		
-		for(int i = 0; i < list.length; i++)
-		{
-			if(list[i] > max)
-				max = i;
-		}
-		
-		return max;
-	}
 	
-	public int getMostPopularHour(Date begin, Date end)
-	{
-		Set<Ticket> tickets = getAllTickets();
-		int[] ticketHour = new int[24];
-		
-		Calendar calendar = Calendar.getInstance();
-		for(Ticket ticket : tickets)
-		{
-			calendar.setTime(ticket.getTimeEntered());
-			ticketHour[calendar.get(Calendar.HOUR_OF_DAY)]++;
-		}
 
-		return getMax(ticketHour);
-	}
-	
-	public boolean isFull()
-	{
-		return getOccupancy() == garage.getMaxOccupancy();
-	}
-
-	public Date getEarliestDate() 
-	{
-		Set<Ticket> tickets = getAllTickets();
-		Date earliestDate = new Date();
-		for(Ticket ticket : tickets)
-		{
-			if(ticket.getTimeEntered().before(earliestDate))
-				earliestDate = ticket.getTimeEntered();
-		}
-		
-		return earliestDate;
-	}
-	
-	public Date getLatestDate()
-	{
-		Set<Ticket> tickets = getAllTickets();
-		Date latestDate = new Date();
-		latestDate.setTime(0);
-		
-		for(Ticket ticket : tickets)
-		{
-			if(ticket.getTimeEntered().after(latestDate))
-				latestDate = ticket.getTimeEntered();
-		}
-		
-		return latestDate;
-	}
 }

@@ -11,14 +11,9 @@ public class Admin
 		this.adminPassword = adminPassword;
 	}
 	
-	public Boolean accessBooth(Booth booth)
+	public boolean accessBooth(Booth booth)
 	{
 		return booth.login(this);
-	}
-
-	public void settlePayment(Booth booth, Driver driver, Ticket ticket) 
-	{
-		//booth.insertTicket(driver, ticket);
 	}
 	
 	@Override public boolean equals(Object o)

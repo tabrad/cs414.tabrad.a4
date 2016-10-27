@@ -14,7 +14,7 @@ public class Garage
 	private HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
-	public Boolean moveObject(String s, Location fromLocation, int toX, int toY)
+	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
 		if(grid[toX][toY] != null)
 			return false;
@@ -35,11 +35,6 @@ public class Garage
 	public Boolean isClear(Location location)
 	{
 		return grid[location.x][location.y] == null;
-	}
-	
-	public Boolean isClear(int x, int y)
-	{
-		return grid[x][y] == null;
 	}
 	
 	public Driver createDriver(String license)
@@ -102,7 +97,7 @@ public class Garage
 		{	
 			for(int y = parkingStart.y; y < parkingEnd.y; y++)
 			{
-				if(!isClear(x, y))
+				if(!isClear(new Location(x, y)))
 					continue;
 				
 				return new Location(x, y);
@@ -112,7 +107,12 @@ public class Garage
 		return null;
 	}
 
-	public Boolean isAdmin(Admin admin)
+	public void addAdmin(Admin admin)
+	{
+		admins.add(admin);
+	}
+	
+	public boolean isAdmin(Admin admin)
 	{
 		return admins.contains(admin);
 	}
@@ -131,19 +131,8 @@ public class Garage
 		return null;
 	}
 	
-	public void addAdmin(Admin admin)
-	{
-		admins.add(admin);
-	}
-
 	public int getMaxOccupancy() 
 	{
 		return maxOccupancy;
 	}
-
-	public int getBoothCount() 
-	{
-		return activeBooths.size();
-	}
-
 }

@@ -24,10 +24,10 @@ public class DriverTest {
 	
 	@Test public void testMove() 
 	{
-		driver.move(garage, 20, 15);
+		driver.move(garage, new Location(20, 15));
 		assertTrue(driver.getLocation().x == 20);
 		assertTrue(driver.getLocation().y == 15);
-		assertFalse(garage.isClear(20, 15));
+		assertFalse(garage.isClear(new Location(20, 15)));
 	}
 	
 	@Test public void testEnterGarage()

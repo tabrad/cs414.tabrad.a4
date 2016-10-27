@@ -20,20 +20,20 @@ public class GarageTest {
 	
 	@Test public void testGrid()
 	{
-		assertTrue(garage.isClear(10, 10));
+		assertTrue(garage.isClear(new Location(10, 10)));
 		
-		driver.move(garage, 10, 10);
-		assertFalse(garage.isClear(10, 10));
+		driver.move(garage, new Location(10, 10));
+		assertFalse(garage.isClear(new Location(10, 10)));
 		
-		driver.move(garage, 11, 11);
-		assertTrue(garage.isClear(10, 10));
+		driver.move(garage, new Location(11, 11));
+		assertTrue(garage.isClear(new Location(10, 10)));
 	}
 	
 	@Test public void testRemoveVehicle()
 	{
-		driver.move(garage, 10, 10);
+		driver.move(garage, new Location(10, 10));
 		garage.removeVehicle(driver.getLocation());
-		assertTrue(garage.isClear(10, 10));
+		assertTrue(garage.isClear(new Location(10, 10)));
 	}
 	
 	@Test
@@ -45,7 +45,7 @@ public class GarageTest {
 		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 		
 		//enter the garage
-		driver.move(garage, 0, 0);
+		driver.move(garage, new Location(0, 0));
 		Location location = driver.getLocation();
 		assertTrue(location.x == 0);
 		assertTrue(location.y == 0);
@@ -54,7 +54,7 @@ public class GarageTest {
 		driver.enterGarage(garage);
 		
 		Driver driver2 = new Driver("JJJ-983", 0, 0);
-		driver2.move(garage, 0, 0);
+		driver2.move(garage, new Location(0, 0));
 		driver2.enterGarage(garage);
 		driver2.exitGarage(garage);
 		

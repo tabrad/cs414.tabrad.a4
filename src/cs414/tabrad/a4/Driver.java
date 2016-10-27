@@ -24,12 +24,6 @@ public class Driver
 		myTicket = ticket;	
 	}
 	
-	public void promptExit(Garage garage)
-	{
-		isParked = false;
-		garage.removeVehicle(location);
-	}
-	
 	public void goToEntrance(Garage garage)
 	{
 		Booth booth = garage.getNearestBooth(location, false);
@@ -63,16 +57,10 @@ public class Driver
 	
 	public void move(Garage garage, Location location)
 	{
-		move(garage, location.x, location.y);
-	}
-	
-	public void move(Garage garage, int x, int y)
-	{
-		if(!garage.moveObject(this.toString(), location, x, y))
+		if(!garage.moveObject(this.toString(), this.location, location.x, location.y))
 			return;
 		
-		location.x = x;
-		location.y = y;
+		this.location = location;
 	}
 	
 	public Location getLocation()
@@ -83,11 +71,6 @@ public class Driver
 	@Override public String toString()
 	{
 		return licensePlate;
-	}
-
-	public float pay(float amountDue) 
-	{
-		return amountDue;
 	}
 
 	public boolean isParked() 
