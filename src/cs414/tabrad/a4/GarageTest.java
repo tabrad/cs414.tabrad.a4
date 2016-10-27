@@ -15,7 +15,11 @@ public class GarageTest {
 	{
 		garage = new Garage();
 		ticketTracker = new TicketTracker(garage);
-		driver = new Driver("XYZ-TTR", 0, 0);
+		driver = garage.createDriver("83nfjahf");
+
+		Rate rates = new Rate(3, 3, 20);
+		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
+		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 	}
 	
 	@Test public void testGrid()
@@ -39,11 +43,6 @@ public class GarageTest {
 	@Test
 	public void testGeneral() 
 	{
-		//add some booths
-		Rate rates = new Rate(3, 3, 20);
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
-		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
-		
 		//enter the garage
 		driver.move(garage, new Location(0, 0));
 		Location location = driver.getLocation();

@@ -41,8 +41,11 @@ public class DriverTest {
 	{
 		driver.enterGarage(garage);
 		Location location = driver.getLocation();
+		driver.goToExit(garage);
+		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		Float amountDue = booth.getAmountDue(driver.getTicket());
+		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
 		driver.exitGarage(garage);
-		assertFalse(driver.isParked());
 		assertTrue(driver.getTicket().isPaid());
 		assertTrue(garage.isClear(location));
 	}

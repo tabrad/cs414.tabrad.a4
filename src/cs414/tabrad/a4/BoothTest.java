@@ -39,10 +39,10 @@ public class BoothTest {
 	@Test public void testTicketButtonPressed()
 	{
 		assertFalse(boothEntrance.getGate().isOpen());
-		boothEntrance.ticketButtonPressed(driver, false);
+		driver.goToEntrance(garage);
+    	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
+    	driver.parkCar(garage);
 		assertTrue(driver.getTicket() != null);
-		
-		assertFalse(boothEntrance.getGate().isOpen());
 		boothEntrance.ticketButtonPressed(driver2, false);
 		assertTrue(driver2.getTicket() != null);
 	}
@@ -54,30 +54,15 @@ public class BoothTest {
 		assertFalse(driver.isParked());
 	}
 	
-	@Test public void testTicketInserted()
-	{
-		driver.enterGarage(garage);
-		driver2.enterGarage(garage);
-		assertFalse(boothExit.getGate().isOpen());
-		
-		Ticket ticket = driver.getTicket();
-		//boothExit.insertTicket(driver, ticket);
-		assertTrue(ticket.isPaid());
-		assertFalse(driver.isParked());
-		
-		ticket = driver2.getTicket();
-		//boothExit.insertTicket(driver2, ticket);
-		assertTrue(ticket.isPaid());
-		assertFalse(driver2.isParked());
-	}
-	
 	@Test public void testAdminTicketInserted()
 	{
 		driver.enterGarage(garage);
-		boothExit.login(admin);
-		Ticket ticket = driver.getTicket();
-		//boothExit.insertTicket(driver, ticket);
-		assertTrue(ticket.isPaid());
+		driver.goToExit(garage);
+		boothExit.login(admin);	
+		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		Float amountDue = booth.getAmountDue(driver.getTicket());
+		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
+		driver.exitGarage(garage);
 		assertFalse(driver2.isParked());
 	}
 	

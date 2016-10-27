@@ -8,8 +8,9 @@ public class TicketTest {
 
 	@Test public void testEquals() 
 	{
-		Ticket ticket = new Ticket(new Date(), 1);
-		Ticket ticket2 = new Ticket(new Date(), 1);
+		Date date = new Date();
+		Ticket ticket = new Ticket(date, 1);
+		Ticket ticket2 = new Ticket(date, 1);
 		assertTrue(ticket.equals(ticket2));
 		
 		ticket.markPaid(2, 20f);
