@@ -74,8 +74,6 @@ public class BoothTest {
 		Ticket ticket = new Ticket(calendar.getTime(), 1);
 		ticketTracker.addTicket(ticket);
 		float boothAmount = boothExit.getAmountDue(ticket);
-		long seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
-		long hours = seconds / 60 / 60;
 		float neededAmount = 5 * rates.hourlyRate;
 		assertTrue(boothAmount == neededAmount);
 		
@@ -83,8 +81,6 @@ public class BoothTest {
 		Ticket ticket2 = new Ticket(calendar.getTime(), 1);
 		ticketTracker.addTicket(ticket2);
 		boothAmount = boothExit.getAmountDue(ticket2);
-		seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
-		hours = seconds / 60 / 60;
 		neededAmount = rates.maxCharge;
 		assertTrue(boothAmount == neededAmount);
 		
@@ -93,8 +89,6 @@ public class BoothTest {
 		ticketTracker.addTicket(ticket3);
 		boothAmount = boothExit.getAmountDue(ticket3);
 		System.out.println(boothAmount);
-		seconds = System.currentTimeMillis() / 1000 - calendar.getTimeInMillis() / 1000;
-		hours = seconds / 60 / 60;
 		neededAmount = rates.minCharge;
 		assertTrue(boothAmount == neededAmount);
 	}
