@@ -80,7 +80,13 @@ public class Booth extends Observable
 		long currentTime = new Date().getTime() / 1000;
 		long ticketTime = ticket.getTimeEntered().getTime() / 1000;
 		long hoursParked = (currentTime - ticketTime) / 60 / 60;
-		float amountDue = hoursParked * rates.hourlyRate;
+		
+		return calculateAmountDue(hoursParked);
+	}
+	
+	private float calculateAmountDue(long hours)
+	{
+		float amountDue = hours * rates.hourlyRate;
 		if(amountDue < 0)
 			return rates.maxCharge; // wrapped the data structure boundary
 		
