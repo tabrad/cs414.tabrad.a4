@@ -38,8 +38,7 @@ public class Booth extends Observable
 	{
 		if(isExit || ticketTracker.isFull())
 			return null;
-		
-		
+
 		Date date = new Date();
 		if(isSimulation)
 		{
@@ -47,6 +46,7 @@ public class Booth extends Observable
 			calendar.set(2016, (int)(Math.random() * 13), (int)(Math.random() * 28), (int)(Math.random() * 60), 0);
 			date.setTime(calendar.getTimeInMillis());
 		}
+		
 		Ticket ticket = new Ticket(date, boothId);
 		ticketTracker.addTicket(ticket);
 		
