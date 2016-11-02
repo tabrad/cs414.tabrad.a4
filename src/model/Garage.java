@@ -2,8 +2,10 @@ package model;
 
 import java.util.HashSet;
 
+//garage is singleton
 public class Garage
 {
+	private static Garage instance = null;
 	private int xSize = 100;
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
@@ -14,6 +16,16 @@ public class Garage
 	private HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
+	private Garage(){}
+	
+	public static Garage getInstance()
+	{
+		if(instance == null)
+			instance = new Garage();
+		
+		return instance;
+	}
+	
 	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
 		if(grid[toX][toY] != null)
@@ -141,17 +153,17 @@ public class Garage
 		for(int i = 0; i < 100; i++)
         {
         	Driver driver = createDriver("" + i);
-        	driver.goToEntrance(this);
+        	driver.goToEntrance();
         	driver.pushTicketButton(getNearestBooth(driver.getLocation(), false), true);
-        	driver.parkCar(this);
+        	driver.parkCar();
 			getNearestBooth(driver.getLocation(), false).closeGate();
 			
-			driver.goToExit(this);
+			driver.goToExit();
 			Booth booth = getNearestBooth(driver.getLocation(), true);
 			Float amountDue = booth.getAmountDue(driver.getTicket());
 			booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-			driver.exitGarage(this);
+			driver.exitGarage();
         }
-		
 	}
+
 }

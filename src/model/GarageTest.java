@@ -13,7 +13,7 @@ public class GarageTest {
 	
 	@Before public void initialize()
 	{
-		garage = new Garage();
+		garage = Garage.getInstance();
 		ticketTracker = new TicketTracker(garage);
 		driver = garage.createDriver("83nfjahf");
 
@@ -26,16 +26,16 @@ public class GarageTest {
 	{
 		assertTrue(garage.isClear(new Location(10, 10)));
 		
-		driver.move(garage, new Location(10, 10));
+		driver.move(new Location(10, 10));
 		assertFalse(garage.isClear(new Location(10, 10)));
 		
-		driver.move(garage, new Location(11, 11));
+		driver.move(new Location(11, 11));
 		assertTrue(garage.isClear(new Location(10, 10)));
 	}
 	
 	@Test public void testRemoveVehicle()
 	{
-		driver.move(garage, new Location(10, 10));
+		driver.move(new Location(10, 10));
 		garage.removeVehicle(driver.getLocation());
 		assertTrue(garage.isClear(new Location(10, 10)));
 	}
@@ -44,18 +44,18 @@ public class GarageTest {
 	public void testGeneral() 
 	{
 		//enter the garage
-		driver.move(garage, new Location(0, 0));
+		driver.move(new Location(0, 0));
 		Location location = driver.getLocation();
 		assertTrue(location.x == 0);
 		assertTrue(location.y == 0);
 		
 		//get a new ticket from the booth
-		driver.enterGarage(garage);
+		driver.enterGarage();
 		
 		Driver driver2 = new Driver("JJJ-983", 0, 0);
-		driver2.move(garage, new Location(0, 0));
-		driver2.enterGarage(garage);
-		driver2.exitGarage(garage);
+		driver2.move(new Location(0, 0));
+		driver2.enterGarage();
+		driver2.exitGarage();
 		
 	}
 

@@ -8,7 +8,7 @@ import model.Location;
 import model.Rate;
 import model.TicketTracker;
 import model.Driver;
-
+import view.Dialog;
 import view.DriverDialog;
 import view.OverviewDialog;
 import view.ReportDialog;
@@ -34,7 +34,7 @@ public class GarageController implements ActionListener
 	
 	private GarageController()
 	{
-		garage = new Garage();
+		garage = Garage.getInstance();
 		rates = new Rate(3, 3, 20);
 	}
 	
@@ -73,6 +73,11 @@ public class GarageController implements ActionListener
         	createDriver();
         }
 		
+		update();
+	}
+	
+	public void update()
+	{
 		Location location = new Location(0,0);
 		overviewDialog.update(ticketTracker.getOccupancy(), 
 				garage.getMaxOccupancy(), 
@@ -89,7 +94,7 @@ public class GarageController implements ActionListener
 	{
 		String license = "" + System.currentTimeMillis();
     	Driver driver = garage.createDriver(license);
-    	DriverDialog driverDialog = new DriverDialog(garage, driver);
+    	DriverDialog driverDialog = new DriverDialog(license, driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
     	driverDialog.showDialog();
 	}
 
@@ -97,5 +102,17 @@ public class GarageController implements ActionListener
 	{
 		ReportDialog reportDialog = new ReportDialog(ticketTracker);
         reportDialog.showDialog();
+	}
+
+	public void moveDriverToEntrance(DriverDialog dialog, String license, int x, int y) 
+	{
+		Driver driver = garage.getDriver(license);
+		driver.goToEntrance();
+		updateDriverDialog(dialog, driver);
+	}
+	
+	private void updateDriverDialog(DriverDialog dialog, Driver driver)
+	{
+		dialog.update(driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
 	}
 }

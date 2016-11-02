@@ -21,7 +21,7 @@ public class BoothTest {
 	
 	@Before public void initialize()
 	{
-		garage = new Garage();
+		garage = Garage.getInstance();
 		rates = new Rate(3, 3, 20);
 		ticketTracker = new TicketTracker(garage);
 		driver = new Driver("XYZ-TTR", 0, 0);
@@ -39,9 +39,9 @@ public class BoothTest {
 	@Test public void testTicketButtonPressed()
 	{
 		assertFalse(boothEntrance.getGate().isOpen());
-		driver.goToEntrance(garage);
+		driver.goToEntrance();
     	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
-    	driver.parkCar(garage);
+    	driver.parkCar();
 		assertTrue(driver.getTicket() != null);
 		boothEntrance.ticketButtonPressed(driver2, false);
 		assertTrue(driver2.getTicket() != null);
@@ -56,13 +56,13 @@ public class BoothTest {
 	
 	@Test public void testAdminTicketInserted()
 	{
-		driver.enterGarage(garage);
-		driver.goToExit(garage);
+		driver.enterGarage();
+		driver.goToExit();
 		boothExit.login(admin);	
 		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
 		Float amountDue = booth.getAmountDue(driver.getTicket());
 		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-		driver.exitGarage(garage);
+		driver.exitGarage();
 		assertFalse(driver2.isParked());
 	}
 	
