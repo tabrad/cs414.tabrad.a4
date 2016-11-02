@@ -1,9 +1,12 @@
 package cs414.tabrad.a4;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
+
+import javax.swing.JTable;
 
 public class TicketTracker extends Observable
 {
@@ -117,6 +120,66 @@ public class TicketTracker extends Observable
 		}
 
 		return tickets;
+	}
+
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
+	{
+		Object[][] data = null;
+		Calendar calendar = Calendar.getInstance();
+		Set<Ticket> tickets = getAllTickets();
+
+		if(granularity == 0) //day
+		{
+			float days[] = {0f,0f,0f,0f,0f,0f,0f};
+			for(Ticket ticket : tickets)
+        	{
+				calendar.setTime(ticket.getTimeEntered());
+				int day = calendar.get(Calendar.DAY_OF_WEEK);
+				days[day - 1] = (isFinancialReport ? ticket.getPaymentAmount() : 1) + days[day - 1];
+        	}
+			
+			//populate the data object that we put into the JTable
+			data = new Object[][] {{0f,0f,0f,0f,0f,0f,0f}};
+			for(int i = 0; i < days.length; i++)
+				data[0][i] = days[i];
+		}
+		else if(granularity == 1) // week
+		{
+			float weeks[] = {0f, 0f, 0f, 0f, 0f, 0f};
+			for(Ticket ticket : tickets)
+			{
+				calendar.setTime(ticket.getTimeEntered());
+				int week = calendar.get(Calendar.WEEK_OF_MONTH);
+				
+				// the week of month setting can return 0
+				if(week < 1)
+					week = 1;
+				
+				weeks[week - 1] = (isFinancialReport ? ticket.getPaymentAmount() : 1) + weeks[week -1];
+			}
+			
+			//populate the data object that we put into the JTable
+			data = new Object[][] {{0f, 0f, 0f, 0f, 0f, 0f}};
+			for(int i = 0; i < weeks.length; i++)
+				data[0][i] = weeks[i];
+		}
+		else // month
+		{
+			float months[] = {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+			for(Ticket ticket : tickets)
+			{
+				calendar.setTime(ticket.getTimeEntered());
+				int month = calendar.get(Calendar.MONTH); //note month starts at 0, where the days and weeks start at 1
+				months[month] = (isFinancialReport ? ticket.getPaymentAmount() : 1) + months[month]; 
+			}
+			
+			//populate the data object that we put into the JTable
+			data = new Object[][] {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}};
+			for(int i = 0; i < months.length; i++)
+				data[0][i] = months[i];
+		}
+		
+		return data;
 	}
 	
 	

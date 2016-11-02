@@ -55,65 +55,19 @@ public class ReportDialog
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
-			Set<Ticket> tickets = ticketTracker.getAllTickets();
-			String command = e.getActionCommand();
-			Calendar calendar = Calendar.getInstance();
-
-			if(granularityBox.getSelectedIndex() == 0) //day
-			{
-				float days[] = {0f,0f,0f,0f,0f,0f,0f};
-				for(Ticket ticket : tickets)
-	        	{
-					calendar.setTime(ticket.getTimeEntered());
-					int day = calendar.get(Calendar.DAY_OF_WEEK);
-					days[day - 1] = (command.equals("financial") ? ticket.getPaymentAmount() : 1) + days[day - 1];
-	        	}
-				
-				//populate the data object that we put into the JTable
-				Object[][] data = {{0f,0f,0f,0f,0f,0f,0f}};
-				for(int i = 0; i < days.length; i++)
-					data[0][i] = days[i];
-				
-				String[] columnNames = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    			table = new JTable(data, columnNames);
-			}
-			else if(granularityBox.getSelectedIndex() == 1) // week
-			{
-				float weeks[] = {0f, 0f, 0f, 0f, 0f};
-				for(Ticket ticket : tickets)
-				{
-					calendar.setTime(ticket.getTimeEntered());
-					int week = calendar.get(Calendar.WEEK_OF_MONTH);
-					weeks[week - 1] = (command.equals("financial") ? ticket.getPaymentAmount() : 1) + weeks[week -1];
-				}
-				
-				//populate the data object that we put into the JTable
-				Object[][] data = {{0f, 0f, 0f, 0f, 0f}};
-				for(int i = 0; i < weeks.length; i++)
-					data[0][i] = weeks[i];
-				
-				String[] columnNames = new String[]{"Week 1", "Week 2", "Week3", "Week4", "Week 5"};
-				table = new JTable(data, columnNames);
-			}
-			else // month
-			{
-				float months[] = {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-				for(Ticket ticket : tickets)
-				{
-					calendar.setTime(ticket.getTimeEntered());
-					int month = calendar.get(Calendar.MONTH); //note month starts at 0, where the days and weeks start at 1
-					months[month] = (command.equals("financial") ? ticket.getPaymentAmount() : 1) + months[month]; 
-				}
-				
-				//populate the data object that we put into the JTable
-				Object[][] data = {{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}};
-				for(int i = 0; i < months.length; i++)
-					data[0][i] = months[i];
-				
-				String[] columnNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December"};
-				table = new JTable(data, columnNames);
-			}
-	    	
+			int granularity = granularityBox.getSelectedIndex();
+			String[] columnNames;
+			
+			if(granularity == 0)
+				columnNames = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+			else if(granularity == 1)
+				columnNames = new String[] {"Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"};
+			else
+				columnNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+			
+			boolean isFinancialReport = e.getActionCommand().equals("financial");
+			Object[][] data = ticketTracker.getTableData(granularity, isFinancialReport);
+    		table = new JTable(data, columnNames);
 	    	JFrame tableFrame = new JFrame("Report");
 			tableFrame.setSize(400, 400);
 			tableFrame.add(new JScrollPane(table));
