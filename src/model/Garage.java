@@ -12,16 +12,13 @@ public class Garage
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
 	private Location parkingEnd = new Location(80, 80);
-	private int maxOccupancy = 3;
+	private static int maxOccupancy = 3;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
-	private HashSet<Admin> admins = new HashSet<Admin>();
+	private static HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
-	private Garage()
-	{
-		
-	}
+	private Garage(){}
 	
 	public static Garage getInstance()
 	{
@@ -132,12 +129,12 @@ public class Garage
 		admins.add(admin);
 	}
 	
-	public boolean isAdmin(Admin admin)
+	public static boolean isAdmin(Admin admin)
 	{
 		return admins.contains(admin);
 	}
 
-	public Admin getAdmin() 
+	public static Admin getAdmin() 
 	{
 		if(!admins.isEmpty())
 		{
@@ -177,5 +174,10 @@ public class Garage
 	public TicketTracker getTicketTracker() 
 	{
 		return ticketTracker;
+	}
+
+	public static boolean isFull() 
+	{
+		return ticketTracker.getOccupancy() >= maxOccupancy;
 	}
 }

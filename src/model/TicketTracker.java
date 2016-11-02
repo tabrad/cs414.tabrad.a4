@@ -8,16 +8,8 @@ import java.util.Set;
 
 public class TicketTracker extends Observable
 {
-	private Garage garage;
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
 	private HashSet<Ticket> paidTickets = new HashSet<Ticket>();
-	
-	public TicketTracker(){}
-	
-	public void initialize()
-	{
-		garage = Garage.getInstance();
-	}
 	
 	public void addTicket(Ticket ticket)
 	{
@@ -56,16 +48,6 @@ public class TicketTracker extends Observable
 	public int getOccupancy()
 	{
 		return unPaidTickets.size();
-	}
-
-	public boolean isFull()
-	{
-		return getOccupancy() == garage.getMaxOccupancy();
-	}
-	
-	public Garage getGarage() 
-	{
-		return garage;
 	}
 	
 	public Set<Ticket> getPaidTickets()

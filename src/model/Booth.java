@@ -36,7 +36,7 @@ public class Booth extends Observable
 
 	private Ticket getTicket(boolean isSimulation) 
 	{
-		if(isExit || ticketTracker.isFull())
+		if(isExit || Garage.isFull())
 			return null;
 
 		Date date = new Date();
@@ -134,7 +134,7 @@ public class Booth extends Observable
 
 	public boolean login(Admin admin) 
 	{
-		if(!ticketTracker.getGarage().isAdmin(admin))
+		if(!Garage.isAdmin(admin))
 			return false;
 		
 		adminMode = true;
@@ -148,7 +148,7 @@ public class Booth extends Observable
 	
 	public void requestAdmin(Driver driver, Ticket ticket) 
 	{
-		Admin admin = ticketTracker.getGarage().getAdmin();
+		Admin admin = Garage.getAdmin();
 		if(!admin.accessBooth(this))
 			return;
 	}
