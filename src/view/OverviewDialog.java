@@ -50,12 +50,6 @@ public class OverviewDialog implements Observer
 		updateLabels();
 	}
 	
-	public static void main(String[] args)
-    {
-        OverviewDialog overviewDialog = new OverviewDialog();
-        overviewDialog.showDialog();
-    }
-	
 	private void prepareController()
 	{
 		garageController = GarageController.getInstance();
@@ -101,7 +95,7 @@ public class OverviewDialog implements Observer
 	//	boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
 	}
 	
-	private void showDialog()
+	public void showDialog()
 	{
 		 headerLabel.setText("Parking Garage Overview");
 		 updateLabels();
@@ -132,28 +126,16 @@ public class OverviewDialog implements Observer
          String command = e.getActionCommand();  
          if(command.equals( "New Car" ))  
          {
-            showNewCarDialog();
-         }
-         else if(command.equals("Reports"))  
-         {
-        	garageController.reportsClicked();
-         }
-         else  
-         {
-            garageController.simulate();
-         }  	
+        	 JPanel message = new JPanel();           
+             message.add(new JLabel("Create a New Car?"));
+             int result = JOptionPane.showConfirmDialog(mainFrame, message, "Create Car", JOptionPane.YES_NO_OPTION);
+     	
+             if(result == JOptionPane.YES_OPTION)
+             {
+             	ActionEvent event = new ActionEvent(this, 0, "New Car");
+             	garageController.actionPerformed(event);
+             }
+         }	
       }		
-	}
-	
-	private void showNewCarDialog()
-	{
-		JPanel message = new JPanel();           
-        message.add(new JLabel("Create a New Car?"));
-        int result = JOptionPane.showConfirmDialog(mainFrame, message, "Create Car", JOptionPane.YES_NO_OPTION);
-	
-        if(result == JOptionPane.YES_OPTION)
-        {
-        	garageController.createDriver();
-        }
 	}
 }

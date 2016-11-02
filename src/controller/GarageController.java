@@ -1,16 +1,16 @@
 package controller;
-import java.util.Observer;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
 
-import model.Booth;
 import model.Garage;
 import model.Location;
 import model.Rate;
 import model.TicketTracker;
 import model.Driver;
+
 import view.DriverDialog;
+import view.OverviewDialog;
 import view.ReportDialog;
 
 // GarageController is singleton
@@ -20,6 +20,12 @@ public class GarageController implements ActionListener
 	private static Garage garage;
 	private static TicketTracker ticketTracker;
 	private static Rate rates;
+	
+	public static void main(String[] args)
+    {
+        OverviewDialog overviewDialog = new OverviewDialog();
+        overviewDialog.showDialog();
+    }
 	
 	private GarageController()
 	{
@@ -57,6 +63,10 @@ public class GarageController implements ActionListener
         {
            simulate();
         } 
+        else if (command.equals("New Car"))
+        {
+        	createDriver();
+        }
 	}
 	
 	public void simulate() 
