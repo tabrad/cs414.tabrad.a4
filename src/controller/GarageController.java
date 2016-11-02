@@ -17,13 +17,18 @@ import view.ReportDialog;
 public class GarageController implements ActionListener
 {
 	private static GarageController instance = null;
+	
+	//view
+	private static OverviewDialog overviewDialog;
+	
+	//model
 	private static Garage garage;
 	private static TicketTracker ticketTracker;
 	private static Rate rates;
 	
 	public static void main(String[] args)
     {
-        OverviewDialog overviewDialog = new OverviewDialog();
+        overviewDialog = new OverviewDialog();
         overviewDialog.showDialog();
     }
 	
@@ -67,6 +72,12 @@ public class GarageController implements ActionListener
         {
         	createDriver();
         }
+		
+		Location location = new Location(0,0);
+		overviewDialog.update(ticketTracker.getOccupancy(), 
+				garage.getMaxOccupancy(), 
+				garage.getNearestBooth(location, false).getGate().isOpen(), 
+				garage.getNearestBooth(location, true).getGate().isOpen());
 	}
 	
 	public void simulate() 

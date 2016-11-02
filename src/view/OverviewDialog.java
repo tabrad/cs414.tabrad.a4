@@ -26,9 +26,8 @@ import controller.GarageController;
  */
 
 
-public class OverviewDialog implements Observer
+public class OverviewDialog extends Dialog
 {
-	private JFrame mainFrame;
 	private JLabel headerLabel;
 	private JLabel statusLabel;
 	private JLabel boothGateLabel;
@@ -44,12 +43,6 @@ public class OverviewDialog implements Observer
 		prepareGUI();
 	}
 	
-	@Override
-	public void update(Observable observable, Object arg)
-	{
-		updateLabels();
-	}
-	
 	private void prepareController()
 	{
 		garageController = GarageController.getInstance();
@@ -57,66 +50,58 @@ public class OverviewDialog implements Observer
 	
 	private void prepareGUI()
     {
-		 mainFrame = new JFrame("Parking Garage");
-	     mainFrame.setSize(400,400);
-	     mainFrame.setLayout(new GridLayout(7, 1));
-
-	     headerLabel = new JLabel("",JLabel.CENTER );
-	     statusLabel = new JLabel("",JLabel.CENTER);
-	     occupancyLabel = new JLabel();
-	     boothGateLabel = new JLabel();
-	     signLabel = new JLabel();
-
-	     statusLabel.setSize(350,100);
-	     mainFrame.addWindowListener(new WindowAdapter() {
+		 frame = new JFrame("Parking Garage");
+	     frame.setSize(400,400);
+	     frame.setLayout(new GridLayout(7, 1));
+	     frame.addWindowListener(new WindowAdapter() {
 	    	 public void windowClosing(WindowEvent windowEvent)
 	    	 {
 	    		 System.exit(0);
 	         }        
-	      });    
-	      
+	      });
+	     
+	     //Elements of the main frame
+	     headerLabel = new JLabel("", JLabel.CENTER);
+	     headerLabel.setText("Parking Garage Overview");
+	     statusLabel = new JLabel("", JLabel.CENTER);
+	     statusLabel.setSize(350,100);
+	     occupancyLabel = new JLabel();
+	     boothGateLabel = new JLabel();
+	     signLabel = new JLabel();
 	     controlPanel = new JPanel();
 	     controlPanel.setLayout(new FlowLayout());	     
 
-	     mainFrame.add(headerLabel);
-	     mainFrame.add(signLabel);
-	     mainFrame.add(occupancyLabel);
-	     mainFrame.add(boothGateLabel);
-	     mainFrame.add(controlPanel);
-	     mainFrame.add(statusLabel);
-	     
-	     mainFrame.setVisible(true);  
-    }
-	
-	private void updateLabels()
-	{
-	//	occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
-	//	signLabel.setText("Garage is: " + (ticketTracker.getOccupancy() == garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
-	//	boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
-	}
-	
-	public void showDialog()
-	{
-		 headerLabel.setText("Parking Garage Overview");
-		 updateLabels();
-
+	     frame.add(headerLabel);
+	     frame.add(signLabel);
+	     frame.add(occupancyLabel);
+	     frame.add(boothGateLabel);
+	     frame.add(controlPanel);
+	     frame.add(statusLabel);
+		 
+	     //Buttons
 		 JButton newCarButton = new JButton("New Car");
 		 JButton submitButton = new JButton("Reports");
 		 JButton cancelButton = new JButton("Simulate");
-		
 		 newCarButton.setActionCommand("New Car");
 		 submitButton.setActionCommand("Reports");
 		 cancelButton.setActionCommand("Simulate");
-		
 		 newCarButton.addActionListener(new ButtonClickListener()); 
 		 submitButton.addActionListener(garageController); 
 		 cancelButton.addActionListener(garageController); 
-		
 		 controlPanel.add(newCarButton);
 		 controlPanel.add(submitButton);
 		 controlPanel.add(cancelButton);
-		 
-		 mainFrame.setVisible(true);  
+	     
+		 //initialize the labels and show the dialog
+		 update(0,0,false, false);
+		 showDialog();
+    }
+	
+	public void update(int occupancy, int maxOccupancy, boolean isEntranceOpen, boolean isExitOpen)
+	{
+		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + maxOccupancy + " vehicles.");
+		signLabel.setText("Garage is: " + (occupancy >= maxOccupancy ? "FULL" : "NOT FULL"));
+		boothGateLabel.setText("Entrance Gate: " + (isEntranceOpen ? "Open " : "Closed ") + "     Exit Gate: " + (isExitOpen ? "Open" : "Closed"));
 	}
 	
 	private class ButtonClickListener implements ActionListener
@@ -128,7 +113,7 @@ public class OverviewDialog implements Observer
          {
         	 JPanel message = new JPanel();           
              message.add(new JLabel("Create a New Car?"));
-             int result = JOptionPane.showConfirmDialog(mainFrame, message, "Create Car", JOptionPane.YES_NO_OPTION);
+             int result = JOptionPane.showConfirmDialog(frame, message, "Create Car", JOptionPane.YES_NO_OPTION);
      	
              if(result == JOptionPane.YES_OPTION)
              {
