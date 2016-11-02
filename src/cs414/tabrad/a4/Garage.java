@@ -8,7 +8,7 @@ public class Garage
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
 	private Location parkingEnd = new Location(80, 80);
-	private int maxOccupancy = 50;
+	private int maxOccupancy = 3;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private HashSet<Admin> admins = new HashSet<Admin>();
@@ -134,5 +134,24 @@ public class Garage
 	public int getMaxOccupancy() 
 	{
 		return maxOccupancy;
+	}
+
+	public void simulate() 
+	{
+		for(int i = 0; i < 100; i++)
+        {
+        	Driver driver = createDriver("" + i);
+        	driver.goToEntrance(this);
+        	driver.pushTicketButton(getNearestBooth(driver.getLocation(), false), true);
+        	driver.parkCar(this);
+			getNearestBooth(driver.getLocation(), false).closeGate();
+			
+			driver.goToExit(this);
+			Booth booth = getNearestBooth(driver.getLocation(), true);
+			Float amountDue = booth.getAmountDue(driver.getTicket());
+			booth.insertPayment(driver, driver.getTicket(), amountDue, false);
+			driver.exitGarage(this);
+        }
+		
 	}
 }

@@ -152,20 +152,7 @@ public class OverviewDialog implements Observer
          }
          else  
          {
-            for(int i = 0; i < 100; i++)
-            {
-            	Driver driver = garage.createDriver("" + i);
-            	driver.goToEntrance(garage);
-            	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
-            	driver.parkCar(garage);
-				garage.getNearestBooth(driver.getLocation(), false).closeGate();
-				
-				driver.goToExit(garage);
-				Booth booth = garage.getNearestBooth(driver.getLocation(), true);
-				Float amountDue = booth.getAmountDue(driver.getTicket());
-				booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-				driver.exitGarage(garage);
-            }
+            garage.simulate();
          }  	
       }		
 	}
