@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package view;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,6 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import model.Booth;
+import model.Driver;
+import model.Garage;
+import model.Ticket;
 
 public class DriverDialog 
 {

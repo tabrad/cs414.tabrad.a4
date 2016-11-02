@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package view;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -14,6 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import model.Booth;
+import model.Driver;
+import model.Garage;
+import model.Location;
+import model.Rate;
+import model.TicketTracker;
 
 
 /**

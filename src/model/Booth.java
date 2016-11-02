@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package model;
 
 import java.util.Calendar;
 import java.util.Date;

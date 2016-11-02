@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package view;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import model.TicketTracker;
 
 
 public class ReportDialog 

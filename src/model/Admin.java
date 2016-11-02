@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package model;
 
 public class Admin 
 {
