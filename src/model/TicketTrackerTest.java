@@ -17,7 +17,7 @@ public class TicketTrackerTest {
 	@Before public void inititialize()
 	{
 		garage = Garage.getInstance();
-		ticketTracker = new TicketTracker(garage);
+		ticketTracker = new TicketTracker();
 	}
 	
 	@Test public void testAddingTickets() 

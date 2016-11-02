@@ -23,16 +23,16 @@ public class BoothTest {
 	{
 		garage = Garage.getInstance();
 		rates = new Rate(3, 3, 20);
-		ticketTracker = new TicketTracker(garage);
+		ticketTracker = new TicketTracker();
 		driver = new Driver("XYZ-TTR", 0, 0);
 		driver2 = new Driver("YYZ-T45", 0, 0);
 		admin = new Admin("jfiwkls", "or023kf9");
 		garage.addAdmin(admin);
 		
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
+		garage.createBooth(1, new Location(5, 5), false);
 		boothEntrance = garage.getNearestBooth(new Location(0, 0), false);
 		
-		garage.createBooth(ticketTracker, 2, new Location(25, 30), true, rates);
+		garage.createBooth(2, new Location(25, 30), true);
 		boothExit = garage.getNearestBooth(new Location(0, 0), true);
 	}
 	

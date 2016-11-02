@@ -6,17 +6,17 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-import javax.swing.JTable;
-
 public class TicketTracker extends Observable
 {
 	private Garage garage;
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
 	private HashSet<Ticket> paidTickets = new HashSet<Ticket>();
 	
-	public TicketTracker(Garage garage)
+	public TicketTracker(){}
+	
+	public void initialize()
 	{
-		this.garage = garage;
+		garage = Garage.getInstance();
 	}
 	
 	public void addTicket(Ticket ticket)

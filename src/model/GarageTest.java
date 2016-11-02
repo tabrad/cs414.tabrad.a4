@@ -14,12 +14,11 @@ public class GarageTest {
 	@Before public void initialize()
 	{
 		garage = Garage.getInstance();
-		ticketTracker = new TicketTracker(garage);
+		ticketTracker = new TicketTracker();
 		driver = garage.createDriver("83nfjahf");
 
-		Rate rates = new Rate(3, 3, 20);
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
-		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
+		garage.createBooth(1, new Location(5, 5), false);
+		garage.createBooth(1, new Location(10, 15), true);
 	}
 	
 	@Test public void testGrid()

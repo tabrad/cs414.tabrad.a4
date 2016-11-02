@@ -6,6 +6,8 @@ import java.util.HashSet;
 public class Garage
 {
 	private static Garage instance = null;
+	private static TicketTracker ticketTracker;
+	Rate rates = new Rate(3, 3, 20);
 	private int xSize = 100;
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
@@ -16,12 +18,18 @@ public class Garage
 	private HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
-	private Garage(){}
+	private Garage()
+	{
+		
+	}
 	
 	public static Garage getInstance()
 	{
 		if(instance == null)
+		{
 			instance = new Garage();
+			ticketTracker = new TicketTracker();
+		}
 		
 		return instance;
 	}
@@ -68,7 +76,7 @@ public class Garage
 		return null;
 	}
 	
-	public Booth createBooth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
+	public Booth createBooth(int boothId, Location location, Boolean isExit)
 	{
 		Booth booth = new Booth(ticketTracker, boothId, location, isExit, rates);
 		activeBooths.add(booth);
@@ -164,5 +172,10 @@ public class Garage
 			booth.insertPayment(driver, driver.getTicket(), amountDue, false);
 			driver.exitGarage();
         }
+	}
+
+	public TicketTracker getTicketTracker() 
+	{
+		return ticketTracker;
 	}
 }
