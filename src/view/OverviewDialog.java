@@ -115,8 +115,8 @@ public class OverviewDialog implements Observer
 		 cancelButton.setActionCommand("Simulate");
 		
 		 newCarButton.addActionListener(new ButtonClickListener()); 
-		 submitButton.addActionListener(new ButtonClickListener()); 
-		 cancelButton.addActionListener(new ButtonClickListener()); 
+		 submitButton.addActionListener(garageController); 
+		 cancelButton.addActionListener(garageController); 
 		
 		 controlPanel.add(newCarButton);
 		 controlPanel.add(submitButton);

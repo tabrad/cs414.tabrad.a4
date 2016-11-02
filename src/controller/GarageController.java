@@ -1,5 +1,7 @@
 package controller;
 import java.util.Observer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 
 import model.Booth;
@@ -12,12 +14,10 @@ import view.DriverDialog;
 import view.ReportDialog;
 
 // GarageController is singleton
-public class GarageController implements Observer
+public class GarageController implements ActionListener
 {
 	private static GarageController instance = null;
 	private static Garage garage;
-	private static Booth entranceBooth;
-	private static Booth exitBooth;
 	private static TicketTracker ticketTracker;
 	private static Rate rates;
 	
@@ -41,20 +41,24 @@ public class GarageController implements Observer
 	private static void initialize()
 	{
 		ticketTracker = new TicketTracker(garage);
-		ticketTracker.addObserver(instance);
-		
-		entranceBooth = garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
-		entranceBooth.addObserver(instance);
-		exitBooth = garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
-		exitBooth.addObserver(instance);
-	}
-	
-	@Override
-	public void update(Observable observable, Object arg)
-	{
-	
+		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
+		garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
 	}
 
+	public void actionPerformed(ActionEvent e) 
+	{
+		String command = e.getActionCommand();
+		
+		if(command.equals("Reports"))  
+        {
+			reportsClicked();
+        }
+        else if (command.equals("Simulate")) 
+        {
+           simulate();
+        } 
+	}
+	
 	public void simulate() 
 	{
 		garage.simulate();
