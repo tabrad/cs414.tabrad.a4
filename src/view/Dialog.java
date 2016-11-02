@@ -10,4 +10,9 @@ public abstract class Dialog
 	{
 		frame.setVisible(true);
 	}
+	
+	public void shutDialog()
+	{
+		frame.dispose();
+	}
 }

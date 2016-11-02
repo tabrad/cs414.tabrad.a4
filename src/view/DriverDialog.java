@@ -107,7 +107,6 @@ public class DriverDialog extends Dialog
 		public void actionPerformed(ActionEvent e)
 		{	
 			garageController.moveDriverToEntrance(getOuterClass(), license, x, y);
-			//driver.goToEntrance();
 			
 			//show dialog that says driver drove to booth, have option to push ticket button or to leave
 			JPanel message = new JPanel();
@@ -116,9 +115,9 @@ public class DriverDialog extends Dialog
 			
 			if(result == JOptionPane.YES_OPTION)
 			{
-				//driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), false);
+				garageController.pushTicketButton(getOuterClass(), license);
 				
-				if(hasTicket)
+				if(!hasTicket)
 				{
 					result = JOptionPane.showOptionDialog(frame, 
 							"The garage is full, do you want to wait for an open spot?", 
@@ -131,18 +130,16 @@ public class DriverDialog extends Dialog
 					
 					if(result == JOptionPane.NO_OPTION)
 					{
-						//garage.removeVehicle(driver.getLocation());
+						garageController.driverPrematureExit(license);
 						shutDialog();
 					}
 				}
 				else
 				{
 					JOptionPane.showMessageDialog(frame, "You may now enter the garage");
-					//driver.parkCar();
-					//garage.getNearestBooth(driver.getLocation(), false).closeGate();
+					garageController.parkCar(getOuterClass(), license);
 				}
 			}
-			
 			updateLabels();
 			updateButtons();
 		}
@@ -152,8 +149,7 @@ public class DriverDialog extends Dialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			//Booth booth = garage.getNearestBooth(driver.getLocation(), true);
-			//driver.goToExit(garage);
+			garageController.moveDriverToExit(getOuterClass(), license);
 			
 			//show dialog that says driver drove to booth, have option to push ticket button or to leave
 			int result = JOptionPane.showOptionDialog(frame, 
@@ -166,61 +162,55 @@ public class DriverDialog extends Dialog
 					"default");
 			
 			float amountDue;
-//			if(result == JOptionPane.YES_OPTION)
-//				amountDue = booth.getAmountDue(driver.getTicket());
-//			else if(result == JOptionPane.CANCEL_OPTION)
-//			{
-//				String id = JOptionPane.showInputDialog("Enter Ticket ID");
-//				Ticket ticket = booth.findTicket(id);
-//				
-//				if(ticket == null)
-//				{
-//					JOptionPane.showMessageDialog(frame, "Invalid Ticket. Maximum Charge.");
-//					amountDue = booth.getAmountDue();
-//				}
-//				else
-//				{
-//					amountDue = booth.getAmountDue(ticket);
-//				}
-//			}
-//			else
-//				amountDue = booth.getAmountDue();
-//			
-//			result = JOptionPane.showOptionDialog(frame, 
-//					"You Owe " + amountDue + ". Please Select Payment", 
-//					"Exit Booth", 
-//					JOptionPane.YES_NO_OPTION, 
-//					JOptionPane.INFORMATION_MESSAGE,
-//					null,
-//					new String[]{"Cash", "Credit Card"},
-//					"default");
-//			
-//			if(result == JOptionPane.YES_OPTION)
-//			{
-//				booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-//				JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
-//			}
-//			else
-//			{
-//				//add a delay here
-//				boolean isPaid = booth.insertPayment(driver, driver.getTicket(), amountDue, true);
-//				
-//				if(isPaid)
-//					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");
-//				else
-//				{
-//					JOptionPane.showMessageDialog(frame, "Payment failed.");
-//					return;
-//				}
-//			}
-//			driver.exitGarage(garage);
+			if(result == JOptionPane.YES_OPTION) //driver inserts ticket
+				amountDue = garageController.getAmountDue(license, false);
+			else if(result == JOptionPane.CANCEL_OPTION) //driver manually enters ticket id
+			{
+				String id = JOptionPane.showInputDialog("Enter Ticket ID");
+				
+				boolean isValid = garageController.findTicket(id);
+				
+				if(!isValid)
+				{
+					JOptionPane.showMessageDialog(frame, "Invalid Ticket. Maximum Charge.");
+					amountDue = garageController.getAmountDue(license, true);
+				}
+				else
+				{
+					amountDue = garageController.getAmountDueByTicketId(license, id);
+				}
+			}
+			else //driver lost ticket
+				amountDue = garageController.getAmountDue(license, true);
+			
+			result = JOptionPane.showOptionDialog(frame, 
+					"You Owe " + amountDue + ". Please Select Payment", 
+					"Exit Booth", 
+					JOptionPane.YES_NO_OPTION, 
+					JOptionPane.INFORMATION_MESSAGE,
+					null,
+					new String[]{"Cash", "Credit Card"},
+					"default");
+			
+			if(result == JOptionPane.YES_OPTION)
+			{
+				garageController.insertPayment(getOuterClass(), license, amountDue, false);
+				JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
+			}
+			else
+			{
+				boolean isPaid = garageController.insertPayment(getOuterClass(), license, amountDue, true);
+				
+				if(isPaid)
+					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");
+				else
+				{
+					JOptionPane.showMessageDialog(frame, "Payment failed.");
+					return;
+				}
+			}
+			garageController.driverExit(getOuterClass(), license);
 			shutDialog();
 		}
-	}
-
-	
-	public void shutDialog()
-	{
-		frame.dispose();
 	}
 }
