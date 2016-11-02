@@ -15,12 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import model.Booth;
-import model.Driver;
-import model.Garage;
-import model.Location;
-import model.Rate;
-import model.TicketTracker;
+import controller.GarageController;
 
 
 /**
@@ -41,15 +36,11 @@ public class OverviewDialog implements Observer
 	private JLabel signLabel;
 	private JPanel controlPanel;
 	
-	private Garage garage;
-	private Booth entranceBooth;
-	private Booth exitBooth;
-	private TicketTracker ticketTracker;
-	private Rate rates; 
+	GarageController garageController;
 	   
 	public OverviewDialog()
 	{
-		prepareModel();
+		prepareController();
 		prepareGUI();
 	}
 	
@@ -65,18 +56,9 @@ public class OverviewDialog implements Observer
         overviewDialog.showDialog();
     }
 	
-	private void prepareModel()
+	private void prepareController()
 	{
-		garage = new Garage();
-		rates = new Rate(3, 3, 20);
-		
-		ticketTracker = new TicketTracker(garage);
-		ticketTracker.addObserver(this);
-		
-		entranceBooth = garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
-		entranceBooth.addObserver(this);
-		exitBooth = garage.createBooth(ticketTracker, 1, new Location(10, 15), true, rates);
-		exitBooth.addObserver(this);
+		garageController = GarageController.getInstance();
 	}
 	
 	private void prepareGUI()
@@ -114,9 +96,9 @@ public class OverviewDialog implements Observer
 	
 	private void updateLabels()
 	{
-		occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
-		signLabel.setText("Garage is: " + (ticketTracker.getOccupancy() == garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
-		boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
+	//	occupancyLabel.setText("Occupancy: " + ticketTracker.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
+	//	signLabel.setText("Garage is: " + (ticketTracker.getOccupancy() == garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
+	//	boothGateLabel.setText("Entrance Gate: " + (entranceBooth.getGate().isOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (exitBooth.getGate().isOpen() ? "Open" : "Closed"));
 	}
 	
 	private void showDialog()
@@ -154,12 +136,11 @@ public class OverviewDialog implements Observer
          }
          else if(command.equals("Reports"))  
          {
-            ReportDialog reportDialog = new ReportDialog(ticketTracker);
-            reportDialog.showDialog();
+        	garageController.reportsClicked();
          }
          else  
          {
-            garage.simulate();
+            garageController.simulate();
          }  	
       }		
 	}
@@ -172,11 +153,7 @@ public class OverviewDialog implements Observer
 	
         if(result == JOptionPane.YES_OPTION)
         {
-        	String license = ""+System.currentTimeMillis();
-        	Driver driver = garage.createDriver(license);
-
-        	DriverDialog driverDialog = new DriverDialog(garage, driver);
-        	driverDialog.showDialog();
+        	garageController.createDriver();
         }
 	}
 }
