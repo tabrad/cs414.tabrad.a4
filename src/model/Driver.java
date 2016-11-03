@@ -1,7 +1,8 @@
-package cs414.tabrad.a4;
+package model;
 
 public class Driver 
 {
+	private Garage garage;
 	private String licensePlate;
 	private Ticket myTicket = null;
 	private Location location = new Location();
@@ -12,6 +13,7 @@ public class Driver
 		this.licensePlate = licensePlate;
 		location.x = x;
 		location.y = y;
+		garage = Garage.getInstance();
 	}
 	
 	public void pushTicketButton(Booth booth, boolean isSimulation)
@@ -24,38 +26,38 @@ public class Driver
 		myTicket = ticket;	
 	}
 	
-	public void goToEntrance(Garage garage)
+	public void goToEntrance()
 	{
 		Booth booth = garage.getNearestBooth(location, false);
-		move(garage, booth.getLocation());
+		move(booth.getLocation());
 	}
 	
-	public void goToExit(Garage garage) 
+	public void goToExit() 
 	{
 		Booth booth = garage.getNearestBooth(location, true);
-		move(garage, booth.getLocation());
+		move(booth.getLocation());
 	}
 	
-	public void parkCar(Garage garage)
+	public void parkCar()
 	{
 		Location stall = garage.getOpenStall();
-		move(garage, stall);
+		move(stall);
 		isParked = true;
 	}
 	
-	public void enterGarage(Garage garage)
+	public void enterGarage()
 	{
-		goToEntrance(garage);
+		goToEntrance();
 		pushTicketButton(garage.getNearestBooth(location, false), false);
-		parkCar(garage);
+		parkCar();
 	}
 	
-	public void exitGarage(Garage garage) 
+	public void exitGarage() 
 	{
 		garage.removeVehicle(location);
 	}
 	
-	public void move(Garage garage, Location location)
+	public void move(Location location)
 	{
 		if(!garage.moveObject(this.toString(), this.location, location.x, location.y))
 			return;

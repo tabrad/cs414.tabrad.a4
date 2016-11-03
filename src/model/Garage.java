@@ -1,19 +1,36 @@
-package cs414.tabrad.a4;
+package model;
 
 import java.util.HashSet;
 
+//garage is singleton
 public class Garage
 {
+	private static Garage instance = null;
+	private static TicketTracker ticketTracker;
+	Rate rates = new Rate(3, 3, 20);
 	private int xSize = 100;
 	private int ySize = 100;
 	private Location parkingStart = new Location(15, 20);
 	private Location parkingEnd = new Location(80, 80);
-	private int maxOccupancy = 3;
+	private static int maxOccupancy = 3;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
-	private HashSet<Admin> admins = new HashSet<Admin>();
+	private static HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
+	private Garage(){}
+	
+	public static Garage getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new Garage();
+			ticketTracker = new TicketTracker();
+		}
+		
+		return instance;
+	}
+	
 	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
 		if(grid[toX][toY] != null)
@@ -56,7 +73,7 @@ public class Garage
 		return null;
 	}
 	
-	public Booth createBooth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
+	public Booth createBooth(int boothId, Location location, Boolean isExit)
 	{
 		Booth booth = new Booth(ticketTracker, boothId, location, isExit, rates);
 		activeBooths.add(booth);
@@ -112,12 +129,12 @@ public class Garage
 		admins.add(admin);
 	}
 	
-	public boolean isAdmin(Admin admin)
+	public static boolean isAdmin(Admin admin)
 	{
 		return admins.contains(admin);
 	}
 
-	public Admin getAdmin() 
+	public static Admin getAdmin() 
 	{
 		if(!admins.isEmpty())
 		{
@@ -141,17 +158,26 @@ public class Garage
 		for(int i = 0; i < 100; i++)
         {
         	Driver driver = createDriver("" + i);
-        	driver.goToEntrance(this);
+        	driver.goToEntrance();
         	driver.pushTicketButton(getNearestBooth(driver.getLocation(), false), true);
-        	driver.parkCar(this);
+        	driver.parkCar();
 			getNearestBooth(driver.getLocation(), false).closeGate();
 			
-			driver.goToExit(this);
+			driver.goToExit();
 			Booth booth = getNearestBooth(driver.getLocation(), true);
 			Float amountDue = booth.getAmountDue(driver.getTicket());
 			booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-			driver.exitGarage(this);
+			driver.exitGarage();
         }
-		
+	}
+
+	public TicketTracker getTicketTracker() 
+	{
+		return ticketTracker;
+	}
+
+	public static boolean isFull() 
+	{
+		return ticketTracker.getOccupancy() >= maxOccupancy;
 	}
 }

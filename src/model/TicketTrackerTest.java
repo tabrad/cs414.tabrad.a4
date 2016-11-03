@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package model;
 
 import static org.junit.Assert.*;
 
@@ -16,8 +16,8 @@ public class TicketTrackerTest {
 	
 	@Before public void inititialize()
 	{
-		garage = new Garage();
-		ticketTracker = new TicketTracker(garage);
+		garage = Garage.getInstance();
+		ticketTracker = new TicketTracker();
 	}
 	
 	@Test public void testAddingTickets() 

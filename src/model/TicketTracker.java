@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package model;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -6,18 +6,10 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-import javax.swing.JTable;
-
 public class TicketTracker extends Observable
 {
-	private Garage garage;
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
 	private HashSet<Ticket> paidTickets = new HashSet<Ticket>();
-	
-	public TicketTracker(Garage garage)
-	{
-		this.garage = garage;
-	}
 	
 	public void addTicket(Ticket ticket)
 	{
@@ -56,16 +48,6 @@ public class TicketTracker extends Observable
 	public int getOccupancy()
 	{
 		return unPaidTickets.size();
-	}
-
-	public boolean isFull()
-	{
-		return getOccupancy() == garage.getMaxOccupancy();
-	}
-	
-	public Garage getGarage() 
-	{
-		return garage;
 	}
 	
 	public Set<Ticket> getPaidTickets()

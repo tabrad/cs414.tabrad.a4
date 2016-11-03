@@ -1,4 +1,4 @@
-package cs414.tabrad.a4;
+package model;
 
 import static org.junit.Assert.*;
 
@@ -21,27 +21,27 @@ public class BoothTest {
 	
 	@Before public void initialize()
 	{
-		garage = new Garage();
+		garage = Garage.getInstance();
 		rates = new Rate(3, 3, 20);
-		ticketTracker = new TicketTracker(garage);
+		ticketTracker = new TicketTracker();
 		driver = new Driver("XYZ-TTR", 0, 0);
 		driver2 = new Driver("YYZ-T45", 0, 0);
 		admin = new Admin("jfiwkls", "or023kf9");
 		garage.addAdmin(admin);
 		
-		garage.createBooth(ticketTracker, 1, new Location(5, 5), false, rates);
+		garage.createBooth(1, new Location(5, 5), false);
 		boothEntrance = garage.getNearestBooth(new Location(0, 0), false);
 		
-		garage.createBooth(ticketTracker, 2, new Location(25, 30), true, rates);
+		garage.createBooth(2, new Location(25, 30), true);
 		boothExit = garage.getNearestBooth(new Location(0, 0), true);
 	}
 	
 	@Test public void testTicketButtonPressed()
 	{
 		assertFalse(boothEntrance.getGate().isOpen());
-		driver.goToEntrance(garage);
+		driver.goToEntrance();
     	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
-    	driver.parkCar(garage);
+    	driver.parkCar();
 		assertTrue(driver.getTicket() != null);
 		boothEntrance.ticketButtonPressed(driver2, false);
 		assertTrue(driver2.getTicket() != null);
@@ -56,13 +56,13 @@ public class BoothTest {
 	
 	@Test public void testAdminTicketInserted()
 	{
-		driver.enterGarage(garage);
-		driver.goToExit(garage);
+		driver.enterGarage();
+		driver.goToExit();
 		boothExit.login(admin);	
 		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
 		Float amountDue = booth.getAmountDue(driver.getTicket());
 		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-		driver.exitGarage(garage);
+		driver.exitGarage();
 		assertFalse(driver2.isParked());
 	}
 	
