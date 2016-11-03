@@ -15,4 +15,9 @@ public abstract class Dialog
 	{
 		frame.dispose();
 	}
+	
+	public void refresh()
+	{
+		frame.repaint();
+	}
 }
