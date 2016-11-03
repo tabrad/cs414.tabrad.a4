@@ -18,13 +18,8 @@ public class GarageView extends Dialog
 	{
 		GarageView view = new GarageView();
 		view.showDialog();
-		
-		URL imageURL = GarageView.class.getResource("images/sports-car.png");
-		if(imageURL == null)
-			System.out.println("null image");
-		ImageIcon icon = new ImageIcon(imageURL);
-		
-		view.addIconToGrid(5, 5, icon);
+		DriverIcon icon = new DriverIcon("test license", 0, 0);
+		view.addLabelToGrid(5, 5, icon);
 	}
 	
 	public GarageView()
@@ -49,10 +44,10 @@ public class GarageView extends Dialog
 		}
 	}
 	
-	public void addIconToGrid(int x, int y, ImageIcon icon)
+	public void addLabelToGrid(int x, int y, JLabel label)
 	{
 		JPanel panel = iconHolder[x][y];
-		panel.add(new JLabel(icon));
+		panel.add(label);
 		frame.pack();
 	}
 
