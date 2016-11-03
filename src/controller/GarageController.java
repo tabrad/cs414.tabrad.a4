@@ -94,7 +94,12 @@ public class GarageController implements ActionListener
 
 	public void reportsClicked() 
 	{
-		ReportDialog reportDialog = new ReportDialog(garage.getTicketTracker());
+		ReportDialog reportDialog = new ReportDialog();
         reportDialog.showDialog();
+	}
+
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
+	{
+		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
 }

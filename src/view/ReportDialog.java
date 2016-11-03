@@ -11,44 +11,45 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import controller.GarageController;
 import model.TicketTracker;
 
 
-public class ReportDialog 
+public class ReportDialog extends Dialog
 {
-	private TicketTracker ticketTracker;
-	private JFrame trackerFrame;
 	private JButton financialButton;
 	private JButton occupancyButton;
 	private JComboBox<String> granularityBox;
 	private JTable table;
 	
-	public ReportDialog(TicketTracker ticketTracker)
+	private GarageController garageController;
+	
+	public ReportDialog()
 	{
-		this.ticketTracker = ticketTracker;
+		garageController = GarageController.getInstance();
 		prepareGUI();
 	}
 	
 	private void prepareGUI()
 	{
-		trackerFrame = new JFrame("Reports");
-		trackerFrame.setSize(400, 250);
-		trackerFrame.setLayout(new GridLayout(5, 2));
+		frame = new JFrame("Reports");
+		frame.setSize(400, 250);
+		frame.setLayout(new GridLayout(5, 2));
 		
-		trackerFrame.add(new JLabel("Report Granularity"));
+		frame.add(new JLabel("Report Granularity"));
 		String[] granularityTypes = {"day", "week", "month"};
 		granularityBox = new JComboBox<String>(granularityTypes);
-		trackerFrame.add(granularityBox);
+		frame.add(granularityBox);
 		
 		financialButton = new JButton("Run Financial Report");
 		financialButton.setActionCommand("financial");
 		financialButton.addActionListener(new ButtonClickListener());
-		trackerFrame.add(financialButton);
+		frame.add(financialButton);
 		
 		occupancyButton = new JButton("Run Occupancy Report");
 		occupancyButton.setActionCommand("occupancy");
 		occupancyButton.addActionListener(new ButtonClickListener());
-		trackerFrame.add(occupancyButton);
+		frame.add(occupancyButton);
 	}
 	
 	private class ButtonClickListener implements ActionListener
@@ -66,17 +67,12 @@ public class ReportDialog
 				columnNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 			
 			boolean isFinancialReport = e.getActionCommand().equals("financial");
-			Object[][] data = ticketTracker.getTableData(granularity, isFinancialReport);
+			Object[][] data = garageController.getTableData(granularity, isFinancialReport);
     		table = new JTable(data, columnNames);
 	    	JFrame tableFrame = new JFrame("Report");
 			tableFrame.setSize(400, 400);
 			tableFrame.add(new JScrollPane(table));
 			tableFrame.setVisible(true);
 		}
-	}
-	
-	public void showDialog()
-	{
-		trackerFrame.setVisible(true);
 	}
 }
