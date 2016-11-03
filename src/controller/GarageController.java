@@ -24,6 +24,7 @@ public class GarageController implements ActionListener
 	public static void main(String[] args)
     {
         overviewDialog = new OverviewDialog();
+        updateOverview();
         overviewDialog.showDialog();
     }
 	

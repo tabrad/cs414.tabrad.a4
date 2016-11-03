@@ -89,10 +89,6 @@ public class OverviewDialog extends Dialog
 		 controlPanel.add(newCarButton);
 		 controlPanel.add(submitButton);
 		 controlPanel.add(cancelButton);
-	     
-		 //initialize the labels and show the dialog
-		 update(0,0,false, false);
-		 showDialog();
     }
 	
 	public void update(int occupancy, int maxOccupancy, boolean isEntranceOpen, boolean isExitOpen)
