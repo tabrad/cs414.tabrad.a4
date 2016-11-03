@@ -12,8 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.GarageController;
-import model.TicketTracker;
-
 
 public class ReportDialog extends Dialog
 {

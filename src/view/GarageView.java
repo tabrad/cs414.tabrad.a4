@@ -1,28 +1,27 @@
 package view;
 
+import java.awt.Component;
 import java.awt.GridLayout;
-import java.net.URL;
-
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GarageView extends Dialog
 {
+	private static GarageView instance = null;
 	private int rows = 10;
 	private int columns = 10;
 	private JPanel[][] iconHolder = new JPanel[rows][columns];
 	
-	public static void main(String[] args) 
+	public static GarageView getInstance()
 	{
-		GarageView view = new GarageView();
-		view.showDialog();
-		DriverIcon icon = new DriverIcon("test license", 0, 0);
-		view.addLabelToGrid(5, 5, icon);
+		if(instance == null)
+			instance = new GarageView();
+		
+		return instance;
 	}
 	
-	public GarageView()
+	private GarageView()
 	{
 		setup();
 	}
@@ -49,6 +48,23 @@ public class GarageView extends Dialog
 		JPanel panel = iconHolder[x][y];
 		panel.add(label);
 		frame.pack();
+	}
+
+	public void updateIcon(int[] move) 
+	{
+		JPanel panelStart = iconHolder[move[0]][move[1]];
+		JPanel panelEnd = iconHolder[move[2]][move[3]];
+		
+		Component icon = panelStart.getComponent(0);
+		panelEnd.add(icon);
+		panelStart.removeAll();
+		frame.pack();
+	}
+
+	public void addDriverIcon(String license, int x, int y) 
+	{
+		DriverIcon icon = new DriverIcon(license, x, y);
+		addLabelToGrid(x, y, icon);	
 	}
 
 }

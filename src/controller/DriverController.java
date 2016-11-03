@@ -1,10 +1,13 @@
 package controller;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import model.Driver;
 import model.Garage;
 import view.DriverDialog;
 
-public class DriverController 
+public class DriverController implements Observer
 {
 	private static Garage garage = Garage.getInstance();
 	
@@ -59,5 +62,13 @@ public class DriverController
 		Driver driver = garage.getDriver(license);
 		driver.exitGarage();
 		updateDriverDialog(dialog, driver);
+	}
+
+	@Override
+	public void update(Observable obj, Object arg) 
+	{
+		System.out.println("notified");
+		GarageController garageController = GarageController.getInstance();
+		garageController.updateIcon(arg);
 	}
 }

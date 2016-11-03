@@ -7,6 +7,7 @@ import model.Garage;
 import model.Location;
 import model.Driver;
 import view.DriverDialog;
+import view.GarageView;
 import view.OverviewDialog;
 import view.ReportDialog;
 
@@ -17,6 +18,7 @@ public class GarageController implements ActionListener
 	
 	//view
 	private static OverviewDialog overviewDialog;
+	private static GarageView garageView;
 	
 	//model
 	private static Garage garage;
@@ -26,6 +28,9 @@ public class GarageController implements ActionListener
         overviewDialog = new OverviewDialog();
         updateOverview();
         overviewDialog.showDialog();
+        
+        garageView = GarageView.getInstance();
+        garageView.showDialog();
     }
 	
 	private GarageController()
@@ -86,10 +91,18 @@ public class GarageController implements ActionListener
 
 	public void createDriver() 
 	{
+		//update the driver dialog
 		String license = "" + System.currentTimeMillis();
     	Driver driver = garage.createDriver(license);
     	DriverDialog driverDialog = new DriverDialog(license, driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
     	driverDialog.showDialog();
+    	
+    	//add an icon to the view
+    	garageView.addDriverIcon(license, driver.getLocation().x, driver.getLocation().y);
+    	
+    	//add a controller to subscribe to changes
+    	DriverController driverController = new DriverController();
+    	driver.addObserver(driverController);
 	}
 
 	public void reportsClicked() 
@@ -101,5 +114,12 @@ public class GarageController implements ActionListener
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
 		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
+	}
+
+	public void updateIcon(Object o) 
+	{
+		int[] move = (int[])o;
+		garageView.updateIcon(move);
+		System.out.println("updateIcon was called");
 	}
 }

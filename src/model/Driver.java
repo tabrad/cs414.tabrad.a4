@@ -1,6 +1,8 @@
 package model;
 
-public class Driver 
+import java.util.Observable;
+
+public class Driver extends Observable
 {
 	private Garage garage;
 	private String licensePlate;
@@ -59,8 +61,15 @@ public class Driver
 	
 	public void move(Location location)
 	{
+		Location start = this.location;
+		
 		if(!garage.moveObject(this.toString(), this.location, location.x, location.y))
 			return;
+		
+		int[] move = {start.x, start.y, location.x, location.y};
+		setChanged();
+		notifyObservers(move);
+		System.out.println("notifying Observers");
 		
 		this.location = location;
 	}
