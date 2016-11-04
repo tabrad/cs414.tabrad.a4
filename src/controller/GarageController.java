@@ -104,6 +104,7 @@ public class GarageController implements ActionListener
     	
     	//add the garage view as an observer
     	driver.addObserver(garageView);
+    	garageView.repaint();
 	}
 
 	public void reportsClicked() 
@@ -116,11 +117,4 @@ public class GarageController implements ActionListener
 	{
 		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
-
-//	public void updateIcon(Object o) 
-//	{
-//		int[] move = (int[])o;
-//		garageView.updateIcon(move);
-//		System.out.println("updateIcon was called");
-//	}
 }
