@@ -2,10 +2,15 @@ package view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import model.Driver;
@@ -41,8 +46,14 @@ public class GarageView extends JPanel implements Observer
 		Set<Driver> drivers = garage.getDrivers();
 		for(Driver driver : drivers)
 		{
-			g.setColor(Color.BLACK);
-			g.fillRect(driver.getLocation().x, driver.getLocation().y, 5, 5);
+			BufferedImage img = null;
+			try 
+			{
+			    img = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
+			} catch (IOException e) {
+			}
+
+			g.drawImage(img, driver.getLocation().x, driver.getLocation().y, null);
 		}
 	}
 }
