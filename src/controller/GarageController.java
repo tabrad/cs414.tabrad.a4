@@ -3,6 +3,8 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
+
 import model.Garage;
 import model.Location;
 import model.Driver;
@@ -30,9 +32,12 @@ public class GarageController implements ActionListener
         overviewDialog.showDialog();
         
         garageView = GarageView.getInstance();
-        garageView.showDialog();
+        JFrame frame = new JFrame();
+        frame.setSize(500, 500);
+        frame.add(garageView);
+        frame.setVisible(true);
     }
-	
+        
 	private GarageController()
 	{
 		garage = Garage.getInstance();
@@ -97,12 +102,8 @@ public class GarageController implements ActionListener
     	DriverDialog driverDialog = new DriverDialog(license, driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
     	driverDialog.showDialog();
     	
-    	//add an icon to the view
-    	garageView.addDriverIcon(license, driver.getLocation().x, driver.getLocation().y);
-    	
-    	//add a controller to subscribe to changes
-    	DriverController driverController = new DriverController();
-    	driver.addObserver(driverController);
+    	//add the garage view as an observer
+    	driver.addObserver(garageView);
 	}
 
 	public void reportsClicked() 
@@ -116,10 +117,10 @@ public class GarageController implements ActionListener
 		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
 
-	public void updateIcon(Object o) 
-	{
-		int[] move = (int[])o;
-		garageView.updateIcon(move);
-		System.out.println("updateIcon was called");
-	}
+//	public void updateIcon(Object o) 
+//	{
+//		int[] move = (int[])o;
+//		garageView.updateIcon(move);
+//		System.out.println("updateIcon was called");
+//	}
 }

@@ -67,8 +67,8 @@ public class DriverController implements Observer
 	@Override
 	public void update(Observable obj, Object arg) 
 	{
-		System.out.println("notified");
-		GarageController garageController = GarageController.getInstance();
-		garageController.updateIcon(arg);
+		System.out.println("Driver Controller Notified Of Driver Moving");
+//		GarageController garageController = GarageController.getInstance();
+//		garageController.updateIcon(arg);
 	}
 }

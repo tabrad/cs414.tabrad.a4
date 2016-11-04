@@ -1,6 +1,8 @@
 package model;
 
 import java.util.HashSet;
+import java.util.Set;
+
 
 //garage is singleton
 public class Garage
@@ -179,5 +181,11 @@ public class Garage
 	public static boolean isFull() 
 	{
 		return ticketTracker.getOccupancy() >= maxOccupancy;
+	}
+
+	
+	public Set<Driver> getDrivers() 
+	{
+		return drivers;
 	}
 }
