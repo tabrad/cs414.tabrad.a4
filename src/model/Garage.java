@@ -10,11 +10,11 @@ public class Garage
 	private static Garage instance = null;
 	private static TicketTracker ticketTracker;
 	Rate rates = new Rate(3, 3, 20);
-	private int xSize = 1000;
-	private int ySize = 1000;
-	private Location parkingStart = new Location(150, 200);
-	private Location parkingEnd = new Location(800, 800);
-	private static int maxOccupancy = 3;
+	private int xSize = 20;
+	private int ySize = 20;
+	private HashSet<Location> parkingStalls;
+	private HashSet<Location> road;
+	private static int maxOccupancy = 102;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private static HashSet<Admin> admins = new HashSet<Admin>();
@@ -31,6 +31,26 @@ public class Garage
 		}
 		
 		return instance;
+	}
+	
+	public void setParkingStalls(HashSet<Location> stalls)
+	{
+		parkingStalls = stalls;
+	}
+	
+	public Set<Location> getParkingStalls()
+	{
+		return parkingStalls;
+	}
+	
+	public void setRoad(HashSet<Location> roads)
+	{
+		road = roads;
+	}
+	
+	public Set<Location> getRoad()
+	{
+		return road;
 	}
 	
 	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
@@ -112,15 +132,12 @@ public class Garage
 
 	public Location getOpenStall() 
 	{	
-		for(int x = parkingStart.x; x < parkingEnd.x; x++)
+		for(Location stall : parkingStalls)
 		{	
-			for(int y = parkingStart.y; y < parkingEnd.y; y++)
-			{
-				if(!isClear(new Location(x, y)))
-					continue;
+			if(!isClear(stall))
+				continue;
 				
-				return new Location(x, y);
-			}
+			return stall;
 		}
 		
 		return null;

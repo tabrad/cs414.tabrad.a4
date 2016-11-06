@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
 
 import javax.swing.JFrame;
 
@@ -56,8 +57,24 @@ public class GarageController implements ActionListener
 	
 	private static void initialize()
 	{
-		garage.createBooth(1, new Location(2*32, 1*32), false);
-		garage.createBooth(1, new Location(19*32, 19*32), true);
+		garage.createBooth(1, new Location(2, 2), false);
+		garage.createBooth(1, new Location(19, 1), true);
+		
+		//setup stall location
+		HashSet<Location> parkingStalls = new HashSet<Location>();
+		for(int x = 6; x < 16; x++)
+		{
+			if(x == 8 || x == 9) //row 1
+				continue;
+			if(x == 12 || x == 13) //row 2
+				continue;
+			
+			for(int y = 3; y < 19; y++)
+			{
+				parkingStalls.add(new Location(x, y));
+			}
+		}
+		garage.setParkingStalls(parkingStalls);
 	}
 
 	public void actionPerformed(ActionEvent e) 
