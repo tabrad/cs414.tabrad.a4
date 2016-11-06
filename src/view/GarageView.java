@@ -73,6 +73,18 @@ public class GarageView extends JPanel implements Observer
 	{
 		super.paintComponent(g);
 		
+		//draw background grid
+		for(int x = 0; x < 639; x += iconWidth)
+		{
+			g.drawLine(2, x, 639, x);
+		}
+		
+		for(int y = 0; y < 639; y += iconHeight)
+		{
+			g.drawLine(y, 2, y, 639);
+		}
+		
+		//draw drivers
 		Garage garage = Garage.getInstance();
 		Set<Driver> drivers = garage.getDrivers();
 		for(Driver driver : drivers)

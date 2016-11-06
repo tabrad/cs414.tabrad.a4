@@ -33,7 +33,7 @@ public class GarageController implements ActionListener
         
         garageView = GarageView.getInstance();
         JFrame frame = new JFrame();
-        frame.setSize(500, 500);
+        frame.setSize(640, 640);
         frame.add(garageView);
         frame.setVisible(true);
     }
@@ -56,8 +56,8 @@ public class GarageController implements ActionListener
 	
 	private static void initialize()
 	{
-		garage.createBooth(1, new Location(50, 50), false);
-		garage.createBooth(1, new Location(100, 150), true);
+		garage.createBooth(1, new Location(2*32, 1*32), false);
+		garage.createBooth(1, new Location(19*32, 19*32), true);
 	}
 
 	public void actionPerformed(ActionEvent e) 
