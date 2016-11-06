@@ -10,10 +10,10 @@ public class Garage
 	private static Garage instance = null;
 	private static TicketTracker ticketTracker;
 	Rate rates = new Rate(3, 3, 20);
-	private int xSize = 100;
-	private int ySize = 100;
-	private Location parkingStart = new Location(15, 20);
-	private Location parkingEnd = new Location(80, 80);
+	private int xSize = 1000;
+	private int ySize = 1000;
+	private Location parkingStart = new Location(150, 200);
+	private Location parkingEnd = new Location(800, 800);
 	private static int maxOccupancy = 3;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();

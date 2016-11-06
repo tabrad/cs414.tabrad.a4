@@ -56,8 +56,8 @@ public class GarageController implements ActionListener
 	
 	private static void initialize()
 	{
-		garage.createBooth(1, new Location(5, 5), false);
-		garage.createBooth(1, new Location(10, 15), true);
+		garage.createBooth(1, new Location(50, 50), false);
+		garage.createBooth(1, new Location(100, 150), true);
 	}
 
 	public void actionPerformed(ActionEvent e) 
