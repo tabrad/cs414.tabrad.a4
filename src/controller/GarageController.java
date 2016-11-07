@@ -59,7 +59,7 @@ public class GarageController implements ActionListener
 	private static void initialize()
 	{
 		garage.createBooth(1, new Location(2, 2), false);
-		garage.createBooth(1, new Location(19, 1), true);
+		garage.createBooth(1, new Location(18, 2), true);
 		
 		//setup road locations
 		HashSet<Location> roads = new HashSet<Location>();

@@ -157,4 +157,9 @@ public class Booth extends Observable
 	{
 		return ticketTracker.findTicket(id);
 	}
+
+	public boolean gateIsOpen() 
+	{
+		return gate.isOpen();
+	}
 }

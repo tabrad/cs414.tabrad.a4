@@ -134,16 +134,27 @@ public class GarageView extends JPanel implements Observer
 		
 		//draw booths
 		Set<Booth> booths = garage.getBooths();
+		BufferedImage imgBooth = null;
+		BufferedImage imgGateClosed = null;
+		BufferedImage imgGateOpen = null;
+		try 
+		{
+		    imgBooth = ImageIO.read(GarageView.class.getResource("images/booth.png"));
+		    imgGateClosed = ImageIO.read(GarageView.class.getResource("images/gate-closed.png"));
+		    imgGateOpen = ImageIO.read(GarageView.class.getResource("images/gate-open.png"));
+		} catch (IOException e) {
+		}
 		for(Booth booth : booths)
 		{
-			BufferedImage img = null;
-			try 
-			{
-			    img = ImageIO.read(GarageView.class.getResource("images/booth.png"));
-			} catch (IOException e) {
-			}
+			int x = booth.getLocation().x;
+			int y = booth.getLocation().y;
 
-			g.drawImage(img, booth.getLocation().x * iconWidth - iconWidth, (booth.getLocation().y) * iconHeight - iconHeight, null);
+			g.drawImage(imgBooth, x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
+			
+			boolean isOpen = booth.gateIsOpen();
+			y -= 1;
+			x += 1;
+			g.drawImage((isOpen ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
 		}
 		
 		
