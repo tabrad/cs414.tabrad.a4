@@ -103,6 +103,11 @@ public class Garage
 		return booth;
 	}
 	
+	public Set<Booth> getBooths()
+	{
+		return activeBooths;
+	}
+	
 	public Booth getNearestBooth(Location location, boolean isExit)
 	{
 		Booth booth = null;

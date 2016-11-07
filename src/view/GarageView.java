@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import controller.GarageController;
+import model.Booth;
 import model.Driver;
 import model.Garage;
 import model.Location;
@@ -129,6 +130,20 @@ public class GarageView extends JPanel implements Observer
 			}
 
 			g.drawImage(img, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
+		}
+		
+		//draw booths
+		Set<Booth> booths = garage.getBooths();
+		for(Booth booth : booths)
+		{
+			BufferedImage img = null;
+			try 
+			{
+			    img = ImageIO.read(GarageView.class.getResource("images/booth.png"));
+			} catch (IOException e) {
+			}
+
+			g.drawImage(img, booth.getLocation().x * iconWidth - iconWidth, (booth.getLocation().y) * iconHeight - iconHeight, null);
 		}
 		
 		
