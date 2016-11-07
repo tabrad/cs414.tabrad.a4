@@ -79,6 +79,24 @@ public class GarageView extends JPanel implements Observer
 	{
 		super.paintComponent(g);
 		
+		//images
+		BufferedImage imgBooth = null;
+		BufferedImage imgGateClosed = null;
+		BufferedImage imgGateOpen = null;
+		BufferedImage imgStall = null;
+		BufferedImage imgRoad = null;
+		BufferedImage imgCar = null;
+		try 
+		{
+		    imgBooth = ImageIO.read(GarageView.class.getResource("images/booth.png"));
+		    imgGateClosed = ImageIO.read(GarageView.class.getResource("images/gate-closed.png"));
+		    imgGateOpen = ImageIO.read(GarageView.class.getResource("images/gate-open.png"));
+		    imgStall = ImageIO.read(GarageView.class.getResource("images/stall.png"));
+		    imgRoad = ImageIO.read(GarageView.class.getResource("images/road.png"));
+		    imgCar = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
+		} catch (IOException e) {
+		}
+		
 		//draw background grid
 		for(int x = 0; x < 639; x += iconWidth)
 		{
@@ -90,71 +108,34 @@ public class GarageView extends JPanel implements Observer
 			g.drawLine(y, 2, y, 639);
 		}
 		
-		//paint parking stalls certain color
+		//paint parking stalls
 		Garage garage = Garage.getInstance();
 		Set<Location> stalls = garage.getParkingStalls();
 		for(Location stall : stalls)
-		{
-			BufferedImage img = null;
-			try 
-			{
-			    img = ImageIO.read(GarageView.class.getResource("images/stall.png"));
-			} catch (IOException e) {
-			}
-
-			g.drawImage(img, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
-		}
+			g.drawImage(imgStall, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
 		
+		//paint roads
 		Set<Location> roads = garage.getRoad();
 		for(Location road : roads)
-		{
-			BufferedImage img = null;
-			try 
-			{
-			    img = ImageIO.read(GarageView.class.getResource("images/road.png"));
-			} catch (IOException e) {
-			}
-
-			g.drawImage(img, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
-		}
+			g.drawImage(imgRoad, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
 		
-		//draw drivers
+		//paint drivers
 		Set<Driver> drivers = garage.getDrivers();
 		for(Driver driver : drivers)
-		{
-			BufferedImage img = null;
-			try 
-			{
-			    img = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
-			} catch (IOException e) {
-			}
+			g.drawImage(imgCar, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
 
-			g.drawImage(img, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
-		}
-		
-		//draw booths
+		//paint booths and gates
 		Set<Booth> booths = garage.getBooths();
-		BufferedImage imgBooth = null;
-		BufferedImage imgGateClosed = null;
-		BufferedImage imgGateOpen = null;
-		try 
-		{
-		    imgBooth = ImageIO.read(GarageView.class.getResource("images/booth.png"));
-		    imgGateClosed = ImageIO.read(GarageView.class.getResource("images/gate-closed.png"));
-		    imgGateOpen = ImageIO.read(GarageView.class.getResource("images/gate-open.png"));
-		} catch (IOException e) {
-		}
 		for(Booth booth : booths)
 		{
 			int x = booth.getLocation().x;
 			int y = booth.getLocation().y;
-
 			g.drawImage(imgBooth, x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
 			
-			boolean isOpen = booth.gateIsOpen();
+			//put booth in the middle of the road
 			y -= 1;
 			x += 1;
-			g.drawImage((isOpen ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
+			g.drawImage((booth.gateIsOpen() ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
 		}
 		
 		
