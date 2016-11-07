@@ -3,6 +3,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
@@ -34,7 +35,7 @@ public class GarageController implements ActionListener
         
         garageView = GarageView.getInstance();
         JFrame frame = new JFrame();
-        frame.setSize(640, 640);
+        frame.setSize(672, 672);
         frame.add(garageView);
         frame.setVisible(true);
     }
@@ -60,21 +61,49 @@ public class GarageController implements ActionListener
 		garage.createBooth(1, new Location(2, 2), false);
 		garage.createBooth(1, new Location(19, 1), true);
 		
-		//setup stall location
+		//setup road locations
+		HashSet<Location> roads = new HashSet<Location>();
+		mapLocationToColumn(1, 20, 4, roads);
+		mapLocationToColumn(1, 20, 5, roads);
+		mapLocationToColumn(1, 20, 8, roads);
+		mapLocationToColumn(1, 20, 9, roads);
+		mapLocationToColumn(1, 20, 12, roads);
+		mapLocationToColumn(1, 20, 13, roads);
+		mapLocationToColumn(1, 20, 16, roads);
+		mapLocationToColumn(1, 20, 17, roads);
+		mapLocationToRow(1, 20, 1, roads);
+		mapLocationToRow(4, 17, 2, roads);
+		mapLocationToRow(4, 17, 19, roads);
+		mapLocationToRow(4, 17, 20, roads);
+		garage.setRoad(roads);
+		
+		//setup parking stalls
 		HashSet<Location> parkingStalls = new HashSet<Location>();
-		for(int x = 6; x < 16; x++)
-		{
-			if(x == 8 || x == 9) //row 1
-				continue;
-			if(x == 12 || x == 13) //row 2
-				continue;
-			
-			for(int y = 3; y < 19; y++)
-			{
-				parkingStalls.add(new Location(x, y));
-			}
-		}
+		mapLocationToColumn(3, 18, 6, parkingStalls);
+		mapLocationToColumn(3, 18, 7, parkingStalls);
+		mapLocationToColumn(3, 18, 10, parkingStalls);
+		mapLocationToColumn(3, 18, 11, parkingStalls);
+		mapLocationToColumn(3, 18, 14, parkingStalls);
+		mapLocationToColumn(3, 18, 15, parkingStalls);
 		garage.setParkingStalls(parkingStalls);
+	}
+	
+	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
+	{
+		for(int y = yStart; y < yEnd + 1; y++)
+		{
+			Location location = new Location(xColumn, y);
+			locations.add(location);
+		}
+	}
+	
+	private static void mapLocationToRow(int xStart, int xEnd, int yRow, HashSet<Location> locations)
+	{
+		for(int x = xStart; x < xEnd + 1; x++)
+		{
+			Location location = new Location(x, yRow);
+			locations.add(location);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) 

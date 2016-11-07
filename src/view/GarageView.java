@@ -104,6 +104,19 @@ public class GarageView extends JPanel implements Observer
 			g.drawImage(img, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
 		}
 		
+		Set<Location> roads = garage.getRoad();
+		for(Location road : roads)
+		{
+			BufferedImage img = null;
+			try 
+			{
+			    img = ImageIO.read(GarageView.class.getResource("images/road.png"));
+			} catch (IOException e) {
+			}
+
+			g.drawImage(img, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
+		}
+		
 		//draw drivers
 		Set<Driver> drivers = garage.getDrivers();
 		for(Driver driver : drivers)
