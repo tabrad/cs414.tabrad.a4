@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import controller.GarageController;
 import model.Driver;
 import model.Garage;
+import model.Location;
 
 public class GarageView extends JPanel implements Observer
 {
@@ -88,8 +89,22 @@ public class GarageView extends JPanel implements Observer
 			g.drawLine(y, 2, y, 639);
 		}
 		
-		//draw drivers
+		//paint parking stalls certain color
 		Garage garage = Garage.getInstance();
+		Set<Location> stalls = garage.getParkingStalls();
+		for(Location stall : stalls)
+		{
+			BufferedImage img = null;
+			try 
+			{
+			    img = ImageIO.read(GarageView.class.getResource("images/stall.png"));
+			} catch (IOException e) {
+			}
+
+			g.drawImage(img, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
+		}
+		
+		//draw drivers
 		Set<Driver> drivers = garage.getDrivers();
 		for(Driver driver : drivers)
 		{
@@ -102,5 +117,7 @@ public class GarageView extends JPanel implements Observer
 
 			g.drawImage(img, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
 		}
+		
+		
 	}
 }
