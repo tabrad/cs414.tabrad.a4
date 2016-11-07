@@ -1,6 +1,8 @@
 package model;
 
-public class Driver 
+import java.util.Observable;
+
+public class Driver extends Observable
 {
 	private Garage garage;
 	private String licensePlate;
@@ -29,13 +31,19 @@ public class Driver
 	public void goToEntrance()
 	{
 		Booth booth = garage.getNearestBooth(location, false);
-		move(booth.getLocation());
+		Location location = new Location();
+		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
+		location.x = booth.getLocation().x;
+		move(location);
 	}
 	
 	public void goToExit() 
 	{
 		Booth booth = garage.getNearestBooth(location, true);
-		move(booth.getLocation());
+		Location location = new Location();
+		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
+		location.x = booth.getLocation().x;
+		move(location);
 	}
 	
 	public void parkCar()
@@ -63,6 +71,9 @@ public class Driver
 			return;
 		
 		this.location = location;
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Location getLocation()

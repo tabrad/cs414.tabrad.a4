@@ -4,7 +4,7 @@ import model.Driver;
 import model.Garage;
 import view.DriverDialog;
 
-public class DriverController 
+public class DriverController
 {
 	private static Garage garage = Garage.getInstance();
 	

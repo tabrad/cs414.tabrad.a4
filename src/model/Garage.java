@@ -1,6 +1,8 @@
 package model;
 
 import java.util.HashSet;
+import java.util.Set;
+
 
 //garage is singleton
 public class Garage
@@ -8,11 +10,11 @@ public class Garage
 	private static Garage instance = null;
 	private static TicketTracker ticketTracker;
 	Rate rates = new Rate(3, 3, 20);
-	private int xSize = 100;
-	private int ySize = 100;
-	private Location parkingStart = new Location(15, 20);
-	private Location parkingEnd = new Location(80, 80);
-	private static int maxOccupancy = 3;
+	private int xSize = 20;
+	private int ySize = 20;
+	private HashSet<Location> parkingStalls;
+	private HashSet<Location> road;
+	private static int maxOccupancy = 102;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private static HashSet<Admin> admins = new HashSet<Admin>();
@@ -29,6 +31,26 @@ public class Garage
 		}
 		
 		return instance;
+	}
+	
+	public void setParkingStalls(HashSet<Location> stalls)
+	{
+		parkingStalls = stalls;
+	}
+	
+	public Set<Location> getParkingStalls()
+	{
+		return parkingStalls;
+	}
+	
+	public void setRoad(HashSet<Location> roads)
+	{
+		road = roads;
+	}
+	
+	public Set<Location> getRoad()
+	{
+		return road;
 	}
 	
 	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
@@ -81,6 +103,11 @@ public class Garage
 		return booth;
 	}
 	
+	public Set<Booth> getBooths()
+	{
+		return activeBooths;
+	}
+	
 	public Booth getNearestBooth(Location location, boolean isExit)
 	{
 		Booth booth = null;
@@ -110,15 +137,12 @@ public class Garage
 
 	public Location getOpenStall() 
 	{	
-		for(int x = parkingStart.x; x < parkingEnd.x; x++)
+		for(Location stall : parkingStalls)
 		{	
-			for(int y = parkingStart.y; y < parkingEnd.y; y++)
-			{
-				if(!isClear(new Location(x, y)))
-					continue;
+			if(!isClear(stall))
+				continue;
 				
-				return new Location(x, y);
-			}
+			return stall;
 		}
 		
 		return null;
@@ -179,5 +203,11 @@ public class Garage
 	public static boolean isFull() 
 	{
 		return ticketTracker.getOccupancy() >= maxOccupancy;
+	}
+
+	
+	public Set<Driver> getDrivers() 
+	{
+		return drivers;
 	}
 }
