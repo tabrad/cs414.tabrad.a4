@@ -30,13 +30,13 @@ public class GarageController implements ActionListener
 	public static void main(String[] args)
     {
         overviewDialog = new OverviewDialog();
-        updateOverview();
-        overviewDialog.showDialog();
-        
         garageView = GarageView.getInstance();
         JFrame frame = new JFrame();
         frame.setSize(672, 672);
         frame.add(garageView);
+        
+        updateOverview();
+        overviewDialog.showDialog();
         frame.setVisible(true);
     }
         
@@ -133,6 +133,8 @@ public class GarageController implements ActionListener
 				garage.getMaxOccupancy(), 
 				garage.getNearestBooth(location, false).getGate().isOpen(), 
 				garage.getNearestBooth(location, true).getGate().isOpen());
+		
+		garageView.repaint();
 	}
 	
 	public void simulate() 
