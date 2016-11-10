@@ -25,6 +25,14 @@ public class GarageView extends JPanel implements Observer
 	private static int iconWidth = 32;
 	private static int iconHeight = 32;
 	
+	//images
+	BufferedImage imgBooth = null;
+	BufferedImage imgGateClosed = null;
+	BufferedImage imgGateOpen = null;
+	BufferedImage imgStall = null;
+	BufferedImage imgRoad = null;
+	BufferedImage imgCar = null;
+	
 	public static GarageView getInstance()
 	{
 		if(instance == null)
@@ -36,6 +44,7 @@ public class GarageView extends JPanel implements Observer
 	private GarageView()
 	{
 		garageController = GarageController.getInstance();
+		loadImages();
 		
 		addMouseListener(new MouseAdapter(){
 			@Override
@@ -62,6 +71,20 @@ public class GarageView extends JPanel implements Observer
 			}
 		});
 	}
+	
+	private void loadImages()
+	{
+		try 
+		{
+		    imgBooth = ImageIO.read(GarageView.class.getResource("images/booth.png"));
+		    imgGateClosed = ImageIO.read(GarageView.class.getResource("images/gate-closed.png"));
+		    imgGateOpen = ImageIO.read(GarageView.class.getResource("images/gate-open.png"));
+		    imgStall = ImageIO.read(GarageView.class.getResource("images/stall.png"));
+		    imgRoad = ImageIO.read(GarageView.class.getResource("images/road.png"));
+		    imgCar = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
+		} catch (IOException e) {
+		}
+	}
 
 	@Override
 	public void update(Observable o, Object arg) 
@@ -73,24 +96,6 @@ public class GarageView extends JPanel implements Observer
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		
-		//images
-		BufferedImage imgBooth = null;
-		BufferedImage imgGateClosed = null;
-		BufferedImage imgGateOpen = null;
-		BufferedImage imgStall = null;
-		BufferedImage imgRoad = null;
-		BufferedImage imgCar = null;
-		try 
-		{
-		    imgBooth = ImageIO.read(GarageView.class.getResource("images/booth.png"));
-		    imgGateClosed = ImageIO.read(GarageView.class.getResource("images/gate-closed.png"));
-		    imgGateOpen = ImageIO.read(GarageView.class.getResource("images/gate-open.png"));
-		    imgStall = ImageIO.read(GarageView.class.getResource("images/stall.png"));
-		    imgRoad = ImageIO.read(GarageView.class.getResource("images/road.png"));
-		    imgCar = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
-		} catch (IOException e) {
-		}
 		
 		//draw background grid
 		for(int x = 0; x < 639; x += iconWidth)
