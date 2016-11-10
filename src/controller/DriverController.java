@@ -25,7 +25,7 @@ public class DriverController
 
 	public static void driverPrematureExit(Driver driver) 
 	{
-		garage.removeVehicle(driver.getLocation());
+		garage.removeVehicle(driver.getLocation(), driver);
 	}
 
 	public static void parkCar(Driver driver) 

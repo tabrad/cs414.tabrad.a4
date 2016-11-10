@@ -1,11 +1,12 @@
 package model;
 
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
 
 //garage is singleton
-public class Garage
+public class Garage extends Observable
 {
 	private static Garage instance = null;
 	private static TicketTracker ticketTracker;
@@ -14,7 +15,6 @@ public class Garage
 	private int ySize = 20;
 	private HashSet<Location> parkingStalls;
 	private HashSet<Location> road;
-	private static int maxOccupancy = 102;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
 	private static HashSet<Admin> admins = new HashSet<Admin>();
@@ -64,11 +64,15 @@ public class Garage
 		return true;
 	}
 	
-	public void removeVehicle(Location location)
+	public void removeVehicle(Location location, Driver driver)
 	{
 		grid[location.x][location.y] = null;
 		Booth booth = getNearestBooth(location, true);
 		booth.closeGate();
+		drivers.remove(driver);
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Boolean isClear(Location location)
@@ -80,6 +84,8 @@ public class Garage
 	{
 		Driver driver = new Driver(license, 0, 0);
 		drivers.add(driver);
+		setChanged();
+		notifyObservers();
 		
 		return driver;
 	}
@@ -174,7 +180,7 @@ public class Garage
 	
 	public int getMaxOccupancy() 
 	{
-		return maxOccupancy;
+		return parkingStalls.size();
 	}
 
 	public void simulate() 
@@ -199,15 +205,33 @@ public class Garage
 	{
 		return ticketTracker;
 	}
-
-	public static boolean isFull() 
+	
+	public int getOccupancy()
 	{
-		return ticketTracker.getOccupancy() >= maxOccupancy;
+		return ticketTracker.getOccupancy();
 	}
 
-	
+	public boolean isFull() 
+	{
+		return ticketTracker.getOccupancy() >= getMaxOccupancy();
+	}
+
 	public Set<Driver> getDrivers() 
 	{
 		return drivers;
+	}
+
+	public boolean isEntranceOpen() 
+	{
+		Booth boothEntrance = getNearestBooth(new Location(0, 0), false);
+		
+		return boothEntrance.gateIsOpen();
+	}
+	
+	public boolean isExitOpen() 
+	{
+		Booth boothExit = getNearestBooth(new Location(0, 0), true);
+		
+		return boothExit.gateIsOpen();
 	}
 }

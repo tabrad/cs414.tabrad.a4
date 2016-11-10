@@ -128,13 +128,7 @@ public class GarageController implements ActionListener
 	}
 	
 	public static void updateOverview()
-	{
-		Location location = new Location(0,0);
-		overviewDialog.update(garage.getTicketTracker().getOccupancy(), 
-				garage.getMaxOccupancy(), 
-				garage.getNearestBooth(location, false).getGate().isOpen(), 
-				garage.getNearestBooth(location, true).getGate().isOpen());
-		
+	{	
 		garageView.repaint();
 	}
 	

@@ -36,7 +36,8 @@ public class Booth extends Observable
 
 	private Ticket getTicket(boolean isSimulation) 
 	{
-		if(isExit || Garage.isFull())
+		Garage garage = Garage.getInstance();
+		if(isExit || garage.isFull())
 			return null;
 
 		Date date = new Date();

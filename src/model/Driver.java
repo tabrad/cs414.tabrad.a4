@@ -62,7 +62,7 @@ public class Driver extends Observable
 	
 	public void exitGarage() 
 	{
-		garage.removeVehicle(location);
+		garage.removeVehicle(location, this);
 	}
 	
 	public void move(Location location)

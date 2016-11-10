@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.GarageController;
+import model.Garage;
 
 
 /**
@@ -24,7 +27,7 @@ import controller.GarageController;
  */
 
 
-public class OverviewDialog extends Dialog
+public class OverviewDialog extends Dialog implements Observer
 {
 	private JLabel headerLabel;
 	private JLabel statusLabel;
@@ -34,11 +37,17 @@ public class OverviewDialog extends Dialog
 	private JPanel controlPanel;
 	
 	GarageController garageController;
+	
+	Garage garage;
 	   
 	public OverviewDialog()
 	{
 		prepareController();
 		prepareGUI();
+		garage = Garage.getInstance();
+		garage.addObserver(this);
+		garage.getTicketTracker().addObserver(this);
+		update();
 	}
 	
 	private void prepareController()
@@ -91,11 +100,11 @@ public class OverviewDialog extends Dialog
 		 controlPanel.add(cancelButton);
     }
 	
-	public void update(int occupancy, int maxOccupancy, boolean isEntranceOpen, boolean isExitOpen)
+	public void update()
 	{
-		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + maxOccupancy + " vehicles.");
-		signLabel.setText("Garage is: " + (occupancy >= maxOccupancy ? "FULL" : "NOT FULL"));
-		boothGateLabel.setText("Entrance Gate: " + (isEntranceOpen ? "Open " : "Closed ") + "     Exit Gate: " + (isExitOpen ? "Open" : "Closed"));
+		occupancyLabel.setText("Occupancy: " + garage.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
+		signLabel.setText("Garage is: " + (garage.getOccupancy() >= garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
+		boothGateLabel.setText("Entrance Gate: " + (garage.isEntranceOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (garage.isExitOpen() ? "Open" : "Closed"));
 	}
 	
 	private class ButtonClickListener implements ActionListener
@@ -116,5 +125,11 @@ public class OverviewDialog extends Dialog
              }
          }	
       }		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) 
+	{
+		update();
 	}
 }

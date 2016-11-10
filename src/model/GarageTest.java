@@ -35,7 +35,7 @@ public class GarageTest {
 	@Test public void testRemoveVehicle()
 	{
 		driver.move(new Location(10, 10));
-		garage.removeVehicle(driver.getLocation());
+		garage.removeVehicle(driver.getLocation(), driver);
 		assertTrue(garage.isClear(new Location(10, 10)));
 	}
 	
