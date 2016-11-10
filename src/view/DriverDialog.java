@@ -3,6 +3,8 @@ package view;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,15 +14,12 @@ import javax.swing.JPanel;
 
 import controller.BoothController;
 import controller.DriverController;
+import model.Driver;
 
-public class DriverDialog extends Dialog
+public class DriverDialog extends Dialog implements Observer
 {
 	//representation of the Driver model
-	private String license;
-	private int x;
-	private int y;
-	private boolean hasTicket;
-	private boolean isParked;
+	private Driver driver;
 	
 	//view elements
 	private JPanel infoPanel = new JPanel();
@@ -31,12 +30,12 @@ public class DriverDialog extends Dialog
 	private JButton enterButton;
 	private JButton exitButton;
 	
-	public DriverDialog(String license, int x, int y, boolean hasTicket, boolean isParked)
+	public DriverDialog(Driver driver)
 	{		
-		this.license = license;
+		this.driver = driver;
 
 		frame = new JFrame();
-		frame.setSize(250, 250);
+		frame.setSize(350, 250);
 		frame.setLayout(new GridLayout(2, 1));
 		
 		infoPanel.setLayout(new GridLayout(5, 1));
@@ -61,32 +60,29 @@ public class DriverDialog extends Dialog
 	    frame.add(infoPanel);
 	    frame.add(buttonPanel);
 	    
-	    update(x, y, hasTicket, isParked);
+	    updateLabels();
+		updateButtons();
 	}
 	
-	public void update(int x, int y, boolean hasTicket, boolean isParked)
+	@Override
+	public void update(Observable arg0, Object arg1) 
 	{
-		this.x = x;
-		this.y = y;
-		this.hasTicket = hasTicket;
-		this.isParked = isParked;
-		
 		updateLabels();
 		updateButtons();
 	}
 	
 	private void updateButtons()
 	{
-		enterButton.setEnabled(!isParked);
-		exitButton.setEnabled(isParked);
+		enterButton.setEnabled(!driver.isParked());
+		exitButton.setEnabled(driver.isParked());
 	}
 	
 	private void updateLabels()
 	{
-		licenseLabel.setText("Driver ID: " + license);
-		locationLabel.setText("X-Location: " + x + " Y-Location: " + y);
-		ticketLabel.setText("Has Ticket: " + (hasTicket ? "Yes" : "No"));
-		parkedLabel.setText("Driver Parked: " + (isParked ? "Yes" : "No"));
+		licenseLabel.setText("Driver ID: " + driver.getLicense());
+		locationLabel.setText("X-Location: " + driver.getX() + " Y-Location: " + driver.getY());
+		ticketLabel.setText("Has Ticket: " + (driver.hasTicket() ? "Yes" : "No"));
+		parkedLabel.setText("Driver Parked: " + (driver.isParked() ? "Yes" : "No"));
 	}
 	
 	private DriverDialog getOuterClass()
@@ -98,7 +94,7 @@ public class DriverDialog extends Dialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{	
-			DriverController.moveDriverToEntrance(getOuterClass(), license, x, y);
+			DriverController.moveDriverToEntrance(driver);
 			
 			//show dialog that says driver drove to booth, have option to push ticket button or to leave
 			JPanel message = new JPanel();
@@ -107,9 +103,9 @@ public class DriverDialog extends Dialog
 			
 			if(result == JOptionPane.YES_OPTION)
 			{
-				DriverController.pushTicketButton(getOuterClass(), license);
+				DriverController.pushTicketButton(driver);
 				
-				if(!hasTicket)
+				if(!driver.hasTicket())
 				{
 					result = JOptionPane.showOptionDialog(frame, 
 							"The garage is full, do you want to wait for an open spot?", 
@@ -122,14 +118,14 @@ public class DriverDialog extends Dialog
 					
 					if(result == JOptionPane.NO_OPTION)
 					{
-						DriverController.driverPrematureExit(license);
+						DriverController.driverPrematureExit(driver);
 						shutDialog();
 					}
 				}
 				else
 				{
 					JOptionPane.showMessageDialog(frame, "You may now enter the garage");
-					DriverController.parkCar(getOuterClass(), license);
+					DriverController.parkCar(driver);
 				}
 			}
 			updateLabels();
@@ -141,7 +137,7 @@ public class DriverDialog extends Dialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			DriverController.moveDriverToExit(getOuterClass(), license);
+			DriverController.moveDriverToExit(driver);
 			
 			//show dialog that says driver drove to booth, have option to push ticket button or to leave
 			int result = JOptionPane.showOptionDialog(frame, 
@@ -155,7 +151,7 @@ public class DriverDialog extends Dialog
 			
 			float amountDue;
 			if(result == JOptionPane.YES_OPTION) //driver inserts ticket
-				amountDue = BoothController.getAmountDue(license, false);
+				amountDue = BoothController.getAmountDue(driver.getLicense(), false);
 			else if(result == JOptionPane.CANCEL_OPTION) //driver manually enters ticket id
 			{
 				String id = JOptionPane.showInputDialog("Enter Ticket ID");
@@ -165,15 +161,15 @@ public class DriverDialog extends Dialog
 				if(!isValid)
 				{
 					JOptionPane.showMessageDialog(frame, "Invalid Ticket. Maximum Charge.");
-					amountDue = BoothController.getAmountDue(license, true);
+					amountDue = BoothController.getAmountDue(driver.getLicense(), true);
 				}
 				else
 				{
-					amountDue = BoothController.getAmountDueByTicketId(license, id);
+					amountDue = BoothController.getAmountDueByTicketId(driver.getLicense(), id);
 				}
 			}
 			else //driver lost ticket
-				amountDue = BoothController.getAmountDue(license, true);
+				amountDue = BoothController.getAmountDue(driver.getLicense(), true);
 			
 			result = JOptionPane.showOptionDialog(frame, 
 					"You Owe " + amountDue + ". Please Select Payment", 
@@ -186,12 +182,12 @@ public class DriverDialog extends Dialog
 			
 			if(result == JOptionPane.YES_OPTION)
 			{
-				BoothController.insertPayment(getOuterClass(), license, amountDue, false);
+				BoothController.insertPayment(getOuterClass(), driver.getLicense(), amountDue, false);
 				JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
 			}
 			else
 			{
-				boolean isPaid = BoothController.insertPayment(getOuterClass(), license, amountDue, true);
+				boolean isPaid = BoothController.insertPayment(getOuterClass(), driver.getLicense(), amountDue, true);
 				
 				if(isPaid)
 					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");
@@ -201,7 +197,7 @@ public class DriverDialog extends Dialog
 					return;
 				}
 			}
-			DriverController.driverExit(getOuterClass(), license);
+			DriverController.driverExit(driver);
 			shutDialog();
 		}
 	}

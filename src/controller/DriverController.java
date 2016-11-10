@@ -2,62 +2,47 @@ package controller;
 
 import model.Driver;
 import model.Garage;
-import view.DriverDialog;
 
 public class DriverController
 {
 	private static Garage garage = Garage.getInstance();
 	
-	public static void updateDriverDialog(DriverDialog dialog, Driver driver)
+	public static void updateDriverDialog(Driver driver)
 	{
-		dialog.update(driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
-		
 		//each time the driver is updated, the is likely updates for the overview dialog too
 		GarageController.updateOverview();
 	}
 	
-	public static void moveDriverToEntrance(DriverDialog dialog, String license, int x, int y) 
+	public static void moveDriverToEntrance(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		driver.goToEntrance();
-		updateDriverDialog(dialog, driver);
 	}
 
-	public static void pushTicketButton(DriverDialog dialog, String license) 
+	public static void pushTicketButton(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), false);
-		updateDriverDialog(dialog, driver);
 	}
 
-	public static void driverPrematureExit(String license) 
+	public static void driverPrematureExit(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		garage.removeVehicle(driver.getLocation());
 	}
 
-	public static void parkCar(DriverDialog dialog, String license) 
+	public static void parkCar(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		driver.parkCar();
 		
 		//closing the gate right here. Not the most logical place to put this code. Maybe refactor later
 		garage.getNearestBooth(driver.getLocation(), false).closeGate();
-		
-		updateDriverDialog(dialog, driver);
 	}
 
-	public static void moveDriverToExit(DriverDialog dialog, String license) 
+	public static void moveDriverToExit(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		driver.goToExit();
-		updateDriverDialog(dialog, driver);
 	}
 	
-	public static void driverExit(DriverDialog dialog, String license) 
+	public static void driverExit(Driver driver) 
 	{
-		Driver driver = garage.getDriver(license);
 		driver.exitGarage();
-		updateDriverDialog(dialog, driver);
 	}
 }

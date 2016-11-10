@@ -64,7 +64,7 @@ public class GarageView extends JPanel implements Observer
 					if(y != driver.getLocation().y)
 						continue;
 					
-					DriverDialog dialog = new DriverDialog(driver.getLicense(), driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
+					DriverDialog dialog = new DriverDialog(driver);
 					dialog.showDialog();
 					return;
 				}

@@ -43,9 +43,6 @@ public class BoothController
 		Driver driver = garage.getDriver(license);
 		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
 		
-		boolean isPaid = booth.insertPayment(driver, driver.getTicket(), amountDue, isCreditCard);
-		DriverController.updateDriverDialog(dialog, driver);
-		
-		return isPaid;
+		return booth.insertPayment(driver, driver.getTicket(), amountDue, isCreditCard);
 	}
 }

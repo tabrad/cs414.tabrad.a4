@@ -148,7 +148,8 @@ public class GarageController implements ActionListener
 		//update the driver dialog
 		String license = "" + System.currentTimeMillis();
     	Driver driver = garage.createDriver(license);
-    	DriverDialog driverDialog = new DriverDialog(license, driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
+    	DriverDialog driverDialog = new DriverDialog(driver);
+    	driver.addObserver(driverDialog);
     	driverDialog.showDialog();
     	
     	//add the garage view as an observer

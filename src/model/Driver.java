@@ -105,4 +105,14 @@ public class Driver extends Observable
 	{
 		return myTicket != null;
 	}
+
+	public int getX() 
+	{
+		return location.x;
+	}
+
+	public int getY() 
+	{
+		return location.y;
+	}
 }
