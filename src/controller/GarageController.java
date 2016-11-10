@@ -168,11 +168,6 @@ public class GarageController implements ActionListener
 		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
 
-	public Set<Driver> getDrivers() 
-	{
-		return garage.getDrivers();
-	}
-
 	public Set<Location> getParkingStalls() 
 	{
 		return garage.getParkingStalls();
@@ -186,5 +181,29 @@ public class GarageController implements ActionListener
 	public Set<Booth> getBooths() 
 	{
 		return garage.getBooths();
+	}
+
+	public void garageClicked(int x, int y) 
+	{
+		for(Driver driver : garage.getDrivers())
+		{		
+			if(x != driver.getX())
+				continue;
+			
+			if(y != driver.getY())
+				continue;
+			
+			DriverDialog dialog = new DriverDialog(driver);
+			driver.addObserver(dialog);
+			driver.addObserver(garageView);
+			dialog.showDialog();
+			return;
+		}
+		
+	}
+
+	public Set<Driver> getDrivers() 
+	{
+		return garage.getDrivers();
 	}
 }

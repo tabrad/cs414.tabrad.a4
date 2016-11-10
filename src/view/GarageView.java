@@ -50,24 +50,9 @@ public class GarageView extends JPanel implements Observer
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				int x = e.getX();
-				int y = e.getY();
-				x = (x/iconWidth) + 1;
-				y = (y/iconHeight) + 1;
-				
-				Set<Driver> drivers = garageController.getDrivers();
-				for(Driver driver : drivers)
-				{		
-					if(x != driver.getLocation().x)
-						continue;
-					
-					if(y != driver.getLocation().y)
-						continue;
-					
-					DriverDialog dialog = new DriverDialog(driver);
-					dialog.showDialog();
-					return;
-				}
+				int x = (e.getX()/iconWidth) + 1;
+				int y = (e.getY()/iconHeight) + 1;
+				garageController.garageClicked(x, y);
 			}
 		});
 	}
