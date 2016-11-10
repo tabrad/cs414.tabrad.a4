@@ -7,12 +7,6 @@ public class DriverController
 {
 	private static Garage garage = Garage.getInstance();
 	
-	public static void updateDriverDialog(Driver driver)
-	{
-		//each time the driver is updated, the is likely updates for the overview dialog too
-		GarageController.updateOverview();
-	}
-	
 	public static void moveDriverToEntrance(Driver driver) 
 	{
 		driver.goToEntrance();
@@ -44,5 +38,6 @@ public class DriverController
 	public static void driverExit(Driver driver) 
 	{
 		driver.exitGarage();
+		GarageController.updateOverview();
 	}
 }
