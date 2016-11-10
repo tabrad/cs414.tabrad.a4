@@ -32,6 +32,8 @@ public class GarageView extends JPanel implements Observer
 	BufferedImage imgStall = null;
 	BufferedImage imgRoad = null;
 	BufferedImage imgCar = null;
+	BufferedImage imgFull = null;
+	BufferedImage imgNotFull = null;
 	
 	public static GarageView getInstance()
 	{
@@ -67,6 +69,8 @@ public class GarageView extends JPanel implements Observer
 		    imgStall = ImageIO.read(GarageView.class.getResource("images/stall.png"));
 		    imgRoad = ImageIO.read(GarageView.class.getResource("images/road.png"));
 		    imgCar = ImageIO.read(GarageView.class.getResource("images/sports-car.png"));
+		    imgFull = ImageIO.read(GarageView.class.getResource("images/full.png"));
+		    imgNotFull = ImageIO.read(GarageView.class.getResource("images/not-full.png"));
 		} catch (IOException e) {
 		}
 	}
@@ -114,5 +118,8 @@ public class GarageView extends JPanel implements Observer
 			x += 1;
 			g.drawImage((booth.gateIsOpen() ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
 		}
+		
+		//paint full sign
+		g.drawImage((garageController.isFull() ? imgFull : imgNotFull), 1 * iconWidth - iconWidth, 2 * iconHeight - iconHeight, null);
 	}
 }

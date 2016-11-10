@@ -200,4 +200,9 @@ public class GarageController implements ActionListener
 	{
 		return garage.getDrivers();
 	}
+	
+	public boolean isFull()
+	{
+		return garage.isFull();
+	}
 }
