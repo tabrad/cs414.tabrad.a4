@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import model.Garage;
 import model.Location;
+import model.Booth;
 import model.Driver;
 import view.DriverDialog;
 import view.GarageView;
@@ -164,5 +165,25 @@ public class GarageController implements ActionListener
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
 		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
+	}
+
+	public Set<Driver> getDrivers() 
+	{
+		return garage.getDrivers();
+	}
+
+	public Set<Location> getParkingStalls() 
+	{
+		return garage.getParkingStalls();
+	}
+
+	public Set<Location> getRoad() {
+		// TODO Auto-generated method stub
+		return garage.getRoad();
+	}
+
+	public Set<Booth> getBooths() 
+	{
+		return garage.getBooths();
 	}
 }

@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import controller.GarageController;
 import model.Booth;
 import model.Driver;
-import model.Garage;
 import model.Location;
 
 public class GarageView extends JPanel implements Observer
@@ -40,15 +39,14 @@ public class GarageView extends JPanel implements Observer
 		
 		addMouseListener(new MouseAdapter(){
 			@Override
-			public void mousePressed(MouseEvent e){
+			public void mousePressed(MouseEvent e)
+			{
 				int x = e.getX();
-				x = (x/32) + 1;
 				int y = e.getY();
-				y = (y/32) + 1;
-				System.out.println("mouse clicked x:" + x + " y:" + y);
+				x = (x/iconWidth) + 1;
+				y = (y/iconHeight) + 1;
 				
-				Garage garage = Garage.getInstance();
-				Set<Driver> drivers = garage.getDrivers();
+				Set<Driver> drivers = garageController.getDrivers();
 				for(Driver driver : drivers)
 				{		
 					if(x != driver.getLocation().x)
@@ -60,10 +58,7 @@ public class GarageView extends JPanel implements Observer
 					DriverDialog dialog = new DriverDialog(driver.getLicense(), driver.getLocation().x, driver.getLocation().y, driver.hasTicket(), driver.isParked());
 					dialog.showDialog();
 					return;
-					
 				}
-				
-				
 			}
 		});
 	}
@@ -99,34 +94,26 @@ public class GarageView extends JPanel implements Observer
 		
 		//draw background grid
 		for(int x = 0; x < 639; x += iconWidth)
-		{
 			g.drawLine(2, x, 639, x);
-		}
 		
 		for(int y = 0; y < 639; y += iconHeight)
-		{
 			g.drawLine(y, 2, y, 639);
-		}
 		
 		//paint parking stalls
-		Garage garage = Garage.getInstance();
-		Set<Location> stalls = garage.getParkingStalls();
+		Set<Location> stalls = garageController.getParkingStalls();
 		for(Location stall : stalls)
 			g.drawImage(imgStall, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
 		
 		//paint roads
-		Set<Location> roads = garage.getRoad();
-		for(Location road : roads)
+		for(Location road : garageController.getRoad())
 			g.drawImage(imgRoad, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
 		
 		//paint drivers
-		Set<Driver> drivers = garage.getDrivers();
-		for(Driver driver : drivers)
+		for(Driver driver : garageController.getDrivers())
 			g.drawImage(imgCar, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
 
 		//paint booths and gates
-		Set<Booth> booths = garage.getBooths();
-		for(Booth booth : booths)
+		for(Booth booth : garageController.getBooths())
 		{
 			int x = booth.getLocation().x;
 			int y = booth.getLocation().y;
@@ -137,7 +124,5 @@ public class GarageView extends JPanel implements Observer
 			x += 1;
 			g.drawImage((booth.gateIsOpen() ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
 		}
-		
-		
 	}
 }
