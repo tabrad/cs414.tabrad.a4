@@ -2,12 +2,15 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Set;
 
 import javax.swing.JFrame;
 
-import model.Garage;
+import common.GarageBroker;
 import model.Location;
 import model.Booth;
 import model.Driver;
@@ -26,7 +29,7 @@ public class GarageController implements ActionListener
 	private static GarageView garageView;
 	
 	//model
-	private static Garage garage;
+	private static GarageBroker garageBroker;
 	
 	public static void main(String[] args)
     {
@@ -43,7 +46,21 @@ public class GarageController implements ActionListener
         
 	private GarageController()
 	{
-		garage = Garage.getInstance();
+		try{
+			garageBroker = (GarageBroker) Naming.lookup("rmi://localhost:2500/GarageService");
+		} catch (MalformedURLException murle) {
+            System.out.println("MalformedURLException");
+            System.out.println(murle);
+        } catch (RemoteException re) {
+            System.out.println("RemoteException"); 
+            System.out.println(re);
+        } catch (NotBoundException nbe) {
+            System.out.println("NotBoundException");
+            System.out.println(nbe);
+        } catch (java.lang.ArithmeticException ae) {
+             System.out.println("java.lang.ArithmeticException");
+             System.out.println(ae);
+        }
 	}
 	
 	public static GarageController getInstance()
@@ -51,60 +68,9 @@ public class GarageController implements ActionListener
 		if(instance == null)
 		{
 			instance = new GarageController();
-			initialize();
 		}
 		
 		return instance;
-	}
-	
-	private static void initialize()
-	{
-		garage.createBooth(1, new Location(2, 2), false);
-		garage.createBooth(1, new Location(18, 2), true);
-		
-		//setup road locations
-		HashSet<Location> roads = new HashSet<Location>();
-		mapLocationToColumn(1, 20, 4, roads);
-		mapLocationToColumn(1, 20, 5, roads);
-		mapLocationToColumn(1, 20, 8, roads);
-		mapLocationToColumn(1, 20, 9, roads);
-		mapLocationToColumn(1, 20, 12, roads);
-		mapLocationToColumn(1, 20, 13, roads);
-		mapLocationToColumn(1, 20, 16, roads);
-		mapLocationToColumn(1, 20, 17, roads);
-		mapLocationToRow(1, 20, 1, roads);
-		mapLocationToRow(4, 17, 2, roads);
-		mapLocationToRow(4, 17, 19, roads);
-		mapLocationToRow(4, 17, 20, roads);
-		garage.setRoad(roads);
-		
-		//setup parking stalls
-		HashSet<Location> parkingStalls = new HashSet<Location>();
-		mapLocationToColumn(3, 18, 6, parkingStalls);
-		mapLocationToColumn(3, 18, 7, parkingStalls);
-		mapLocationToColumn(3, 18, 10, parkingStalls);
-		mapLocationToColumn(3, 18, 11, parkingStalls);
-		mapLocationToColumn(3, 18, 14, parkingStalls);
-		mapLocationToColumn(3, 18, 15, parkingStalls);
-		garage.setParkingStalls(parkingStalls);
-	}
-	
-	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
-	{
-		for(int y = yStart; y < yEnd + 1; y++)
-		{
-			Location location = new Location(xColumn, y);
-			locations.add(location);
-		}
-	}
-	
-	private static void mapLocationToRow(int xStart, int xEnd, int yRow, HashSet<Location> locations)
-	{
-		for(int x = xStart; x < xEnd + 1; x++)
-		{
-			Location location = new Location(x, yRow);
-			locations.add(location);
-		}
 	}
 
 	public void actionPerformed(ActionEvent e) 
@@ -134,14 +100,13 @@ public class GarageController implements ActionListener
 	
 	public void simulate() 
 	{
-		garage.simulate();
+		garageBroker.simulate();
 	}
 
 	public void createDriver() 
 	{
 		//update the driver dialog
-		String license = "" + System.currentTimeMillis();
-    	Driver driver = garage.createDriver(license);
+    	Driver driver = garageBroker.createDriver();
     	DriverDialog driverDialog = new DriverDialog(driver);
     	driver.addObserver(driverDialog);
     	driverDialog.showDialog();
@@ -159,50 +124,40 @@ public class GarageController implements ActionListener
 
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
-		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
+		return garageBroker.getTableData(granularity, isFinancialReport);
 	}
 
 	public Set<Location> getParkingStalls() 
 	{
-		return garage.getParkingStalls();
+		return garageBroker.getParkingStalls();
 	}
 
-	public Set<Location> getRoad() {
-		// TODO Auto-generated method stub
-		return garage.getRoad();
+	public Set<Location> getRoad() 
+	{
+		return garageBroker.getRoad();
 	}
 
 	public Set<Booth> getBooths() 
 	{
-		return garage.getBooths();
+		return garageBroker.getBooths();
 	}
 
 	public void garageClicked(int x, int y) 
 	{
-		for(Driver driver : garage.getDrivers())
-		{		
-			if(x != driver.getX())
-				continue;
-			
-			if(y != driver.getY())
-				continue;
-			
-			DriverDialog dialog = new DriverDialog(driver);
-			driver.addObserver(dialog);
-			driver.addObserver(garageView);
-			dialog.showDialog();
-			return;
-		}
-		
+		Driver driver = garageBroker.findDriver(x, y);
+		DriverDialog dialog = new DriverDialog(driver);
+		driver.addObserver(dialog);
+		driver.addObserver(garageView);
+		dialog.showDialog();
 	}
 
 	public Set<Driver> getDrivers() 
 	{
-		return garage.getDrivers();
+		return garageBroker.getDrivers();
 	}
 	
 	public boolean isFull()
 	{
-		return garage.isFull();
+		return garageBroker.isFull();
 	}
 }
