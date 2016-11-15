@@ -100,19 +100,25 @@ public class GarageController implements ActionListener
 	
 	public void simulate() 
 	{
+		try{
 		garageBroker.simulate();
+		}catch(Exception e){}
+		
 	}
 
 	public void createDriver() 
 	{
 		//update the driver dialog
-    	Driver driver = garageBroker.createDriver();
+		Driver driver = null;
+		try{
+    	 driver = (Driver)garageBroker.createDriver();
+		}catch(Exception e){}
+	
     	DriverDialog driverDialog = new DriverDialog(driver);
     	driver.addObserver(driverDialog);
     	driverDialog.showDialog();
     	
     	//add the garage view as an observer
-    	driver.addObserver(garageView);
     	garageView.repaint();
 	}
 
@@ -124,40 +130,62 @@ public class GarageController implements ActionListener
 
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
+		try{
 		return garageBroker.getTableData(granularity, isFinancialReport);
+		}catch(Exception e){}
+		return null;
 	}
 
 	public Set<Location> getParkingStalls() 
 	{
+		try{
 		return garageBroker.getParkingStalls();
+		}catch(Exception e){}
+		return null;
 	}
 
 	public Set<Location> getRoad() 
 	{
+		try{
 		return garageBroker.getRoad();
+		}catch(Exception e){}
+		return null;
 	}
 
 	public Set<Booth> getBooths() 
 	{
+		try{
 		return garageBroker.getBooths();
+		}catch(Exception e){}
+		return null;
 	}
 
 	public void garageClicked(int x, int y) 
 	{
+		try{
 		Driver driver = garageBroker.findDriver(x, y);
+		if(driver == null)
+			return;
+		
 		DriverDialog dialog = new DriverDialog(driver);
-		driver.addObserver(dialog);
-		driver.addObserver(garageView);
 		dialog.showDialog();
+		}catch(Exception e){}
+		return;
 	}
 
 	public Set<Driver> getDrivers() 
 	{
+		try{
 		return garageBroker.getDrivers();
+		}catch(Exception e){}
+		return null;
 	}
 	
 	public boolean isFull()
 	{
+		try{
 		return garageBroker.isFull();
+		}catch(Exception e){}
+		return false;
 	}
 }

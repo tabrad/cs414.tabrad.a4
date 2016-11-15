@@ -234,4 +234,19 @@ public class Garage extends Observable
 		
 		return boothExit.gateIsOpen();
 	}
+
+	public Driver findDriver(int x, int y) 
+	{
+		for(Driver driver : drivers)
+		{		
+			if(x != driver.getX())
+				continue;
+			
+			if(y != driver.getY())
+				continue;
+			
+			return driver;
+		}
+		return null;
+	}
 }

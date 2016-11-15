@@ -70,7 +70,6 @@ public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implem
 		}
 	}
 
-	
 	public void simulate() 
 	{
 		garage.simulate();	
@@ -82,45 +81,39 @@ public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implem
 		return garage.createDriver(license);
 	}
 
-	public Object[][] getTableData(int granularity, boolean isFinancialReport) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object[][] getTableData(int granularity, boolean isFinancialReport)
+	{
+		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
 
-	@Override
-	public Set<Location> getParkingStalls() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Location> getParkingStalls() 
+	{
+		return garage.getParkingStalls();
 	}
 
-	@Override
-	public Set<Location> getRoad() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Location> getRoad() 
+	{
+		return garage.getRoad();
 	}
 
-	@Override
-	public Set<Booth> getBooths() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Booth> getBooths() 
+	{
+		return garage.getBooths();
 	}
 
-	@Override
-	public Driver findDriver(int x, int y) {
-		// TODO Auto-generated method stub
-		return null;
+	public Driver findDriver(int x, int y) 
+	{
+		return garage.findDriver(x, y);
 	}
 
-	@Override
-	public Set<Driver> getDrivers() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Driver> getDrivers() 
+	{
+		return garage.getDrivers();
 	}
 
-	@Override
-	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isFull() 
+	{
+		return garage.isFull();
 	}
 	
 	

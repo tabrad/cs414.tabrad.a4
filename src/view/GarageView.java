@@ -17,13 +17,16 @@ import model.Booth;
 import model.Driver;
 import model.Location;
 
-public class GarageView extends JPanel implements Observer
+public class GarageView extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private static GarageView instance = null;
 	GarageController garageController;
 	private static int iconWidth = 32;
 	private static int iconHeight = 32;
+	Set<Location> stalls;
+	Set<Location> roads;
+	Set<Booth> booths;
 	
 	//images
 	BufferedImage imgBooth = null;
@@ -46,6 +49,10 @@ public class GarageView extends JPanel implements Observer
 	private GarageView()
 	{
 		garageController = GarageController.getInstance();
+		stalls = garageController.getParkingStalls();
+		roads = garageController.getRoad();
+		booths = garageController.getBooths();
+		
 		loadImages();
 		
 		addMouseListener(new MouseAdapter(){
@@ -74,12 +81,6 @@ public class GarageView extends JPanel implements Observer
 		} catch (IOException e) {
 		}
 	}
-
-	@Override
-	public void update(Observable o, Object arg) 
-	{
-		repaint();
-	}
 	
 	//paintComponent is called in repaint()
 	public void paintComponent(Graphics g)
@@ -94,12 +95,11 @@ public class GarageView extends JPanel implements Observer
 			g.drawLine(y, 2, y, 639);
 		
 		//paint parking stalls
-		Set<Location> stalls = garageController.getParkingStalls();
 		for(Location stall : stalls)
 			g.drawImage(imgStall, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
 		
 		//paint roads
-		for(Location road : garageController.getRoad())
+		for(Location road : roads)
 			g.drawImage(imgRoad, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
 		
 		//paint drivers
@@ -107,7 +107,7 @@ public class GarageView extends JPanel implements Observer
 			g.drawImage(imgCar, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
 
 		//paint booths and gates
-		for(Booth booth : garageController.getBooths())
+		for(Booth booth : booths)
 		{
 			int x = booth.getLocation().x;
 			int y = booth.getLocation().y;
