@@ -8,12 +8,15 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.BoothImpl;
+import server.GarageImpl;
+
 public class BoothTest {
 
-	Garage garage;
+	GarageImpl garage;
 	TicketTracker ticketTracker;
-	Booth boothEntrance;
-	Booth boothExit;
+	BoothImpl boothEntrance;
+	BoothImpl boothExit;
 	Rate rates;
 	Driver driver;
 	Driver driver2;
@@ -21,7 +24,7 @@ public class BoothTest {
 	
 	@Before public void initialize()
 	{
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		rates = new Rate(3, 3, 20);
 		ticketTracker = new TicketTracker();
 		driver = new Driver("XYZ-TTR", 0, 0);
@@ -59,7 +62,7 @@ public class BoothTest {
 		driver.enterGarage();
 		driver.goToExit();
 		boothExit.login(admin);	
-		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
 		Float amountDue = booth.getAmountDue(driver.getTicket());
 		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
 		driver.exitGarage();

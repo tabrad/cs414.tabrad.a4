@@ -2,7 +2,7 @@ package server;
 
 import java.rmi.Naming;
 
-import common.GarageBroker;
+import common.Garage;
 
 public class GarageServer 
 {
@@ -10,9 +10,9 @@ public class GarageServer
 	public GarageServer(String url) {
 		this.url = url;
 		try {
-			GarageBroker garageBroker = new GarageBrokerImpl();
-			Naming.rebind(url, garageBroker);
-			System.out.println("GarageServer running...");
+			Garage garage = new GarageImpl();
+			Naming.rebind(url, garage);
+			System.out.println("Garage running...");
 		} catch (Exception e) {
 			System.out.println("Trouble: " + e);
 		}
@@ -22,7 +22,7 @@ public class GarageServer
 	// java CalculatorServer <host> <port>
 
 	public static void main(String args[]) {
-		String url = new String("rmi://localhost:2500/GarageServer");
+		String url = new String("rmi://localhost:2500/Garage");
 		new GarageServer(url);
 	}
 	

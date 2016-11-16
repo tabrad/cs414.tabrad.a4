@@ -1,11 +1,11 @@
 package controller;
 
 import model.Driver;
-import model.Garage;
+import server.GarageImpl;
 
 public class DriverController
 {
-	private static Garage garage = Garage.getInstance();
+	private static GarageImpl garage = GarageImpl.getInstance();
 	
 	public static void moveDriverToEntrance(Driver driver) 
 	{

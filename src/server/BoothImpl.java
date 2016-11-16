@@ -1,27 +1,37 @@
-package model;
+package server;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
-public class Booth extends Observable 
+import common.Booth;
+import model.Admin;
+import model.Driver;
+import model.Location;
+import model.PaymentProcessor;
+import model.Rate;
+import model.Ticket;
+import model.TicketTracker;
+
+public class BoothImpl extends Observable implements Booth
 {
 	private int boothId;
-	private Location location = new Location();
-	private Boolean isExit;
-	private Gate gate = new Gate();
+	private Location location;
+	private boolean isExit;
+	private boolean isOpen;
 	private Rate rates = new Rate();
 	private TicketTracker ticketTracker;
 	private PaymentProcessor paymentProcessor = new PaymentProcessor();
 	private Boolean adminMode = false;
 	
-	public Booth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
+	public BoothImpl(TicketTracker ticketTracker, int boothId, Location location, boolean isExit, Rate rates)
 	{
 		this.ticketTracker = ticketTracker;
 		this.boothId = boothId;
 		this.location = location;
 		this.isExit = isExit;
 		this.rates = rates;
+		this.isOpen = false;
 	}
 	
 	public int getId()
@@ -36,7 +46,7 @@ public class Booth extends Observable
 
 	private Ticket getTicket(boolean isSimulation) 
 	{
-		Garage garage = Garage.getInstance();
+		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
 			return null;
 
@@ -114,28 +124,23 @@ public class Booth extends Observable
 		return true;
 	}
 	
-	public Gate getGate() 
-	{
-		return gate;
-	}
-	
 	public void openGate()
 	{
-		gate.open();
+		isOpen = true;
 		setChanged();
 		notifyObservers();
 	}
 
 	public void closeGate() 
 	{
-		gate.close();
+		isOpen = false;
 		setChanged();
 		notifyObservers();
 	}
 
 	public boolean login(Admin admin) 
 	{
-		if(!Garage.isAdmin(admin))
+		if(!GarageImpl.isAdmin(admin))
 			return false;
 		
 		adminMode = true;
@@ -149,7 +154,7 @@ public class Booth extends Observable
 	
 	public void requestAdmin(Driver driver, Ticket ticket) 
 	{
-		Admin admin = Garage.getAdmin();
+		Admin admin = GarageImpl.getAdmin();
 		if(!admin.accessBooth(this))
 			return;
 	}
@@ -161,6 +166,6 @@ public class Booth extends Observable
 
 	public boolean gateIsOpen() 
 	{
-		return gate.isOpen();
+		return isOpen;
 	}
 }

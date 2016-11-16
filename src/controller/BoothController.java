@@ -1,19 +1,19 @@
 package controller;
 
-import model.Booth;
 import model.Driver;
-import model.Garage;
 import model.Ticket;
+import server.BoothImpl;
+import server.GarageImpl;
 import view.DriverDialog;
 
 public class BoothController 
 {
-	private static Garage garage = Garage.getInstance();
+	private static GarageImpl garage = GarageImpl.getInstance();
 	
 	public static float getAmountDue(String license, boolean lostTicket) 
 	{
 		Driver driver = garage.getDriver(license);
-		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
 		float amountDue = 0;
 		
 		if(lostTicket)
@@ -27,7 +27,7 @@ public class BoothController
 	public static float getAmountDueByTicketId(String license, String id) 
 	{	
 		Driver driver = garage.getDriver(license);
-		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
 		Ticket ticket = garage.getTicketTracker().findTicket(id);
 		
 		return booth.getAmountDue(ticket);
@@ -41,7 +41,7 @@ public class BoothController
 	public static boolean insertPayment(DriverDialog dialog, String license, float amountDue, boolean isCreditCard) 
 	{
 		Driver driver = garage.getDriver(license);
-		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
 		
 		return booth.insertPayment(driver, driver.getTicket(), amountDue, isCreditCard);
 	}

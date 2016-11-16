@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.GarageController;
-import model.Garage;
+import server.GarageImpl;
 
 
 /**
@@ -35,25 +35,19 @@ public class OverviewDialog extends Dialog implements Observer
 	private JLabel occupancyLabel;
 	private JLabel signLabel;
 	private JPanel controlPanel;
+	private int maxOccupancy;
 	
 	GarageController garageController;
-	
-	Garage garage;
 	   
 	public OverviewDialog()
 	{
-		prepareController();
+		garageController = GarageController.getInstance();
+		maxOccupancy = garageController.getMaxOccupancy();
 		prepareGUI();
-		garage = Garage.getInstance();
-		garage.addObserver(this);
-		garage.getTicketTracker().addObserver(this);
 		update();
 	}
 	
-	private void prepareController()
-	{
-		garageController = GarageController.getInstance();
-	}
+		
 	
 	private void prepareGUI()
     {
@@ -102,9 +96,10 @@ public class OverviewDialog extends Dialog implements Observer
 	
 	public void update()
 	{
-		occupancyLabel.setText("Occupancy: " + garage.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
-		signLabel.setText("Garage is: " + (garage.getOccupancy() >= garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
-		boothGateLabel.setText("Entrance Gate: " + (garage.isEntranceOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (garage.isExitOpen() ? "Open" : "Closed"));
+		int occupancy = garageController.getOccupancy();
+		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + occupancy + " vehicles.");
+		signLabel.setText("Garage is: " + (occupancy >= maxOccupancy ? "FULL" : "NOT FULL"));
+		boothGateLabel.setText("Entrance Gate: " + (garageController.isEntranceOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (garageController.isExitOpen() ? "Open" : "Closed"));
 	}
 	
 	private class ButtonClickListener implements ActionListener

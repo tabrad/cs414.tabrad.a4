@@ -1,5 +1,7 @@
 package model;
 
+import server.BoothImpl;
+
 public class Admin 
 {
 	private String adminId;
@@ -11,7 +13,7 @@ public class Admin
 		this.adminPassword = adminPassword;
 	}
 	
-	public boolean accessBooth(Booth booth)
+	public boolean accessBooth(BoothImpl booth)
 	{
 		return booth.login(this);
 	}

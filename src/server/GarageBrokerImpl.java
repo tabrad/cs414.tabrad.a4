@@ -4,26 +4,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 import common.GarageBroker;
-import model.Booth;
 import model.Driver;
-import model.Garage;
 import model.Location;
 
 public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implements GarageBroker
 {
-	private Garage garage;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private GarageImpl garage;
 	
 	public GarageBrokerImpl() throws java.rmi.RemoteException 
 	{
 		super();
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		initialize();
 	}
 	
 	private void initialize()
 	{
-		garage.createBooth(1, new Location(2, 2), false);
-		garage.createBooth(1, new Location(18, 2), true);
+		//garage.createBooth(1, new Location(2, 2), false);
+		//garage.createBooth(1, new Location(18, 2), true);
 		
 		//setup road locations
 		HashSet<Location> roads = new HashSet<Location>();
@@ -50,6 +52,11 @@ public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implem
 		mapLocationToColumn(3, 18, 14, parkingStalls);
 		mapLocationToColumn(3, 18, 15, parkingStalls);
 		garage.setParkingStalls(parkingStalls);
+	}
+	
+	public void createBooth() throws java.rmi.RemoteException
+	{
+		
 	}
 	
 	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
@@ -96,7 +103,7 @@ public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implem
 		return garage.getRoad();
 	}
 
-	public Set<Booth> getBooths() 
+	public Set<BoothImpl> getBooths() 
 	{
 		return garage.getBooths();
 	}
@@ -116,5 +123,24 @@ public class GarageBrokerImpl extends java.rmi.server.UnicastRemoteObject implem
 		return garage.isFull();
 	}
 	
+	public int getMaxOccupancy()
+	{
+		return garage.getMaxOccupancy();
+	}
+	
+	public int getOccupancy()
+	{
+		return garage.getOccupancy();
+	}
+	
+	public boolean isEntranceOpen()
+	{
+		return garage.isEntranceOpen();
+	}
+	
+	public boolean isExitOpen()
+	{
+		return garage.isExitOpen();
+	}
 	
 }

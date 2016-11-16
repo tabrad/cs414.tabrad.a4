@@ -1,10 +1,18 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Observable;
 
-public class Driver extends Observable
+import server.BoothImpl;
+import server.GarageImpl;
+
+public class Driver extends Observable implements Serializable
 {
-	private Garage garage;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private GarageImpl garage;
 	private String licensePlate;
 	private Ticket myTicket = null;
 	private Location location = new Location();
@@ -15,10 +23,10 @@ public class Driver extends Observable
 		this.licensePlate = licensePlate;
 		location.x = x;
 		location.y = y;
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 	}
 	
-	public void pushTicketButton(Booth booth, boolean isSimulation)
+	public void pushTicketButton(BoothImpl booth, boolean isSimulation)
 	{
 		booth.ticketButtonPressed(this, isSimulation);
 	}
@@ -30,7 +38,7 @@ public class Driver extends Observable
 	
 	public void goToEntrance()
 	{
-		Booth booth = garage.getNearestBooth(location, false);
+		BoothImpl booth = garage.getNearestBooth(location, false);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
@@ -39,7 +47,7 @@ public class Driver extends Observable
 	
 	public void goToExit() 
 	{
-		Booth booth = garage.getNearestBooth(location, true);
+		BoothImpl booth = garage.getNearestBooth(location, true);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;

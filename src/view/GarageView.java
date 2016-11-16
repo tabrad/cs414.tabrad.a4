@@ -5,17 +5,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import controller.GarageController;
-import model.Booth;
 import model.Driver;
 import model.Location;
+import server.BoothImpl;
 
 public class GarageView extends JPanel
 {
@@ -24,9 +23,9 @@ public class GarageView extends JPanel
 	GarageController garageController;
 	private static int iconWidth = 32;
 	private static int iconHeight = 32;
-	Set<Location> stalls;
-	Set<Location> roads;
-	Set<Booth> booths;
+	Set<Location> stalls = new HashSet<Location>();
+	Set<Location> roads = new HashSet<Location>();
+	Set<BoothImpl> booths = new HashSet<BoothImpl>();
 	
 	//images
 	BufferedImage imgBooth = null;
@@ -49,6 +48,8 @@ public class GarageView extends JPanel
 	private GarageView()
 	{
 		garageController = GarageController.getInstance();
+		int max = garageController.getMaxOccupancy();
+		System.out.println("max:"+max);
 		stalls = garageController.getParkingStalls();
 		roads = garageController.getRoad();
 		booths = garageController.getBooths();
@@ -107,7 +108,7 @@ public class GarageView extends JPanel
 			g.drawImage(imgCar, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
 
 		//paint booths and gates
-		for(Booth booth : booths)
+		for(BoothImpl booth : booths)
 		{
 			int x = booth.getLocation().x;
 			int y = booth.getLocation().y;

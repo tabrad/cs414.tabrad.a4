@@ -5,15 +5,18 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.BoothImpl;
+import server.GarageImpl;
+
 public class DriverTest {
 
-	Garage garage;
+	GarageImpl garage;
 	TicketTracker ticketTracker;
 	Driver driver;
 	
 	@Before public void initialize()
 	{
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		ticketTracker = new TicketTracker();
 		garage.createBooth(1, new Location(5, 5), false);
 		garage.createBooth(1, new Location(10, 15), true);
@@ -40,7 +43,7 @@ public class DriverTest {
 		driver.enterGarage();
 		Location location = driver.getLocation();
 		driver.goToExit();
-		Booth booth = garage.getNearestBooth(driver.getLocation(), true);
+		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
 		Float amountDue = booth.getAmountDue(driver.getTicket());
 		booth.insertPayment(driver, driver.getTicket(), amountDue, false);
 		driver.exitGarage();

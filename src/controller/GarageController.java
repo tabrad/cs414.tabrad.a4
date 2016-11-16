@@ -10,9 +10,9 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 
-import common.GarageBroker;
+import common.Garage;
 import model.Location;
-import model.Booth;
+import server.BoothImpl;
 import model.Driver;
 import view.DriverDialog;
 import view.GarageView;
@@ -25,29 +25,29 @@ public class GarageController implements ActionListener
 	private static GarageController instance = null;
 	
 	//view
-	private static OverviewDialog overviewDialog;
+	//private static OverviewDialog overviewDialog;
 	private static GarageView garageView;
 	
 	//model
-	private static GarageBroker garageBroker;
+	private static Garage garage;
 	
 	public static void main(String[] args)
     {
-        overviewDialog = new OverviewDialog();
+       // overviewDialog = new OverviewDialog();
         garageView = GarageView.getInstance();
         JFrame frame = new JFrame();
         frame.setSize(672, 672);
         frame.add(garageView);
         
         updateOverview();
-        overviewDialog.showDialog();
+        //overviewDialog.showDialog();
         frame.setVisible(true);
     }
         
 	private GarageController()
 	{
 		try{
-			garageBroker = (GarageBroker) Naming.lookup("rmi://localhost:2500/GarageService");
+			garage = (Garage) Naming.lookup("rmi://localhost:2500/Garage");
 		} catch (MalformedURLException murle) {
             System.out.println("MalformedURLException");
             System.out.println(murle);
@@ -101,7 +101,7 @@ public class GarageController implements ActionListener
 	public void simulate() 
 	{
 		try{
-		garageBroker.simulate();
+		garage.simulate();
 		}catch(Exception e){}
 		
 	}
@@ -111,7 +111,7 @@ public class GarageController implements ActionListener
 		//update the driver dialog
 		Driver driver = null;
 		try{
-    	 driver = (Driver)garageBroker.createDriver();
+    	 driver = (Driver)garage.createDriver();
 		}catch(Exception e){}
 	
     	DriverDialog driverDialog = new DriverDialog(driver);
@@ -131,7 +131,7 @@ public class GarageController implements ActionListener
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
 		try{
-		return garageBroker.getTableData(granularity, isFinancialReport);
+		return garage.getTableData(granularity, isFinancialReport);
 		}catch(Exception e){}
 		return null;
 	}
@@ -139,23 +139,23 @@ public class GarageController implements ActionListener
 	public Set<Location> getParkingStalls() 
 	{
 		try{
-		return garageBroker.getParkingStalls();
-		}catch(Exception e){}
+			return garage.getParkingStalls();
+		}catch(Exception e){System.out.println("error getting stalls");}
 		return null;
 	}
 
 	public Set<Location> getRoad() 
 	{
 		try{
-		return garageBroker.getRoad();
+		return garage.getRoad();
 		}catch(Exception e){}
 		return null;
 	}
 
-	public Set<Booth> getBooths() 
+	public Set<BoothImpl> getBooths() 
 	{
 		try{
-		return garageBroker.getBooths();
+		return garage.getBooths();
 		}catch(Exception e){}
 		return null;
 	}
@@ -163,7 +163,7 @@ public class GarageController implements ActionListener
 	public void garageClicked(int x, int y) 
 	{
 		try{
-		Driver driver = garageBroker.findDriver(x, y);
+		Driver driver = garage.findDriver(x, y);
 		if(driver == null)
 			return;
 		
@@ -176,7 +176,7 @@ public class GarageController implements ActionListener
 	public Set<Driver> getDrivers() 
 	{
 		try{
-		return garageBroker.getDrivers();
+		return garage.getDrivers();
 		}catch(Exception e){}
 		return null;
 	}
@@ -184,8 +184,44 @@ public class GarageController implements ActionListener
 	public boolean isFull()
 	{
 		try{
-		return garageBroker.isFull();
+		return garage.isFull();
 		}catch(Exception e){}
+		return false;
+	}
+
+	public int getMaxOccupancy() 
+	{
+		try{
+			return garage.getMaxOccupancy();
+		}catch(Exception e){System.out.println("failed to get max occupancy");}
+		
+		return 0;
+	}
+
+	public int getOccupancy() 
+	{
+		try{
+			return garage.getOccupancy();
+		}catch(Exception e){}
+		
+		return 0;
+	}
+
+	public boolean isEntranceOpen() 
+	{
+		try{
+			return garage.isEntranceOpen();
+		}catch(Exception e){}
+		
+		return false;
+	}
+
+	public boolean isExitOpen() 
+	{
+		try{
+			return garage.isExitOpen();
+		}catch(Exception e){}
+		
 		return false;
 	}
 }

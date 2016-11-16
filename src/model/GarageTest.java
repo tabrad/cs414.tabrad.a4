@@ -5,15 +5,17 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.GarageImpl;
+
 public class GarageTest {
 
-	Garage garage;
+	GarageImpl garage;
 	TicketTracker ticketTracker;
 	Driver driver;
 	
 	@Before public void initialize()
 	{
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		ticketTracker = new TicketTracker();
 		driver = garage.createDriver("83nfjahf");
 
