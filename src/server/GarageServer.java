@@ -10,7 +10,7 @@ public class GarageServer
 	public GarageServer(String url) {
 		this.url = url;
 		try {
-			Garage garage = new GarageImpl();
+			Garage garage = GarageImpl.getInstance();
 			Naming.rebind(url, garage);
 			System.out.println("Garage running...");
 		} catch (Exception e) {

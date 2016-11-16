@@ -8,7 +8,7 @@ public interface Garage extends java.rmi.Remote
 {
 	public void simulate() throws java.rmi.RemoteException;
 
-	public Object createDriver() throws java.rmi.RemoteException;
+	public Driver createDriver() throws java.rmi.RemoteException;
 	
 	public void createBooth(int boothId, Location location, Boolean isExit) throws java.rmi.RemoteException;
 	

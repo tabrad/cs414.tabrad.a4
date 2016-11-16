@@ -30,7 +30,7 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 	private static HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
-	public GarageImpl() throws RemoteException 
+	private GarageImpl() throws RemoteException 
 	{
 		super();
 		initialize();
@@ -91,8 +91,11 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		}
 	}
 	
-	public static GarageImpl getInstance()
+	public static GarageImpl getInstance() throws RemoteException
 	{	
+		if(instance == null)
+			instance = new GarageImpl();
+		
 		return instance;
 	}
 	
@@ -191,12 +194,10 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 	
 	public Booth getBooth(boolean isExit) throws RemoteException
 	{
-		for(Booth b : activeBooths)
+		for(Booth booth : activeBooths)
 		{
-			if(b.isExit() == isExit)
+			if(booth.isExit() == isExit)
 			{
-				System.out.println("found booht");
-				Booth booth = (Booth)UnicastRemoteObject.exportObject(b, 0);
 				return booth;
 			}		
 		}

@@ -27,7 +27,7 @@ import server.GarageImpl;
  */
 
 
-public class OverviewDialog extends Dialog implements Observer
+public class OverviewDialog extends Dialog
 {
 	private JLabel headerLabel;
 	private JLabel statusLabel;
@@ -97,7 +97,7 @@ public class OverviewDialog extends Dialog implements Observer
 	public void update()
 	{
 		int occupancy = garageController.getOccupancy();
-		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + occupancy + " vehicles.");
+		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + maxOccupancy + " vehicles.");
 		signLabel.setText("Garage is: " + (occupancy >= maxOccupancy ? "FULL" : "NOT FULL"));
 		boothGateLabel.setText("Entrance Gate: " + (garageController.isEntranceOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (garageController.isExitOpen() ? "Open" : "Closed"));
 	}
@@ -120,11 +120,5 @@ public class OverviewDialog extends Dialog implements Observer
              }
          }	
       }		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) 
-	{
-		update();
 	}
 }

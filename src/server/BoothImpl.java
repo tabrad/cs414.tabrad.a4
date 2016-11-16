@@ -1,5 +1,6 @@
 package server;
 
+import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
@@ -43,7 +44,7 @@ public class BoothImpl extends Observable implements Booth
 		return isExit;
 	}
 
-	private Ticket getTicket(boolean isSimulation) 
+	private Ticket getTicket(boolean isSimulation) throws RemoteException 
 	{
 		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
@@ -68,7 +69,7 @@ public class BoothImpl extends Observable implements Booth
 		return location;
 	}
 	
-	public void ticketButtonPressed(DriverImpl driver, boolean isSimulation)
+	public void ticketButtonPressed(DriverImpl driver, boolean isSimulation) throws RemoteException
 	{
 		Ticket ticket = getTicket(isSimulation);
 		if(ticket == null)

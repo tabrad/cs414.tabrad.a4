@@ -114,7 +114,7 @@ public class GarageController implements ActionListener
 		Driver driver = null;
 		try{
     	 driver = (Driver)garage.createDriver();
-		}catch(Exception e){}
+		}catch(Exception e){System.out.println("failed to create driver");}
 	
     	DriverDialog driverDialog = new DriverDialog(driver, garage);
     	driverDialog.showDialog();

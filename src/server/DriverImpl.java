@@ -26,7 +26,7 @@ public class DriverImpl extends UnicastRemoteObject implements Driver
 		garage = GarageImpl.getInstance();
 	}
 	
-	public void pushTicketButton(BoothImpl booth, boolean isSimulation)
+	public void pushTicketButton(BoothImpl booth, boolean isSimulation) throws RemoteException
 	{
 		booth.ticketButtonPressed(this, isSimulation);
 	}
@@ -70,7 +70,7 @@ public class DriverImpl extends UnicastRemoteObject implements Driver
 		isParked = true;
 	}
 	
-	public void enterGarage()
+	public void enterGarage() throws RemoteException
 	{
 		goToEntrance();
 		pushTicketButton((BoothImpl)garage.getNearestBooth(location, false), false);
