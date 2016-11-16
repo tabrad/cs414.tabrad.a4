@@ -2,9 +2,7 @@ package common;
 
 import java.util.Set;
 
-import model.Driver;
 import model.Location;
-import server.BoothImpl;
 
 public interface Garage extends java.rmi.Remote
 {
@@ -22,11 +20,7 @@ public interface Garage extends java.rmi.Remote
 
 	public Set<Location> getRoad() throws java.rmi.RemoteException;
 
-	public Set<BoothImpl> getBooths() throws java.rmi.RemoteException;
-
 	public Driver findDriver(int x, int y) throws java.rmi.RemoteException;
-
-	public Set<Driver> getDrivers() throws java.rmi.RemoteException;
 
 	public boolean isFull() throws java.rmi.RemoteException;
 
@@ -37,4 +31,10 @@ public interface Garage extends java.rmi.Remote
 	public boolean isEntranceOpen() throws java.rmi.RemoteException;
 	
 	public boolean isExitOpen() throws java.rmi.RemoteException;
+
+	public Set<Driver> getDrivers() throws java.rmi.RemoteException;
+
+	public void removeVehicle(Location location) throws java.rmi.RemoteException;
+
+	public Set<Location> getDriversLocations() throws java.rmi.RemoteException;
 }

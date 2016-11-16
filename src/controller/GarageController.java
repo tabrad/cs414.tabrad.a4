@@ -10,10 +10,10 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 
+import common.Booth;
+import common.Driver;
 import common.Garage;
 import model.Location;
-import server.BoothImpl;
-import model.Driver;
 import view.DriverDialog;
 import view.GarageView;
 import view.OverviewDialog;
@@ -25,22 +25,22 @@ public class GarageController implements ActionListener
 	private static GarageController instance = null;
 	
 	//view
-	//private static OverviewDialog overviewDialog;
+	private static OverviewDialog overviewDialog;
 	private static GarageView garageView;
 	
 	//model
 	private static Garage garage;
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws RemoteException
     {
-       // overviewDialog = new OverviewDialog();
+        overviewDialog = new OverviewDialog();
         garageView = GarageView.getInstance();
         JFrame frame = new JFrame();
         frame.setSize(672, 672);
         frame.add(garageView);
         
         updateOverview();
-        //overviewDialog.showDialog();
+        overviewDialog.showDialog();
         frame.setVisible(true);
     }
         
@@ -87,7 +87,9 @@ public class GarageController implements ActionListener
         } 
         else if (command.equals("New Car"))
         {
-        	createDriver();
+        	try{
+        		createDriver();
+        	}catch(Exception ee){}
         }
 		
 		updateOverview();
@@ -106,7 +108,7 @@ public class GarageController implements ActionListener
 		
 	}
 
-	public void createDriver() 
+	public void createDriver() throws RemoteException 
 	{
 		//update the driver dialog
 		Driver driver = null;
@@ -114,8 +116,7 @@ public class GarageController implements ActionListener
     	 driver = (Driver)garage.createDriver();
 		}catch(Exception e){}
 	
-    	DriverDialog driverDialog = new DriverDialog(driver);
-    	driver.addObserver(driverDialog);
+    	DriverDialog driverDialog = new DriverDialog(driver, garage);
     	driverDialog.showDialog();
     	
     	//add the garage view as an observer
@@ -151,26 +152,20 @@ public class GarageController implements ActionListener
 		}catch(Exception e){}
 		return null;
 	}
-
-	public Set<BoothImpl> getBooths() 
+	
+	public Booth getBooth(boolean isExit) throws RemoteException
 	{
-		try{
-		return garage.getBooths();
-		}catch(Exception e){}
-		return null;
+		return garage.getBooth(isExit);
 	}
 
-	public void garageClicked(int x, int y) 
+	public void garageClicked(int x, int y) throws RemoteException 
 	{
-		try{
 		Driver driver = garage.findDriver(x, y);
 		if(driver == null)
 			return;
 		
-		DriverDialog dialog = new DriverDialog(driver);
+		DriverDialog dialog = new DriverDialog(driver, garage);
 		dialog.showDialog();
-		}catch(Exception e){}
-		return;
 	}
 
 	public Set<Driver> getDrivers() 
@@ -223,5 +218,10 @@ public class GarageController implements ActionListener
 		}catch(Exception e){}
 		
 		return false;
+	}
+
+	public Set<Location> getDriversLocations() throws RemoteException 
+	{
+		return garage.getDriversLocations();
 	}
 }

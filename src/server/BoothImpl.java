@@ -6,7 +6,6 @@ import java.util.Observable;
 
 import common.Booth;
 import model.Admin;
-import model.Driver;
 import model.Location;
 import model.PaymentProcessor;
 import model.Rate;
@@ -69,7 +68,7 @@ public class BoothImpl extends Observable implements Booth
 		return location;
 	}
 	
-	public void ticketButtonPressed(Driver driver, boolean isSimulation)
+	public void ticketButtonPressed(DriverImpl driver, boolean isSimulation)
 	{
 		Ticket ticket = getTicket(isSimulation);
 		if(ticket == null)
@@ -109,7 +108,7 @@ public class BoothImpl extends Observable implements Booth
 		return amountDue;
 	}
 	
-	public boolean insertPayment(Driver driver, Ticket ticket, float amount, boolean isCreditCard)
+	public boolean insertPayment(DriverImpl driver, Ticket ticket, float amount, boolean isCreditCard)
 	{
 		if(!adminMode && amount != getAmountDue(ticket))
 			return false;
@@ -152,7 +151,7 @@ public class BoothImpl extends Observable implements Booth
 		adminMode = false;
 	}
 	
-	public void requestAdmin(Driver driver, Ticket ticket) 
+	public void requestAdmin(DriverImpl driver, Ticket ticket) 
 	{
 		Admin admin = GarageImpl.getAdmin();
 		if(!admin.accessBooth(this))

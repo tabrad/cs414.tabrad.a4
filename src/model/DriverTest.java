@@ -6,21 +6,24 @@ import org.junit.Before;
 import org.junit.Test;
 
 import server.BoothImpl;
+import server.DriverImpl;
 import server.GarageImpl;
 
 public class DriverTest {
 
 	GarageImpl garage;
 	TicketTracker ticketTracker;
-	Driver driver;
+	DriverImpl driver;
 	
 	@Before public void initialize()
 	{
 		garage = GarageImpl.getInstance();
 		ticketTracker = new TicketTracker();
+		try{
 		garage.createBooth(1, new Location(5, 5), false);
 		garage.createBooth(1, new Location(10, 15), true);
-		driver = new Driver("XYZ-TTR", 0, 0);
+		}catch(Exception e){}
+		driver = new DriverImpl("XYZ-TTR", 0, 0);
 	}
 	
 	@Test public void testMove() 

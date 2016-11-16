@@ -1,16 +1,15 @@
-package model;
+package server;
 
-import java.io.Serializable;
-import java.util.Observable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
-import server.BoothImpl;
-import server.GarageImpl;
+import common.Booth;
+import common.Driver;
+import model.Location;
+import model.Ticket;
 
-public class Driver extends Observable implements Serializable
+public class DriverImpl extends UnicastRemoteObject implements Driver
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private GarageImpl garage;
 	private String licensePlate;
@@ -18,8 +17,9 @@ public class Driver extends Observable implements Serializable
 	private Location location = new Location();
 	private boolean isParked = false;
 	
-	public Driver(String licensePlate, int x, int y)
+	public DriverImpl(String licensePlate, int x, int y) throws java.rmi.RemoteException
 	{
+		super();
 		this.licensePlate = licensePlate;
 		location.x = x;
 		location.y = y;
@@ -31,6 +31,15 @@ public class Driver extends Observable implements Serializable
 		booth.ticketButtonPressed(this, isSimulation);
 	}
 	
+	public void pushTicketButton(int boothId) throws RemoteException 
+	{
+		for(Booth booth : garage.getBooths())
+		{
+			if(booth.getId() == boothId)
+				pushTicketButton((BoothImpl)booth, false);
+		}
+	}
+	
 	public void setTicket(Ticket ticket) 
 	{
 		myTicket = ticket;	
@@ -38,7 +47,7 @@ public class Driver extends Observable implements Serializable
 	
 	public void goToEntrance()
 	{
-		BoothImpl booth = garage.getNearestBooth(location, false);
+		BoothImpl booth = (BoothImpl)garage.getNearestBooth(location, false);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
@@ -47,7 +56,7 @@ public class Driver extends Observable implements Serializable
 	
 	public void goToExit() 
 	{
-		BoothImpl booth = garage.getNearestBooth(location, true);
+		BoothImpl booth = (BoothImpl)garage.getNearestBooth(location, true);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
@@ -64,7 +73,7 @@ public class Driver extends Observable implements Serializable
 	public void enterGarage()
 	{
 		goToEntrance();
-		pushTicketButton(garage.getNearestBooth(location, false), false);
+		pushTicketButton((BoothImpl)garage.getNearestBooth(location, false), false);
 		parkCar();
 	}
 	
@@ -79,9 +88,6 @@ public class Driver extends Observable implements Serializable
 			return;
 		
 		this.location = location;
-		
-		setChanged();
-		notifyObservers();
 	}
 	
 	public Location getLocation()

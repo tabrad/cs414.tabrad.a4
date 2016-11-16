@@ -1,41 +1,49 @@
 package controller;
 
-import model.Driver;
-import server.GarageImpl;
+import java.rmi.RemoteException;
 
-public class DriverController
-{
-	private static GarageImpl garage = GarageImpl.getInstance();
+import common.Driver;
+import common.Garage;
+
+public class DriverController 
+{	
+	private Driver driver;
+	private Garage garage;
 	
-	public static void moveDriverToEntrance(Driver driver) 
+	public DriverController(Driver driver, Garage garage)
+	{
+		this.driver = driver;
+	}
+	
+	public void moveDriverToEntrance() throws RemoteException  
 	{
 		driver.goToEntrance();
 	}
 
-	public static void pushTicketButton(Driver driver) 
+	public void pushTicketButton(int boothId) throws RemoteException 
 	{
-		driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), false);
+		driver.pushTicketButton(boothId);
 	}
 
-	public static void driverPrematureExit(Driver driver) 
+	public void driverPrematureExit() throws RemoteException 
 	{
-		garage.removeVehicle(driver.getLocation(), driver);
+		garage.removeVehicle(driver.getLocation());
 	}
 
-	public static void parkCar(Driver driver) 
+	public void parkCar() throws RemoteException 
 	{
 		driver.parkCar();
 		
-		//closing the gate right here. Not the most logical place to put this code. Maybe refactor later
-		garage.getNearestBooth(driver.getLocation(), false).closeGate();
+		//closing the gate right here. Not the most logical place to put this code. should be more of a signal than a control of the booth. Rename?
+		garage.getBooth(false).closeGate();
 	}
 
-	public static void moveDriverToExit(Driver driver) 
+	public void moveDriverToExit() throws RemoteException 
 	{
 		driver.goToExit();
 	}
 	
-	public static void driverExit(Driver driver) 
+	public void driverExit() throws RemoteException 
 	{
 		driver.exitGarage();
 		GarageController.updateOverview();

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import server.BoothImpl;
+import server.DriverImpl;
 import server.GarageImpl;
 
 public class BoothTest {
@@ -18,8 +19,8 @@ public class BoothTest {
 	BoothImpl boothEntrance;
 	BoothImpl boothExit;
 	Rate rates;
-	Driver driver;
-	Driver driver2;
+	DriverImpl driver;
+	DriverImpl driver2;
 	Admin admin;
 	
 	@Before public void initialize()
@@ -27,21 +28,22 @@ public class BoothTest {
 		garage = GarageImpl.getInstance();
 		rates = new Rate(3, 3, 20);
 		ticketTracker = new TicketTracker();
-		driver = new Driver("XYZ-TTR", 0, 0);
-		driver2 = new Driver("YYZ-T45", 0, 0);
+		driver = new DriverImpl("XYZ-TTR", 0, 0);
+		driver2 = new DriverImpl("YYZ-T45", 0, 0);
 		admin = new Admin("jfiwkls", "or023kf9");
 		garage.addAdmin(admin);
-		
+		try{
 		garage.createBooth(1, new Location(5, 5), false);
 		boothEntrance = garage.getNearestBooth(new Location(0, 0), false);
 		
 		garage.createBooth(2, new Location(25, 30), true);
 		boothExit = garage.getNearestBooth(new Location(0, 0), true);
+		}catch(Exception e){};
 	}
 	
 	@Test public void testTicketButtonPressed()
 	{
-		assertFalse(boothEntrance.getGate().isOpen());
+		assertFalse(boothEntrance.gateIsOpen());
 		driver.goToEntrance();
     	driver.pushTicketButton(garage.getNearestBooth(driver.getLocation(), false), true);
     	driver.parkCar();
@@ -53,7 +55,7 @@ public class BoothTest {
 	@Test public void testTicketButtonPressedNotEntrance()
 	{
 		boothExit.ticketButtonPressed(driver, false);
-		assertFalse(boothExit.getGate().isOpen());
+		assertFalse(boothExit.gateIsOpen());
 		assertFalse(driver.isParked());
 	}
 	
