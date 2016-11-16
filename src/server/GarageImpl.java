@@ -154,6 +154,8 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		Driver d = new DriverImpl("" + System.currentTimeMillis(), 0, 0);
 		Driver driver = (Driver)UnicastRemoteObject.exportObject(d, 0);
 		drivers.add(driver);	
+		if(driver == null)
+			System.out.println("driver is null");
 		return driver;
 	}
 	

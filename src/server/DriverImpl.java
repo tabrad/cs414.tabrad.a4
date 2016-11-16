@@ -8,7 +8,7 @@ import common.Driver;
 import model.Location;
 import model.Ticket;
 
-public class DriverImpl extends UnicastRemoteObject implements Driver
+public class DriverImpl implements Driver
 {
 	private static final long serialVersionUID = 1L;
 	private GarageImpl garage;
