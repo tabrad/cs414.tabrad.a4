@@ -8,6 +8,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import common.Ticket;
 import server.BoothImpl;
 import server.DriverImpl;
 import server.GarageImpl;

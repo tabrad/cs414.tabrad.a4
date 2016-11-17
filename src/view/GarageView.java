@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -38,6 +40,9 @@ public class GarageView extends JPanel
 	BufferedImage imgCar = null;
 	BufferedImage imgFull = null;
 	BufferedImage imgNotFull = null;
+	
+	//timer for polling the server
+	Timer timer = new Timer();
 	
 	public static GarageView getInstance() throws RemoteException
 	{
@@ -72,6 +77,14 @@ public class GarageView extends JPanel
 				} catch (RemoteException e1) {}
 			}
 		});
+		
+		 timer.scheduleAtFixedRate(new TimerTask() {
+		        @Override
+		        public void run() {
+		            repaint();
+		            //System.out.println("repaint called");
+		        }
+		    }, 1000, 1000);
 	}
 	
 	private void loadImages()

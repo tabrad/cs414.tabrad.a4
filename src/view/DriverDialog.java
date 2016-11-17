@@ -4,6 +4,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,6 +36,8 @@ public class DriverDialog extends Dialog
 	private JLabel ticketLabel = new JLabel();
 	private JButton enterButton;
 	private JButton exitButton;
+	
+	Timer timer = new Timer();
 	
 	public DriverDialog(Driver driver, Garage garage) throws RemoteException
 	{		
@@ -66,6 +70,18 @@ public class DriverDialog extends Dialog
 	    
 	    frame.add(infoPanel);
 	    frame.add(buttonPanel);
+	    
+	    timer.scheduleAtFixedRate(new TimerTask() {
+	        @Override
+	        public void run() {
+	            try {
+					update();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+	    }, 1000, 1000);
 	    
 	    updateLabels();
 		updateButtons();
@@ -101,7 +117,7 @@ public class DriverDialog extends Dialog
 		public void actionPerformed(ActionEvent e)
 		{	
 			try{
-				
+				System.out.println("going to move to entrance");
 				driverController.moveDriverToEntrance();
 				
 				//show dialog that says driver drove to booth, have option to push ticket button or to leave
@@ -111,7 +127,7 @@ public class DriverDialog extends Dialog
 				
 				if(result == JOptionPane.YES_OPTION)
 				{
-					driverController.pushTicketButton(garage.getBooth(true).getId());
+					driverController.pushTicketButton(garage.getBooth(false).getId());
 					
 					if(!driver.hasTicket())
 					{
@@ -139,7 +155,7 @@ public class DriverDialog extends Dialog
 				
 				updateLabels();
 				updateButtons();
-			}catch(Exception ee){}
+			}catch(Exception ee){ee.printStackTrace();}
 		}
 	}
 	

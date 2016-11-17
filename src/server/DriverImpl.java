@@ -1,12 +1,11 @@
 package server;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 import common.Booth;
 import common.Driver;
+import common.Ticket;
 import model.Location;
-import model.Ticket;
 
 public class DriverImpl implements Driver
 {
@@ -26,28 +25,27 @@ public class DriverImpl implements Driver
 		garage = GarageImpl.getInstance();
 	}
 	
-	public void pushTicketButton(BoothImpl booth, boolean isSimulation) throws RemoteException
-	{
-		booth.ticketButtonPressed(this, isSimulation);
-	}
-	
 	public void pushTicketButton(int boothId) throws RemoteException 
 	{
+		Ticket ticket = null;
 		for(Booth booth : garage.getBooths())
 		{
 			if(booth.getId() == boothId)
-				pushTicketButton((BoothImpl)booth, false);
+			{
+				ticket = booth.ticketButtonPressed(false);
+				break;
+			}
 		}
+		
+		if(ticket == null)
+			return;
+		myTicket = ticket;
+		System.out.println("ticket set");
 	}
 	
-	public void setTicket(Ticket ticket) 
+	public void goToEntrance() throws RemoteException
 	{
-		myTicket = ticket;	
-	}
-	
-	public void goToEntrance()
-	{
-		BoothImpl booth = (BoothImpl)garage.getNearestBooth(location, false);
+		Booth booth = garage.getNearestBooth(location, false);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
@@ -70,12 +68,12 @@ public class DriverImpl implements Driver
 		isParked = true;
 	}
 	
-	public void enterGarage() throws RemoteException
-	{
-		goToEntrance();
-		pushTicketButton((BoothImpl)garage.getNearestBooth(location, false), false);
-		parkCar();
-	}
+//	public void enterGarage() throws RemoteException
+//	{
+//		goToEntrance();
+//		pushTicketButton(garage.getNearestBooth(location, false), false);
+//		parkCar();
+//	}
 	
 	public void exitGarage() 
 	{

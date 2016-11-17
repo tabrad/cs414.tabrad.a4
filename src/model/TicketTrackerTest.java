@@ -8,6 +8,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import common.Ticket;
 import server.GarageImpl;
 
 public class TicketTrackerTest {

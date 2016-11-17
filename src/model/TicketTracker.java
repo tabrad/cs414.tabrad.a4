@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
+import common.Ticket;
+
 public class TicketTracker extends Observable
 {
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();

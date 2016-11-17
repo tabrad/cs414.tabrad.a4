@@ -1,16 +1,18 @@
 package server;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
 import common.Booth;
+import common.Driver;
+import common.Ticket;
 import model.Admin;
 import model.Location;
 import model.PaymentProcessor;
 import model.Rate;
-import model.Ticket;
 import model.TicketTracker;
 
 public class BoothImpl extends Observable implements Booth
@@ -46,9 +48,10 @@ public class BoothImpl extends Observable implements Booth
 
 	private Ticket getTicket(boolean isSimulation) throws RemoteException 
 	{
+		System.out.println("getticket start");
 		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
-			return null;
+			System.out.print("is exit or is full");
 
 		Date date = new Date();
 		if(isSimulation)
@@ -58,9 +61,10 @@ public class BoothImpl extends Observable implements Booth
 			date.setTime(calendar.getTimeInMillis());
 		}
 		
-		Ticket ticket = new Ticket(date, boothId);
+		Ticket t = new TicketImpl(date, boothId);
+		Ticket ticket = (Ticket) UnicastRemoteObject.exportObject(t, 0); 	
 		ticketTracker.addTicket(ticket);
-		
+		System.out.println("ticket exported");
 		return ticket;
 	}
 	
@@ -69,13 +73,14 @@ public class BoothImpl extends Observable implements Booth
 		return location;
 	}
 	
-	public void ticketButtonPressed(DriverImpl driver, boolean isSimulation) throws RemoteException
+	public Ticket ticketButtonPressed(boolean isSimulation) throws RemoteException
 	{
 		Ticket ticket = getTicket(isSimulation);
-		if(ticket == null)
-			return;
-		driver.setTicket(ticket);
+//		if(ticket == null)
+	//		return null;
 		openGate();
+		
+		return ticket;
 	}
 	
 	public float getAmountDue() 
@@ -83,7 +88,7 @@ public class BoothImpl extends Observable implements Booth
 		return rates.maxCharge;
 	}
 	
-	public float getAmountDue(Ticket ticket) 
+	public float getAmountDue(Ticket ticket) throws RemoteException 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticket))
 			return rates.maxCharge;
@@ -109,7 +114,7 @@ public class BoothImpl extends Observable implements Booth
 		return amountDue;
 	}
 	
-	public boolean insertPayment(DriverImpl driver, Ticket ticket, float amount, boolean isCreditCard)
+	public boolean insertPayment(DriverImpl driver, Ticket ticket, float amount, boolean isCreditCard) throws RemoteException
 	{
 		if(!adminMode && amount != getAmountDue(ticket))
 			return false;

@@ -10,8 +10,6 @@ public interface Driver extends java.rmi.Remote
 	
 	public void parkCar() throws java.rmi.RemoteException;
 	
-	public void enterGarage() throws java.rmi.RemoteException;
-	
 	public void exitGarage() throws java.rmi.RemoteException;
 	
 	public boolean isParked() throws java.rmi.RemoteException;

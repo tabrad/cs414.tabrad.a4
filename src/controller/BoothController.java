@@ -1,6 +1,6 @@
 package controller;
 
-import model.Ticket;
+import common.Ticket;
 import server.BoothImpl;
 import server.DriverImpl;
 import server.GarageImpl;
