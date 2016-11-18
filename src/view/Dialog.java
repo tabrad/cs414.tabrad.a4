@@ -8,6 +8,7 @@ public abstract class Dialog
 	
 	public void showDialog()
 	{
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
