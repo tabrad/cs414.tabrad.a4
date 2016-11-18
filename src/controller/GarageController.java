@@ -26,7 +26,6 @@ public class GarageController implements ActionListener
 	
 	//view
 	private static OverviewDialog overviewDialog;
-	private static GarageView garageView;
 	
 	//model
 	private static Garage garage;
@@ -34,14 +33,9 @@ public class GarageController implements ActionListener
 	public static void main(String[] args) throws RemoteException
     {
         overviewDialog = new OverviewDialog();
-        garageView = GarageView.getInstance();
-        JFrame frame = new JFrame();
-        frame.setSize(672, 672);
-        frame.add(garageView);
         
         updateOverview();
         overviewDialog.showDialog();
-        frame.setVisible(true);
     }
         
 	private GarageController()
@@ -97,7 +91,6 @@ public class GarageController implements ActionListener
 	
 	public static void updateOverview()
 	{	
-		garageView.repaint();
 		overviewDialog.update();
 	}
 	
@@ -119,9 +112,7 @@ public class GarageController implements ActionListener
 	
     	DriverDialog driverDialog = new DriverDialog(driver, garage);
     	driverDialog.showDialog();
-    	
-    	//add the garage view as an observer
-    	garageView.repaint();
+    	updateOverview();
 	}
 
 	public void reportsClicked() 
