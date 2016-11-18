@@ -1,4 +1,4 @@
-package model;
+package server;
 
 public class Rate 
 {

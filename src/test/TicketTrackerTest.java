@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.Ticket;
-import model.TicketTracker;
 import server.GarageImpl;
 import server.TicketImpl;
+import server.TicketTracker;
 
 public class TicketTrackerTest {
 

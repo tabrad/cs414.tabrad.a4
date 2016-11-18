@@ -11,7 +11,7 @@ import java.util.Set;
 import common.Booth;
 import common.Driver;
 import common.Garage;
-import model.Location;
+import common.Location;
 import view.DriverDialog;
 import view.OverviewDialog;
 import view.ReportDialog;

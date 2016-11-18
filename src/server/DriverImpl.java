@@ -4,8 +4,8 @@ import java.rmi.RemoteException;
 
 import common.Booth;
 import common.Driver;
+import common.Location;
 import common.Ticket;
-import model.Location;
 
 public class DriverImpl implements Driver
 {

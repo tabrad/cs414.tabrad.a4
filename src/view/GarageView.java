@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import common.Booth;
+import common.Location;
 import controller.GarageController;
-import model.Location;
 
 public class GarageView extends JPanel
 {

@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 
 import common.Driver;
 import common.Garage;
-import model.Location;
+import common.Location;
 
 public class DriverController 
 {	

@@ -3,8 +3,6 @@ package common;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import model.Location;
-
 public interface Garage extends java.rmi.Remote
 {
 	public void simulate() throws RemoteException;

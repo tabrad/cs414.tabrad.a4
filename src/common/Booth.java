@@ -1,7 +1,5 @@
 package common;
 
-import model.Location;
-
 public interface Booth extends java.rmi.Remote
 {
 	public int getId() throws java.rmi.RemoteException;

@@ -11,14 +11,14 @@ import org.junit.Test;
 
 import common.Booth;
 import common.Driver;
+import common.Location;
 import common.Ticket;
-import model.Admin;
-import model.Location;
-import model.Rate;
-import model.TicketTracker;
+import server.Admin;
 import server.BoothImpl;
 import server.GarageImpl;
+import server.Rate;
 import server.TicketImpl;
+import server.TicketTracker;
 
 
 public class BoothTest {

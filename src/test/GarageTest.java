@@ -8,9 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.Driver;
-import model.Location;
-import model.TicketTracker;
+import common.Location;
 import server.GarageImpl;
+import server.TicketTracker;
 
 public class GarageTest {
 

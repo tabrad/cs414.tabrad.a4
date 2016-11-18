@@ -2,8 +2,6 @@ package common;
 
 import java.rmi.RemoteException;
 
-import model.Location;
-
 public interface Driver extends java.rmi.Remote
 {
 	public void goToEntrance() throws RemoteException;

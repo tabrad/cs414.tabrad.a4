@@ -7,12 +7,8 @@ import java.util.Date;
 import java.util.Observable;
 
 import common.Booth;
+import common.Location;
 import common.Ticket;
-import model.Admin;
-import model.Location;
-import model.PaymentProcessor;
-import model.Rate;
-import model.TicketTracker;
 
 public class BoothImpl extends Observable implements Booth
 {

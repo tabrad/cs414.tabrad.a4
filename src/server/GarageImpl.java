@@ -8,10 +8,7 @@ import java.util.Set;
 import common.Booth;
 import common.Driver;
 import common.Garage;
-import model.Admin;
-import model.Location;
-import model.Rate;
-import model.TicketTracker;
+import common.Location;
 
 
 //garage is singleton

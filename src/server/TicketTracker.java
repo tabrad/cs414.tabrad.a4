@@ -1,4 +1,4 @@
-package model;
+package server;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;

@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import common.Booth;
-import model.Location;
-import model.TicketTracker;
+import common.Location;
 import server.DriverImpl;
 import server.GarageImpl;
+import server.TicketTracker;
 
 public class DriverTest {
 

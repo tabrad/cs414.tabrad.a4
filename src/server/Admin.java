@@ -1,6 +1,4 @@
-package model;
-
-import server.BoothImpl;
+package server;
 
 public class Admin 
 {
