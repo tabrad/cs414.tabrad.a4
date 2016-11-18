@@ -58,19 +58,33 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		mapLocationToRow(4, 17, 2, roads);
 		mapLocationToRow(4, 17, 19, roads);
 		mapLocationToRow(4, 17, 20, roads);
-		setRoad(roads);
+		road = roads;
 		
 		//setup parking stalls
-		HashSet<Location> parkingStalls = new HashSet<Location>();
-		mapLocationToColumn(3, 18, 6, parkingStalls);
-		mapLocationToColumn(3, 18, 7, parkingStalls);
-		mapLocationToColumn(3, 18, 10, parkingStalls);
-		mapLocationToColumn(3, 18, 11, parkingStalls);
-		mapLocationToColumn(3, 18, 14, parkingStalls);
-		mapLocationToColumn(3, 18, 15, parkingStalls);
-		setParkingStalls(parkingStalls);
+		HashSet<Location> stalls = new HashSet<Location>();
+		mapLocationToColumn(3, 18, 6, stalls);
+		mapLocationToColumn(3, 18, 7, stalls);
+		mapLocationToColumn(3, 18, 10, stalls);
+		mapLocationToColumn(3, 18, 11, stalls);
+		mapLocationToColumn(3, 18, 14, stalls);
+		mapLocationToColumn(3, 18, 15, stalls);
+		this.parkingStalls = stalls;
 		
+		int max = GarageServer.getMaxOccupancy();
+		//if set to 0 we will give full stalls
+		if(max == 0)
+			return;
 		
+		//go through stall set and only keep the number of stalls requested
+		HashSet<Location> parkingStallsNew = new HashSet<Location>();
+		for(Location stall : parkingStalls)
+		{
+			if(parkingStallsNew.size() > (max - 1))
+				break;
+			
+			parkingStallsNew.add(stall);
+		}
+		parkingStalls = parkingStallsNew;
 	}
 	
 	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
@@ -99,19 +113,9 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return instance;
 	}
 	
-	public void setParkingStalls(HashSet<Location> stalls)
-	{
-		parkingStalls = stalls;
-	}
-	
 	public Set<Location> getParkingStalls()
 	{
 		return parkingStalls;
-	}
-	
-	public void setRoad(HashSet<Location> roads)
-	{
-		road = roads;
 	}
 	
 	public Set<Location> getRoad()
