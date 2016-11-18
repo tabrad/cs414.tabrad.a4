@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.GarageController;
-import server.GarageImpl;
 
 
 /**
@@ -46,8 +43,6 @@ public class OverviewDialog extends Dialog
 		prepareGUI();
 		update();
 	}
-	
-		
 	
 	private void prepareGUI()
     {

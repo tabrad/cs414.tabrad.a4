@@ -98,6 +98,7 @@ public class GarageController implements ActionListener
 	public static void updateOverview()
 	{	
 		garageView.repaint();
+		overviewDialog.update();
 	}
 	
 	public void simulate() 

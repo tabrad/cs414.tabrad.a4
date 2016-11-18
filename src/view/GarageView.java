@@ -81,6 +81,7 @@ public class GarageView extends JPanel
 		        @Override
 		        public void run() {
 		            repaint();
+		            GarageController.updateOverview();
 		        }
 		    }, 1000, 1000);
 	}
