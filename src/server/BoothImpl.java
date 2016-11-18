@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Observable;
 
 import common.Booth;
-import common.Driver;
 import common.Ticket;
 import model.Admin;
 import model.Location;
@@ -51,7 +50,7 @@ public class BoothImpl extends Observable implements Booth
 		System.out.println("getticket start");
 		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
-			System.out.print("is exit or is full");
+			return null;
 
 		Date date = new Date();
 		if(isSimulation)
@@ -88,11 +87,12 @@ public class BoothImpl extends Observable implements Booth
 		return rates.maxCharge;
 	}
 	
-	public float getAmountDue(Ticket ticket) throws RemoteException 
+	public float getAmountDue(String ticketId) throws RemoteException 
 	{
-		if(!ticketTracker.hasUnpaidTicket(ticket))
+		if(!ticketTracker.hasUnpaidTicket(ticketId))
 			return rates.maxCharge;
 		
+		Ticket ticket = ticketTracker.findTicket(ticketId);
 		long currentTime = new Date().getTime() / 1000;
 		long ticketTime = ticket.getTimeEntered().getTime() / 1000;
 		long hoursParked = (currentTime - ticketTime) / 60 / 60;
@@ -114,14 +114,15 @@ public class BoothImpl extends Observable implements Booth
 		return amountDue;
 	}
 	
-	public boolean insertPayment(DriverImpl driver, Ticket ticket, float amount, boolean isCreditCard) throws RemoteException
+	public boolean insertPayment(String ticketId, float amount, boolean isCreditCard) throws RemoteException
 	{
-		if(!adminMode && amount != getAmountDue(ticket))
+		if(!adminMode && amount != getAmountDue(ticketId))
 			return false;
 		
 		if(!adminMode && !paymentProcessor.processPayment(isCreditCard))
 			return false;
 		
+		Ticket ticket = ticketTracker.findTicket(ticketId);
 		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
 		openGate();
@@ -164,7 +165,7 @@ public class BoothImpl extends Observable implements Booth
 			return;
 	}
 
-	public Ticket findTicket(String id) 
+	public Ticket findTicket(String id) throws RemoteException 
 	{
 		return ticketTracker.findTicket(id);
 	}

@@ -33,9 +33,6 @@ public class DriverController
 	public void parkCar() throws RemoteException 
 	{
 		driver.parkCar();
-		
-		//closing the gate right here. Not the most logical place to put this code. should be more of a signal than a control of the booth. Rename?
-		garage.getBooth(false).closeGate();
 	}
 
 	public void moveDriverToExit() throws RemoteException 

@@ -9,9 +9,8 @@ import model.Location;
 
 public class DriverImpl implements Driver
 {
-	private static final long serialVersionUID = 1L;
 	private GarageImpl garage;
-	private String licensePlate;
+	private String license;
 	private Ticket myTicket = null;
 	private Location location = new Location();
 	private boolean isParked = false;
@@ -19,7 +18,7 @@ public class DriverImpl implements Driver
 	public DriverImpl(String licensePlate, int x, int y) throws java.rmi.RemoteException
 	{
 		super();
-		this.licensePlate = licensePlate;
+		this.license = licensePlate;
 		location.x = x;
 		location.y = y;
 		garage = GarageImpl.getInstance();
@@ -45,39 +44,33 @@ public class DriverImpl implements Driver
 	
 	public void goToEntrance() throws RemoteException
 	{
-		Booth booth = garage.getNearestBooth(location, false);
+		Booth booth = garage.getBooth(false);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
 		move(location);
 	}
 	
-	public void goToExit() 
+	public void goToExit() throws RemoteException 
 	{
-		BoothImpl booth = (BoothImpl)garage.getNearestBooth(location, true);
+		Booth booth = garage.getBooth(true);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
 		move(location);
 	}
 	
-	public void parkCar()
+	public void parkCar() throws RemoteException
 	{
 		Location stall = garage.getOpenStall();
 		move(stall);
 		isParked = true;
+		garage.closeEntranceGate();
 	}
 	
-//	public void enterGarage() throws RemoteException
-//	{
-//		goToEntrance();
-//		pushTicketButton(garage.getNearestBooth(location, false), false);
-//		parkCar();
-//	}
-	
-	public void exitGarage() 
+	public void exitGarage() throws RemoteException 
 	{
-		garage.removeVehicle(location, this);
+		garage.removeVehicle(location, license);
 	}
 	
 	public void move(Location location)
@@ -95,7 +88,7 @@ public class DriverImpl implements Driver
 	
 	@Override public String toString()
 	{
-		return licensePlate;
+		return license;
 	}
 
 	public boolean isParked() 
@@ -110,7 +103,7 @@ public class DriverImpl implements Driver
 
 	public String getLicense() 
 	{
-		return licensePlate;
+		return license;
 	}
 
 	public boolean hasTicket() 
@@ -126,5 +119,10 @@ public class DriverImpl implements Driver
 	public int getY() 
 	{
 		return location.y;
+	}
+
+	public String getTicketId() throws RemoteException 
+	{
+		return myTicket.getId();
 	}
 }

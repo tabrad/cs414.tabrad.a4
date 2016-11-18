@@ -224,4 +224,9 @@ public class GarageController implements ActionListener
 	{
 		return garage.getDriversLocations();
 	}
+
+	public Driver getDriver(String license) throws RemoteException
+	{
+		return garage.getDriver(license);
+	}
 }

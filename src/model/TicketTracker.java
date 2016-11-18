@@ -1,5 +1,6 @@
 package model;
 
+import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,7 +21,7 @@ public class TicketTracker extends Observable
 		notifyObservers();
 	}
 	
-	public Ticket findTicket(String id)
+	public Ticket findTicket(String id) throws RemoteException
 	{
 		for(Ticket ticket : unPaidTickets)
 		{
@@ -31,10 +32,12 @@ public class TicketTracker extends Observable
 		return null;
 	}
 	
-	public boolean hasUnpaidTicket(Ticket ticket)
+	public boolean hasUnpaidTicket(String ticketId) throws RemoteException
 	{
-		if(unPaidTickets.contains(ticket))
-			return true;
+		for(Ticket ticket : unPaidTickets)
+		{
+			if(ticket.getId().equals(ticketId));
+		}
 		
 		return false;
 	}
@@ -65,7 +68,7 @@ public class TicketTracker extends Observable
 		return tickets;
 	}
 
-	public Set<Ticket> getTicketsProcessedByBooth(int boothId, boolean asEntrance, boolean asExit) 
+	public Set<Ticket> getTicketsProcessedByBooth(int boothId, boolean asEntrance, boolean asExit) throws RemoteException 
 	{
 		HashSet<Ticket> tickets = new HashSet<Ticket>();
 		
@@ -84,7 +87,7 @@ public class TicketTracker extends Observable
 		return tickets;
 	}
 	
-	public Set<Ticket> getTicketsByTimePeriod(Date begin, Date end)
+	public Set<Ticket> getTicketsByTimePeriod(Date begin, Date end) throws RemoteException
 	{
 		HashSet<Ticket> tickets = new HashSet<Ticket>();
 		for(Ticket ticket : unPaidTickets)
@@ -106,7 +109,7 @@ public class TicketTracker extends Observable
 		return tickets;
 	}
 
-	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException 
 	{
 		Object[][] data = null;
 		Calendar calendar = Calendar.getInstance();

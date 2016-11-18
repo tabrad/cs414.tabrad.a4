@@ -130,18 +130,20 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return true;
 	}
 	
-	public void removeVehicle(Location location, DriverImpl driver)
+	public void removeVehicle(Location location, String license) throws RemoteException
 	{
 		grid[location.x][location.y] = null;
-		BoothImpl booth = (BoothImpl)getNearestBooth(location, true);
+		Booth booth = getBooth(true);
 		booth.closeGate();
-		drivers.remove(driver);
-	}
-	
-	public void removeVehicle(Location location) throws RemoteException 
-	{
-		DriverImpl driver = (DriverImpl)findDriver(location.x, location.y);
-		removeVehicle(location, driver);
+		
+		//remove driver
+		Driver temp = null;
+		for(Driver d : drivers)
+		{
+			if(d.getLicense().equals(license))
+				temp = d;
+		}
+		drivers.remove(temp);
 	}
 	
 	public Boolean isClear(Location location)
@@ -170,17 +172,15 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return null;
 	}
 	
-	public Driver findDriver(int x, int y) 
+	public Driver findDriver(int x, int y) throws RemoteException 
 	{
 		for(Driver driver : drivers)
 		{		
-			try{
-				if(x != driver.getX())
-					continue;
-				
-				if(y != driver.getY())
-					continue;
-			}catch(Exception e){}
+			if(x != driver.getX())
+				continue;
+			
+			if(y != driver.getY())
+				continue;
 			
 			return driver;
 		}
@@ -211,35 +211,6 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 	public Set<Booth> getBooths()
 	{
 		return activeBooths;
-	}
-	
-	public Booth getNearestBooth(Location location, boolean isExit)
-	{
-		Booth booth = null;
-		int closestDistance = 0;
-		
-		for(Booth b : activeBooths)
-		{	
-			try{
-				if(b.isExit() != isExit)
-					continue;
-				
-				int boothDistance = Math.abs(b.getLocation().x - location.x) + Math.abs(b.getLocation().y - location.y);
-				
-				//if we have not selected a booth yet, use this booth
-				if(closestDistance == 0)
-				{
-					booth = b;
-					closestDistance = boothDistance;
-					continue;
-				}
-				
-				if(boothDistance < closestDistance)
-					booth = b;
-			}catch(Exception e){}
-		}
-		
-		return booth;
 	}
 
 	public Location getOpenStall() 
@@ -317,21 +288,25 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return ticketTracker.getOccupancy() >= getMaxOccupancy();
 	}
 
+	public void closeEntranceGate() throws RemoteException 
+	{
+		Booth booth = getBooth(false);
+		booth.closeGate();
+	}
+	
 	public boolean isEntranceOpen() throws RemoteException 
 	{
-		Booth boothEntrance = getNearestBooth(new Location(0, 0), false);
-		
+		Booth boothEntrance = getBooth(false);
 		return boothEntrance.gateIsOpen();
 	}
 	
 	public boolean isExitOpen() throws RemoteException 
 	{
-		Booth boothExit = getNearestBooth(new Location(0, 0), true);
-		
+		Booth boothExit = getBooth(true);
 		return boothExit.gateIsOpen();
 	}
 
-	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException 
 	{
 		return getTicketTracker().getTableData(granularity, isFinancialReport);
 	}
@@ -357,4 +332,6 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		
 		return locations;
 	}
+
+	
 }

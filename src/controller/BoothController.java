@@ -1,48 +1,35 @@
 package controller;
 
-import common.Ticket;
-import server.BoothImpl;
-import server.DriverImpl;
-import server.GarageImpl;
-import view.DriverDialog;
+import java.rmi.RemoteException;
+
+import common.Booth;
 
 public class BoothController 
 {
-	private static GarageImpl garage = GarageImpl.getInstance();
+	private static GarageController garageController = GarageController.getInstance();
 	
-	public static float getAmountDue(String license, boolean lostTicket) 
+	public static float getAmountDue(String ticketId, boolean lostTicket) throws RemoteException 
 	{
-		DriverImpl driver = garage.getDriver(license);
-		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
+		Booth booth = garageController.getBooth(true);
 		float amountDue = 0;
 		
 		if(lostTicket)
 			amountDue = booth.getAmountDue();
 		else
-			amountDue = booth.getAmountDue(driver.getTicket());
+			amountDue = booth.getAmountDue(ticketId);
 		
 		return amountDue;
 	}
 
-	public static float getAmountDueByTicketId(String license, String id) 
-	{	
-		DriverImpl driver = garage.getDriver(license);
-		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
-		Ticket ticket = garage.getTicketTracker().findTicket(id);
-		
-		return booth.getAmountDue(ticket);
+	public static boolean findTicket(String id) throws RemoteException 
+	{
+		Booth booth = garageController.getBooth(true);
+		return booth.findTicket(id) != null;
 	}
 
-	public static boolean findTicket(String id) 
+	public static boolean insertPayment(String ticketId, float amountDue, boolean isCreditCard) throws RemoteException 
 	{
-		return garage.getTicketTracker().findTicket(id) != null;
-	}
-
-	public static boolean insertPayment(DriverDialog dialog, String license, float amountDue, boolean isCreditCard) 
-	{
-		DriverImpl driver = garage.getDriver(license);
-		BoothImpl booth = garage.getNearestBooth(driver.getLocation(), true);
-		
-		return booth.insertPayment(driver, driver.getTicket(), amountDue, isCreditCard);
+		Booth booth = garageController.getBooth(true);
+		return booth.insertPayment(ticketId, amountDue, isCreditCard);
 	}
 }

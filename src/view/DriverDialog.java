@@ -107,11 +107,6 @@ public class DriverDialog extends Dialog
 		parkedLabel.setText("Driver Parked: " + (driver.isParked() ? "Yes" : "No"));
 	}
 	
-	private DriverDialog getOuterClass()
-	{
-		return this;
-	}
-	
 	private class EnterGarageListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -179,7 +174,7 @@ public class DriverDialog extends Dialog
 				
 				float amountDue;
 				if(result == JOptionPane.YES_OPTION) //driver inserts ticket
-					amountDue = BoothController.getAmountDue(driver.getLicense(), false);
+					amountDue = BoothController.getAmountDue(driver.getTicketId(), false);
 				else if(result == JOptionPane.CANCEL_OPTION) //driver manually enters ticket id
 				{
 					String id = JOptionPane.showInputDialog("Enter Ticket ID");
@@ -189,15 +184,15 @@ public class DriverDialog extends Dialog
 					if(!isValid)
 					{
 						JOptionPane.showMessageDialog(frame, "Invalid Ticket. Maximum Charge.");
-						amountDue = BoothController.getAmountDue(driver.getLicense(), true);
+						amountDue = BoothController.getAmountDue(driver.getTicketId(), true);
 					}
 					else
 					{
-						amountDue = BoothController.getAmountDueByTicketId(driver.getLicense(), id);
+						amountDue = BoothController.getAmountDue(id, true);
 					}
 				}
 				else //driver lost ticket
-					amountDue = BoothController.getAmountDue(driver.getLicense(), true);
+					amountDue = BoothController.getAmountDue(driver.getTicketId(), true);
 				
 				result = JOptionPane.showOptionDialog(frame, 
 						"You Owe " + amountDue + ". Please Select Payment", 
@@ -210,12 +205,12 @@ public class DriverDialog extends Dialog
 				
 				if(result == JOptionPane.YES_OPTION)
 				{
-					BoothController.insertPayment(getOuterClass(), driver.getLicense(), amountDue, false);
+					BoothController.insertPayment(driver.getTicketId(), amountDue, false);
 					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
 				}
 				else
 				{
-					boolean isPaid = BoothController.insertPayment(getOuterClass(), driver.getLicense(), amountDue, true);
+					boolean isPaid = BoothController.insertPayment(driver.getTicketId(), amountDue, true);
 					
 					if(isPaid)
 						JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");

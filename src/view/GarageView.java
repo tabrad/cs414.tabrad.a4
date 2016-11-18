@@ -55,10 +55,9 @@ public class GarageView extends JPanel
 	private GarageView() throws RemoteException
 	{
 		garageController = GarageController.getInstance();
-		int max = garageController.getMaxOccupancy();
-		System.out.println("max:"+max);
 		stalls = garageController.getParkingStalls();
 		roads = garageController.getRoad();
+		
 		boothEntrance = garageController.getBooth(false);
 		boothExit = garageController.getBooth(true);
 		booths.add(boothEntrance);
@@ -82,7 +81,6 @@ public class GarageView extends JPanel
 		        @Override
 		        public void run() {
 		            repaint();
-		            //System.out.println("repaint called");
 		        }
 		    }, 1000, 1000);
 	}
