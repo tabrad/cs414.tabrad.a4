@@ -90,7 +90,10 @@ public class BoothImpl extends Observable implements Booth
 	public float getAmountDue(String ticketId) throws RemoteException 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticketId))
+		{
+			System.out.println("failed to find ticket");
 			return rates.maxCharge;
+		}
 		
 		Ticket ticket = ticketTracker.findTicket(ticketId);
 		long currentTime = new Date().getTime() / 1000;

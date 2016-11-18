@@ -36,7 +36,8 @@ public class TicketTracker extends Observable
 	{
 		for(Ticket ticket : unPaidTickets)
 		{
-			if(ticket.getId().equals(ticketId));
+			if(ticket.getId().equals(ticketId))
+				return true;
 		}
 		
 		return false;

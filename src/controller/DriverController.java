@@ -27,7 +27,7 @@ public class DriverController
 
 	public void driverPrematureExit() throws RemoteException 
 	{
-		garage.removeVehicle(driver.getLocation());
+		garage.removeVehicle(driver.getLocation(), driver.getLicense());
 	}
 
 	public void parkCar() throws RemoteException 

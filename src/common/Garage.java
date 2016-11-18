@@ -1,26 +1,27 @@
 package common;
 
+import java.rmi.RemoteException;
 import java.util.Set;
 
 import model.Location;
 
 public interface Garage extends java.rmi.Remote
 {
-	public void simulate() throws java.rmi.RemoteException;
-	public Driver createDriver() throws java.rmi.RemoteException;	
-	public void createBooth(int boothId, Location location, Boolean isExit) throws java.rmi.RemoteException;
-	public Booth getBooth(boolean isExit) throws java.rmi.RemoteException;
-	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws java.rmi.RemoteException;
-	public Set<Location> getParkingStalls() throws java.rmi.RemoteException;
-	public Set<Location> getRoad() throws java.rmi.RemoteException;
-	public Driver findDriver(int x, int y) throws java.rmi.RemoteException;
-	public boolean isFull() throws java.rmi.RemoteException;
-	public int getMaxOccupancy() throws java.rmi.RemoteException;
-	public int getOccupancy() throws java.rmi.RemoteException;
-	public boolean isEntranceOpen() throws java.rmi.RemoteException;	
-	public boolean isExitOpen() throws java.rmi.RemoteException;
-	public Set<Driver> getDrivers() throws java.rmi.RemoteException;
-	public void removeVehicle(Location location) throws java.rmi.RemoteException;
-	public Set<Location> getDriversLocations() throws java.rmi.RemoteException;
-	public Driver getDriver(String license) throws java.rmi.RemoteException;
+	public void simulate() throws RemoteException;
+	public Driver createDriver() throws RemoteException;	
+	public void createBooth(int boothId, Location location, Boolean isExit) throws RemoteException;
+	public Booth getBooth(boolean isExit) throws RemoteException;
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException;
+	public Set<Location> getParkingStalls() throws RemoteException;
+	public Set<Location> getRoad() throws RemoteException;
+	public Driver findDriver(int x, int y) throws RemoteException;
+	public boolean isFull() throws RemoteException;
+	public int getMaxOccupancy() throws RemoteException;
+	public int getOccupancy() throws RemoteException;
+	public boolean isEntranceOpen() throws RemoteException;	
+	public boolean isExitOpen() throws RemoteException;
+	public Set<Driver> getDrivers() throws RemoteException;
+	public Set<Location> getDriversLocations() throws RemoteException;
+	public Driver getDriver(String license) throws RemoteException;
+	public void removeVehicle(Location location, String license) throws RemoteException;
 }
