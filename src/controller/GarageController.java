@@ -2,15 +2,18 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Set;
 
 import javax.swing.JFrame;
 
-import model.Garage;
+import common.Booth;
+import common.Driver;
+import common.Garage;
 import model.Location;
-import model.Booth;
-import model.Driver;
 import view.DriverDialog;
 import view.GarageView;
 import view.OverviewDialog;
@@ -23,27 +26,35 @@ public class GarageController implements ActionListener
 	
 	//view
 	private static OverviewDialog overviewDialog;
-	private static GarageView garageView;
 	
 	//model
 	private static Garage garage;
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws RemoteException
     {
         overviewDialog = new OverviewDialog();
-        garageView = GarageView.getInstance();
-        JFrame frame = new JFrame();
-        frame.setSize(672, 672);
-        frame.add(garageView);
         
         updateOverview();
         overviewDialog.showDialog();
-        frame.setVisible(true);
     }
         
 	private GarageController()
 	{
-		garage = Garage.getInstance();
+		try{
+			garage = (Garage) Naming.lookup("rmi://localhost:2500/Garage");
+		} catch (MalformedURLException murle) {
+            System.out.println("MalformedURLException");
+            System.out.println(murle);
+        } catch (RemoteException re) {
+            System.out.println("RemoteException"); 
+            System.out.println(re);
+        } catch (NotBoundException nbe) {
+            System.out.println("NotBoundException");
+            System.out.println(nbe);
+        } catch (java.lang.ArithmeticException ae) {
+             System.out.println("java.lang.ArithmeticException");
+             System.out.println(ae);
+        }
 	}
 	
 	public static GarageController getInstance()
@@ -51,60 +62,9 @@ public class GarageController implements ActionListener
 		if(instance == null)
 		{
 			instance = new GarageController();
-			initialize();
 		}
 		
 		return instance;
-	}
-	
-	private static void initialize()
-	{
-		garage.createBooth(1, new Location(2, 2), false);
-		garage.createBooth(1, new Location(18, 2), true);
-		
-		//setup road locations
-		HashSet<Location> roads = new HashSet<Location>();
-		mapLocationToColumn(1, 20, 4, roads);
-		mapLocationToColumn(1, 20, 5, roads);
-		mapLocationToColumn(1, 20, 8, roads);
-		mapLocationToColumn(1, 20, 9, roads);
-		mapLocationToColumn(1, 20, 12, roads);
-		mapLocationToColumn(1, 20, 13, roads);
-		mapLocationToColumn(1, 20, 16, roads);
-		mapLocationToColumn(1, 20, 17, roads);
-		mapLocationToRow(1, 20, 1, roads);
-		mapLocationToRow(4, 17, 2, roads);
-		mapLocationToRow(4, 17, 19, roads);
-		mapLocationToRow(4, 17, 20, roads);
-		garage.setRoad(roads);
-		
-		//setup parking stalls
-		HashSet<Location> parkingStalls = new HashSet<Location>();
-		mapLocationToColumn(3, 18, 6, parkingStalls);
-		mapLocationToColumn(3, 18, 7, parkingStalls);
-		mapLocationToColumn(3, 18, 10, parkingStalls);
-		mapLocationToColumn(3, 18, 11, parkingStalls);
-		mapLocationToColumn(3, 18, 14, parkingStalls);
-		mapLocationToColumn(3, 18, 15, parkingStalls);
-		garage.setParkingStalls(parkingStalls);
-	}
-	
-	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
-	{
-		for(int y = yStart; y < yEnd + 1; y++)
-		{
-			Location location = new Location(xColumn, y);
-			locations.add(location);
-		}
-	}
-	
-	private static void mapLocationToRow(int xStart, int xEnd, int yRow, HashSet<Location> locations)
-	{
-		for(int x = xStart; x < xEnd + 1; x++)
-		{
-			Location location = new Location(x, yRow);
-			locations.add(location);
-		}
 	}
 
 	public void actionPerformed(ActionEvent e) 
@@ -121,7 +81,9 @@ public class GarageController implements ActionListener
         } 
         else if (command.equals("New Car"))
         {
-        	createDriver();
+        	try{
+        		createDriver();
+        	}catch(Exception ee){}
         }
 		
 		updateOverview();
@@ -129,26 +91,28 @@ public class GarageController implements ActionListener
 	
 	public static void updateOverview()
 	{	
-		garageView.repaint();
+		overviewDialog.update();
 	}
 	
 	public void simulate() 
 	{
+		try{
 		garage.simulate();
+		}catch(Exception e){}
+		
 	}
 
-	public void createDriver() 
+	public void createDriver() throws RemoteException 
 	{
 		//update the driver dialog
-		String license = "" + System.currentTimeMillis();
-    	Driver driver = garage.createDriver(license);
-    	DriverDialog driverDialog = new DriverDialog(driver);
-    	driver.addObserver(driverDialog);
+		Driver driver = null;
+		try{
+    	 driver = (Driver)garage.createDriver();
+		}catch(Exception e){System.out.println("failed to create driver");}
+	
+    	DriverDialog driverDialog = new DriverDialog(driver, garage);
     	driverDialog.showDialog();
-    	
-    	//add the garage view as an observer
-    	driver.addObserver(garageView);
-    	garageView.repaint();
+    	updateOverview();
 	}
 
 	public void reportsClicked() 
@@ -159,50 +123,102 @@ public class GarageController implements ActionListener
 
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) 
 	{
-		return garage.getTicketTracker().getTableData(granularity, isFinancialReport);
+		try{
+		return garage.getTableData(granularity, isFinancialReport);
+		}catch(Exception e){}
+		return null;
 	}
 
 	public Set<Location> getParkingStalls() 
 	{
-		return garage.getParkingStalls();
+		try{
+			return garage.getParkingStalls();
+		}catch(Exception e){System.out.println("error getting stalls");}
+		return null;
 	}
 
-	public Set<Location> getRoad() {
-		// TODO Auto-generated method stub
+	public Set<Location> getRoad() 
+	{
+		try{
 		return garage.getRoad();
+		}catch(Exception e){}
+		return null;
+	}
+	
+	public Booth getBooth(boolean isExit) throws RemoteException
+	{
+		return garage.getBooth(isExit);
 	}
 
-	public Set<Booth> getBooths() 
+	public void garageClicked(int x, int y) throws RemoteException 
 	{
-		return garage.getBooths();
-	}
-
-	public void garageClicked(int x, int y) 
-	{
-		for(Driver driver : garage.getDrivers())
-		{		
-			if(x != driver.getX())
-				continue;
-			
-			if(y != driver.getY())
-				continue;
-			
-			DriverDialog dialog = new DriverDialog(driver);
-			driver.addObserver(dialog);
-			driver.addObserver(garageView);
-			dialog.showDialog();
+		Driver driver = garage.findDriver(x, y);
+		if(driver == null)
 			return;
-		}
 		
+		DriverDialog dialog = new DriverDialog(driver, garage);
+		dialog.showDialog();
 	}
 
 	public Set<Driver> getDrivers() 
 	{
+		try{
 		return garage.getDrivers();
+		}catch(Exception e){}
+		return null;
 	}
 	
 	public boolean isFull()
 	{
+		try{
 		return garage.isFull();
+		}catch(Exception e){}
+		return false;
+	}
+
+	public int getMaxOccupancy() 
+	{
+		try{
+			return garage.getMaxOccupancy();
+		}catch(Exception e){System.out.println("failed to get max occupancy");}
+		
+		return 0;
+	}
+
+	public int getOccupancy() 
+	{
+		try{
+			return garage.getOccupancy();
+		}catch(Exception e){}
+		
+		return 0;
+	}
+
+	public boolean isEntranceOpen() 
+	{
+		try{
+			return garage.isEntranceOpen();
+		}catch(Exception e){}
+		
+		return false;
+	}
+
+	public boolean isExitOpen() 
+	{
+		try{
+			return garage.isExitOpen();
+		}catch(Exception e){}
+		
+		return false;
+	}
+
+	public Set<Location> getDriversLocations() throws RemoteException 
+	{
+		return garage.getDriversLocations();
+	}
+
+	public Driver getDriver(String license) throws RemoteException
+	{
+		return garage.getDriver(license);
 	}
 }

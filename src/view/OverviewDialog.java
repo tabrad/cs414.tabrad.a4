@@ -1,13 +1,14 @@
 package view;
 
+import java.rmi.RemoteException;
+
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.GarageController;
-import model.Garage;
 
 
 /**
@@ -27,39 +27,29 @@ import model.Garage;
  */
 
 
-public class OverviewDialog extends Dialog implements Observer
+public class OverviewDialog extends Dialog
 {
 	private JLabel headerLabel;
-	private JLabel statusLabel;
-	private JLabel boothGateLabel;
 	private JLabel occupancyLabel;
-	private JLabel signLabel;
 	private JPanel controlPanel;
+	private GarageView garageView;
+	private int maxOccupancy;
 	
 	GarageController garageController;
-	
-	Garage garage;
 	   
-	public OverviewDialog()
+	public OverviewDialog() throws RemoteException
 	{
-		prepareController();
+		garageController = GarageController.getInstance();
+		maxOccupancy = garageController.getMaxOccupancy();
 		prepareGUI();
-		garage = Garage.getInstance();
-		garage.addObserver(this);
-		garage.getTicketTracker().addObserver(this);
 		update();
 	}
 	
-	private void prepareController()
-	{
-		garageController = GarageController.getInstance();
-	}
-	
-	private void prepareGUI()
+	private void prepareGUI() throws RemoteException
     {
 		 frame = new JFrame("Parking Garage");
-	     frame.setSize(400,400);
-	     frame.setLayout(new GridLayout(7, 1));
+	     //frame.setSize(1000,1000);
+	     frame.setLayout(new GridBagLayout());
 	     frame.addWindowListener(new WindowAdapter() {
 	    	 public void windowClosing(WindowEvent windowEvent)
 	    	 {
@@ -67,23 +57,33 @@ public class OverviewDialog extends Dialog implements Observer
 	         }        
 	      });
 	     
-	     //Elements of the main frame
+	     //use a gridboxlayout to control contents of the frame
+	     GridBagConstraints c = new GridBagConstraints();
+	     c.fill = GridBagConstraints.HORIZONTAL;
+	     
+	     c.gridx = 0;
+	     c.gridy = 0;
 	     headerLabel = new JLabel("", JLabel.CENTER);
 	     headerLabel.setText("Parking Garage Overview");
-	     statusLabel = new JLabel("", JLabel.CENTER);
-	     statusLabel.setSize(350,100);
+	     frame.add(headerLabel, c);
+	     
+	     //add buttons to the frame
 	     occupancyLabel = new JLabel();
-	     boothGateLabel = new JLabel();
-	     signLabel = new JLabel();
 	     controlPanel = new JPanel();
 	     controlPanel.setLayout(new FlowLayout());	     
-
-	     frame.add(headerLabel);
-	     frame.add(signLabel);
-	     frame.add(occupancyLabel);
-	     frame.add(boothGateLabel);
-	     frame.add(controlPanel);
-	     frame.add(statusLabel);
+	     controlPanel.add(occupancyLabel);
+	     c.gridy = 1;
+	     frame.add(controlPanel, c);
+	     
+	     //add our main GUI "garageView"
+	     garageView = GarageView.getInstance();
+	     garageView.setSize(672, 672);
+	     c.gridy = 2;
+	     c.weighty = 1.0;
+	     c.ipady = 672;
+	     c.ipadx = 672;
+	     frame.add(garageView, c);
+	     frame.setSize(768, 768);
 		 
 	     //Buttons
 		 JButton newCarButton = new JButton("New Car");
@@ -102,9 +102,9 @@ public class OverviewDialog extends Dialog implements Observer
 	
 	public void update()
 	{
-		occupancyLabel.setText("Occupancy: " + garage.getOccupancy() + " out of " + garage.getMaxOccupancy() + " vehicles.");
-		signLabel.setText("Garage is: " + (garage.getOccupancy() >= garage.getMaxOccupancy() ? "FULL" : "NOT FULL"));
-		boothGateLabel.setText("Entrance Gate: " + (garage.isEntranceOpen() ? "Open " : "Closed ") + "     Exit Gate: " + (garage.isExitOpen() ? "Open" : "Closed"));
+		int occupancy = garageController.getOccupancy();
+		occupancyLabel.setText("Occupancy: " + occupancy + " out of " + maxOccupancy + " vehicles.");
+		garageView.repaint();
 	}
 	
 	private class ButtonClickListener implements ActionListener
@@ -125,11 +125,5 @@ public class OverviewDialog extends Dialog implements Observer
              }
          }	
       }		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) 
-	{
-		update();
 	}
 }

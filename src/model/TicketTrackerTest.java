@@ -8,15 +8,18 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import common.Ticket;
+import server.GarageImpl;
+
 public class TicketTrackerTest {
 
-	Garage garage;
+	GarageImpl garage;
 	TicketTracker ticketTracker;
 	
 	
 	@Before public void inititialize()
 	{
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		ticketTracker = new TicketTracker();
 	}
 	

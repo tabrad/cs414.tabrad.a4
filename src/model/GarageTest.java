@@ -5,20 +5,25 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.DriverImpl;
+import server.GarageImpl;
+
 public class GarageTest {
 
-	Garage garage;
+	GarageImpl garage;
 	TicketTracker ticketTracker;
-	Driver driver;
+	DriverImpl driver;
 	
 	@Before public void initialize()
 	{
-		garage = Garage.getInstance();
+		garage = GarageImpl.getInstance();
 		ticketTracker = new TicketTracker();
 		driver = garage.createDriver("83nfjahf");
 
+		try{
 		garage.createBooth(1, new Location(5, 5), false);
 		garage.createBooth(1, new Location(10, 15), true);
+		}catch(Exception e){}
 	}
 	
 	@Test public void testGrid()
@@ -51,7 +56,7 @@ public class GarageTest {
 		//get a new ticket from the booth
 		driver.enterGarage();
 		
-		Driver driver2 = new Driver("JJJ-983", 0, 0);
+		DriverImpl driver2 = new DriverImpl("JJJ-983", 0, 0);
 		driver2.move(new Location(0, 0));
 		driver2.enterGarage();
 		driver2.exitGarage();

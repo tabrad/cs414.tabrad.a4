@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import java.util.Date;
 import org.junit.Test;
 
+import common.Ticket;
+
 public class TicketTest {
 
 	@Test public void testEquals() 

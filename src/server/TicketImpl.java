@@ -1,8 +1,10 @@
-package model;
+package server;
 
 import java.util.Date;
 
-public class Ticket 
+import common.Ticket;
+
+public class TicketImpl implements Ticket
 {
 	private Date timeEntered;
 	private Date timeExited;
@@ -11,7 +13,7 @@ public class Ticket
 	private int boothExited;
 	private float paymentAmount;
 	
-	public Ticket(Date timeEntered, int boothEntered)
+	public TicketImpl (Date timeEntered, int boothEntered)
 	{
 		this.timeEntered = timeEntered;
 		this.boothEntered = boothEntered;
@@ -57,7 +59,7 @@ public class Ticket
 	
 	@Override public boolean equals(Object o)
 	{
-		return ((Ticket)o).getTimeEntered() == timeEntered && ((Ticket)o).getBoothEntered() == boothEntered;
+		return ((TicketImpl)o).getTimeEntered() == timeEntered && ((TicketImpl)o).getBoothEntered() == boothEntered;
 	}
 
 	public boolean processedBy(int boothId, boolean asEntrance, boolean asExit) 

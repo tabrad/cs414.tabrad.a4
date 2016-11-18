@@ -1,27 +1,38 @@
-package model;
+package server;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
-public class Booth extends Observable 
+import common.Booth;
+import common.Ticket;
+import model.Admin;
+import model.Location;
+import model.PaymentProcessor;
+import model.Rate;
+import model.TicketTracker;
+
+public class BoothImpl extends Observable implements Booth
 {
 	private int boothId;
-	private Location location = new Location();
-	private Boolean isExit;
-	private Gate gate = new Gate();
+	private Location location;
+	private boolean isExit;
+	private boolean isOpen;
 	private Rate rates = new Rate();
 	private TicketTracker ticketTracker;
 	private PaymentProcessor paymentProcessor = new PaymentProcessor();
 	private Boolean adminMode = false;
 	
-	public Booth(TicketTracker ticketTracker, int boothId, Location location, Boolean isExit, Rate rates)
+	public BoothImpl(TicketTracker ticketTracker, int boothId, Location location, boolean isExit, Rate rates)
 	{
 		this.ticketTracker = ticketTracker;
 		this.boothId = boothId;
 		this.location = location;
 		this.isExit = isExit;
 		this.rates = rates;
+		this.isOpen = false;
 	}
 	
 	public int getId()
@@ -34,9 +45,10 @@ public class Booth extends Observable
 		return isExit;
 	}
 
-	private Ticket getTicket(boolean isSimulation) 
+	private Ticket getTicket(boolean isSimulation) throws RemoteException 
 	{
-		Garage garage = Garage.getInstance();
+		System.out.println("getticket start");
+		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
 			return null;
 
@@ -48,9 +60,10 @@ public class Booth extends Observable
 			date.setTime(calendar.getTimeInMillis());
 		}
 		
-		Ticket ticket = new Ticket(date, boothId);
+		Ticket t = new TicketImpl(date, boothId);
+		Ticket ticket = (Ticket) UnicastRemoteObject.exportObject(t, 0); 	
 		ticketTracker.addTicket(ticket);
-		
+		System.out.println("ticket exported");
 		return ticket;
 	}
 	
@@ -59,13 +72,14 @@ public class Booth extends Observable
 		return location;
 	}
 	
-	public void ticketButtonPressed(Driver driver, boolean isSimulation)
+	public Ticket ticketButtonPressed(boolean isSimulation) throws RemoteException
 	{
 		Ticket ticket = getTicket(isSimulation);
-		if(ticket == null)
-			return;
-		driver.setTicket(ticket);
+//		if(ticket == null)
+	//		return null;
 		openGate();
+		
+		return ticket;
 	}
 	
 	public float getAmountDue() 
@@ -73,11 +87,15 @@ public class Booth extends Observable
 		return rates.maxCharge;
 	}
 	
-	public float getAmountDue(Ticket ticket) 
+	public float getAmountDue(String ticketId) throws RemoteException 
 	{
-		if(!ticketTracker.hasUnpaidTicket(ticket))
+		if(!ticketTracker.hasUnpaidTicket(ticketId))
+		{
+			System.out.println("failed to find ticket");
 			return rates.maxCharge;
+		}
 		
+		Ticket ticket = ticketTracker.findTicket(ticketId);
 		long currentTime = new Date().getTime() / 1000;
 		long ticketTime = ticket.getTimeEntered().getTime() / 1000;
 		long hoursParked = (currentTime - ticketTime) / 60 / 60;
@@ -99,14 +117,15 @@ public class Booth extends Observable
 		return amountDue;
 	}
 	
-	public boolean insertPayment(Driver driver, Ticket ticket, float amount, boolean isCreditCard)
+	public boolean insertPayment(String ticketId, float amount, boolean isCreditCard) throws RemoteException
 	{
-		if(!adminMode && amount != getAmountDue(ticket))
+		if(!adminMode && amount != getAmountDue(ticketId))
 			return false;
 		
 		if(!adminMode && !paymentProcessor.processPayment(isCreditCard))
 			return false;
 		
+		Ticket ticket = ticketTracker.findTicket(ticketId);
 		ticket.markPaid(boothId, amount);
 		ticketTracker.markTicketPaid(ticket);
 		openGate();
@@ -114,28 +133,23 @@ public class Booth extends Observable
 		return true;
 	}
 	
-	public Gate getGate() 
-	{
-		return gate;
-	}
-	
 	public void openGate()
 	{
-		gate.open();
+		isOpen = true;
 		setChanged();
 		notifyObservers();
 	}
 
 	public void closeGate() 
 	{
-		gate.close();
+		isOpen = false;
 		setChanged();
 		notifyObservers();
 	}
 
 	public boolean login(Admin admin) 
 	{
-		if(!Garage.isAdmin(admin))
+		if(!GarageImpl.isAdmin(admin))
 			return false;
 		
 		adminMode = true;
@@ -147,20 +161,20 @@ public class Booth extends Observable
 		adminMode = false;
 	}
 	
-	public void requestAdmin(Driver driver, Ticket ticket) 
+	public void requestAdmin(DriverImpl driver, Ticket ticket) 
 	{
-		Admin admin = Garage.getAdmin();
+		Admin admin = GarageImpl.getAdmin();
 		if(!admin.accessBooth(this))
 			return;
 	}
 
-	public Ticket findTicket(String id) 
+	public Ticket findTicket(String id) throws RemoteException 
 	{
 		return ticketTracker.findTicket(id);
 	}
 
 	public boolean gateIsOpen() 
 	{
-		return gate.isOpen();
+		return isOpen;
 	}
 }

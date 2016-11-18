@@ -5,25 +5,31 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
+import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import common.Booth;
 import controller.GarageController;
-import model.Booth;
-import model.Driver;
 import model.Location;
 
-public class GarageView extends JPanel implements Observer
+public class GarageView extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private static GarageView instance = null;
 	GarageController garageController;
 	private static int iconWidth = 32;
 	private static int iconHeight = 32;
+	Set<Location> stalls = new HashSet<Location>();
+	Set<Location> roads = new HashSet<Location>();
+	Booth boothEntrance;
+	Booth boothExit;
+	Set<Booth> booths = new HashSet<Booth>();
 	
 	//images
 	BufferedImage imgBooth = null;
@@ -35,7 +41,10 @@ public class GarageView extends JPanel implements Observer
 	BufferedImage imgFull = null;
 	BufferedImage imgNotFull = null;
 	
-	public static GarageView getInstance()
+	//timer for polling the server
+	Timer timer = new Timer();
+	
+	public static GarageView getInstance() throws RemoteException
 	{
 		if(instance == null)
 			instance = new GarageView();
@@ -43,9 +52,17 @@ public class GarageView extends JPanel implements Observer
 		return instance;
 	}
 	
-	private GarageView()
+	private GarageView() throws RemoteException
 	{
 		garageController = GarageController.getInstance();
+		stalls = garageController.getParkingStalls();
+		roads = garageController.getRoad();
+		
+		boothEntrance = garageController.getBooth(false);
+		boothExit = garageController.getBooth(true);
+		booths.add(boothEntrance);
+		booths.add(boothExit);
+		
 		loadImages();
 		
 		addMouseListener(new MouseAdapter(){
@@ -54,9 +71,19 @@ public class GarageView extends JPanel implements Observer
 			{
 				int x = (e.getX()/iconWidth) + 1;
 				int y = (e.getY()/iconHeight) + 1;
-				garageController.garageClicked(x, y);
+				try {
+					garageController.garageClicked(x, y);
+				} catch (RemoteException e1) {}
 			}
 		});
+		
+		 timer.scheduleAtFixedRate(new TimerTask() {
+		        @Override
+		        public void run() {
+		            repaint();
+		            GarageController.updateOverview();
+		        }
+		    }, 1000, 1000);
 	}
 	
 	private void loadImages()
@@ -74,12 +101,6 @@ public class GarageView extends JPanel implements Observer
 		} catch (IOException e) {
 		}
 	}
-
-	@Override
-	public void update(Observable o, Object arg) 
-	{
-		repaint();
-	}
 	
 	//paintComponent is called in repaint()
 	public void paintComponent(Graphics g)
@@ -94,29 +115,34 @@ public class GarageView extends JPanel implements Observer
 			g.drawLine(y, 2, y, 639);
 		
 		//paint parking stalls
-		Set<Location> stalls = garageController.getParkingStalls();
 		for(Location stall : stalls)
 			g.drawImage(imgStall, stall.x * iconWidth - iconWidth, stall.y * iconHeight - iconHeight, null);
 		
 		//paint roads
-		for(Location road : garageController.getRoad())
+		for(Location road : roads)
 			g.drawImage(imgRoad, road.x * iconWidth - iconWidth, road.y * iconHeight - iconHeight, null);
 		
 		//paint drivers
-		for(Driver driver : garageController.getDrivers())
-			g.drawImage(imgCar, driver.getLocation().x * iconWidth - iconWidth, driver.getLocation().y * iconHeight - iconHeight, null);
+		Set<Location> locations = new HashSet<Location>();
+		try{
+			locations = garageController.getDriversLocations();
+		}catch(Exception e){}
+		for(Location location : locations)
+			g.drawImage(imgCar, location.x * iconWidth - iconWidth, location.y * iconHeight - iconHeight, null);
 
 		//paint booths and gates
-		for(Booth booth : garageController.getBooths())
+		for(Booth booth : booths)
 		{
-			int x = booth.getLocation().x;
-			int y = booth.getLocation().y;
-			g.drawImage(imgBooth, x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
-			
-			//put booth in the middle of the road
-			y -= 1;
-			x += 1;
-			g.drawImage((booth.gateIsOpen() ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
+			try{
+				int x = booth.getLocation().x;
+				int y = booth.getLocation().y;
+				g.drawImage(imgBooth, x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
+				
+				//put gate in the middle of the road
+				y -= 1;
+				x += 1;
+				g.drawImage((booth.gateIsOpen() ? imgGateOpen : imgGateClosed), x * iconWidth - iconWidth, y * iconHeight - iconHeight, null);
+			}catch(Exception e){}
 		}
 		
 		//paint full sign
