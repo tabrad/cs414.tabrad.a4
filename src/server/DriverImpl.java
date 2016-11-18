@@ -14,8 +14,9 @@ public class DriverImpl implements Driver
 	private Ticket myTicket = null;
 	private Location location = new Location();
 	private boolean isParked = false;
+	private boolean hasExited = false;
 	
-	public DriverImpl(String licensePlate, int x, int y) throws java.rmi.RemoteException
+	public DriverImpl(String licensePlate, int x, int y) throws RemoteException
 	{
 		super();
 		this.license = licensePlate;
@@ -71,6 +72,7 @@ public class DriverImpl implements Driver
 	public void exitGarage() throws RemoteException 
 	{
 		garage.removeVehicle(location, license);
+		hasExited = true;
 	}
 	
 	public void move(Location location)
@@ -124,5 +126,10 @@ public class DriverImpl implements Driver
 	public String getTicketId() throws RemoteException 
 	{
 		return myTicket.getId();
+	}
+
+	public boolean hasExited() throws RemoteException 
+	{
+		return hasExited;
 	}
 }

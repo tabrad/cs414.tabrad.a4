@@ -1,19 +1,22 @@
 package common;
 
+import java.rmi.RemoteException;
+
 import model.Location;
 
 public interface Driver extends java.rmi.Remote
 {
-	public void goToEntrance() throws java.rmi.RemoteException;
-	public void goToExit() throws java.rmi.RemoteException;
-	public void parkCar() throws java.rmi.RemoteException;
-	public void exitGarage() throws java.rmi.RemoteException;
-	public boolean isParked() throws java.rmi.RemoteException;
-	public int getX() throws java.rmi.RemoteException;
-	public int getY() throws java.rmi.RemoteException;
-	public String getLicense() throws java.rmi.RemoteException;
-	public boolean hasTicket() throws java.rmi.RemoteException;
-	public Location getLocation() throws java.rmi.RemoteException;
-	public void pushTicketButton(int boothId) throws java.rmi.RemoteException;
-	public String getTicketId()throws java.rmi.RemoteException;
+	public void goToEntrance() throws RemoteException;
+	public void goToExit() throws RemoteException;
+	public void parkCar() throws RemoteException;
+	public void exitGarage() throws RemoteException;
+	public boolean isParked() throws RemoteException;
+	public int getX() throws RemoteException;
+	public int getY() throws RemoteException;
+	public String getLicense() throws RemoteException;
+	public boolean hasTicket() throws RemoteException;
+	public Location getLocation() throws RemoteException;
+	public void pushTicketButton(int boothId) throws RemoteException;
+	public String getTicketId()throws RemoteException;
+	public boolean hasExited() throws RemoteException;
 }

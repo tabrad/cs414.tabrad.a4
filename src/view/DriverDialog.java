@@ -73,11 +73,11 @@ public class DriverDialog extends Dialog
 	    
 	    timer.scheduleAtFixedRate(new TimerTask() {
 	        @Override
-	        public void run() {
-	            try {
+	        public void run() 
+	        {
+				try {
 					update();
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }
@@ -89,8 +89,11 @@ public class DriverDialog extends Dialog
 	
 	public void update() throws RemoteException 
 	{
+		if(driver.hasExited())
+			shutDialog();
 		updateLabels();
 		updateButtons();
+
 	}
 	
 	private void updateButtons() throws RemoteException
