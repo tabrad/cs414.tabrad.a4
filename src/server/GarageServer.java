@@ -12,19 +12,14 @@ public class GarageServer
 		try {
 			Garage garage = GarageImpl.getInstance();
 			Naming.rebind(url, garage);
-			System.out.println("Garage running...");
+			System.out.println("Garage running on " + this.url);
 		} catch (Exception e) {
 			System.out.println("Trouble: " + e);
 		}
 	}
 
-	// run the program using 
-	// java CalculatorServer <host> <port>
-
 	public static void main(String args[]) {
-		String url = new String("rmi://localhost:2500/Garage");
+		String url = new String("rmi://" + args[0] + ":" + args[1] + "/Garage");
 		new GarageServer(url);
 	}
-	
-	
 }
