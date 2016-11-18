@@ -54,7 +54,7 @@ public class BoothTest {
 	{
 		assertFalse(boothEntrance.gateIsOpen());
 		driver.goToEntrance();
-    	driver.pushTicketButton(garage.getBooth(true).getId());
+    	driver.pushTicketButton(garage.getBooth(true).getId(), false);
     	driver.parkCar();
 		assertFalse(driver.hasTicket());
 	}

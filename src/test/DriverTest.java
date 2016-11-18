@@ -41,7 +41,7 @@ public class DriverTest {
 	@Test public void testEnterGarage() throws RemoteException
 	{
 		driver.goToEntrance();
-		driver.pushTicketButton(1);
+		driver.pushTicketButton(1, false);
 		driver.parkCar();
 		assertTrue(driver.isParked());
 		assertTrue(driver.getTicket() != null);
@@ -50,7 +50,7 @@ public class DriverTest {
 	@Test public void testExitGarage() throws RemoteException
 	{
 		driver.goToEntrance();
-		driver.pushTicketButton(1);
+		driver.pushTicketButton(1, false);
 		driver.parkCar();
 		Location location = driver.getLocation();
 		driver.goToExit();

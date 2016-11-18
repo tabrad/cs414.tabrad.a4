@@ -49,44 +49,6 @@ public class TicketTrackerTest {
 		assertTrue(paidTickets.contains(ticket));
 	}
 	
-	@Test public void testGettingTicketsByBooth() throws RemoteException
-	{
-		for(int i = 0; i < 10; i++)
-		{
-			Ticket ticket = new TicketImpl(new Date(), 1);
-			ticketTracker.addTicket(ticket);
-		}
-		
-		for(int i = 0; i < 10; i++)
-		{
-			Ticket ticket = new TicketImpl(new Date(), 2);
-			ticketTracker.addTicket(ticket);
-		}
-		
-		Set<Ticket> booth1Tickets = ticketTracker.getTicketsProcessedByBooth(1, false, false);
-		assertTrue(booth1Tickets.size() == 10);
-		
-		booth1Tickets.clear();
-		booth1Tickets = ticketTracker.getTicketsProcessedByBooth(1, true, false);
-		assertTrue(booth1Tickets.size() == 10);
-		
-		booth1Tickets.clear();
-		booth1Tickets = ticketTracker.getTicketsProcessedByBooth(1, false, true);
-		assertTrue(booth1Tickets.size() == 0);	
-	}
-	
-	@Test public void testGettingTicketsByTime() throws RemoteException
-	{
-		for(int i = 0; i < 20; i++)
-		{
-			Ticket ticket = new TicketImpl(new Date(System.currentTimeMillis() - (1000 * 20) + (1000 * i)), 1);
-			ticketTracker.addTicket(ticket);
-		}
-		
-		Set<Ticket> tickets = ticketTracker.getTicketsByTimePeriod(new Date(System.currentTimeMillis() - (1000 * 10)), new Date());
-		assertTrue(tickets.size() == 10);
-	} 
-	
 	
 	
 	

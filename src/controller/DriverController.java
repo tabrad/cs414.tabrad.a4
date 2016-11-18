@@ -24,7 +24,7 @@ public class DriverController
 
 	public void pushTicketButton(int boothId) throws RemoteException 
 	{
-		driver.pushTicketButton(boothId);
+		driver.pushTicketButton(boothId, false);
 	}
 
 	public void driverPrematureExit() throws RemoteException 

@@ -25,14 +25,14 @@ public class DriverImpl implements Driver
 		garage = GarageImpl.getInstance();
 	}
 	
-	public void pushTicketButton(int boothId) throws RemoteException 
+	public void pushTicketButton(int boothId, boolean isSimulation) throws RemoteException 
 	{
 		Ticket ticket = null;
 		for(Booth booth : garage.getBooths())
 		{
 			if(booth.getId() == boothId)
 			{
-				ticket = booth.ticketButtonPressed(false);
+				ticket = booth.ticketButtonPressed(isSimulation);
 				break;
 			}
 		}

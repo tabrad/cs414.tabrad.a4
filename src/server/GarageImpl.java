@@ -258,20 +258,19 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 
 	public void simulate() throws RemoteException 
 	{
-//		for(int i = 0; i < 100; i++)
-//        {
-//        	Driver driver = createDriver("" + i);
-//        	driver.goToEntrance();
-//        	driver.pushTicketButton(getNearestBooth(driver.getLocation(), false), true);
-//        	driver.parkCar();
-//			getNearestBooth(driver.getLocation(), false).closeGate();
-//			
-//			driver.goToExit();
-//			BoothImpl booth = getNearestBooth(driver.getLocation(), true);
-//			Float amountDue = booth.getAmountDue(driver.getTicket());
-//			booth.insertPayment(driver, driver.getTicket(), amountDue, false);
-//			driver.exitGarage();
-//        }
+		for(int i = 0; i < 100; i++)
+        {
+        	Driver driver = new DriverImpl("" + i, 0 , 0);
+        	driver.goToEntrance();
+        	driver.pushTicketButton(getBooth(false).getId(), true);
+        	driver.parkCar();
+			getBooth(false).closeGate();
+			driver.goToExit();
+			Booth booth = getBooth(true);
+			Float amountDue = booth.getAmountDue(driver.getTicketId());
+			booth.insertPayment(driver.getTicketId(), amountDue, false);
+			driver.exitGarage();
+        }
 	}
 
 	public TicketTracker getTicketTracker() 

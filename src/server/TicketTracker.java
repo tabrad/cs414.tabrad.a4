@@ -2,7 +2,6 @@ package server;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,60 +55,11 @@ public class TicketTracker
 		return paidTickets;
 	}
 	
-	public Set<Ticket> getAllTickets()
-	{
-		HashSet<Ticket> tickets = unPaidTickets;
-		tickets.addAll(paidTickets);
-		
-		return tickets;
-	}
-
-	public Set<Ticket> getTicketsProcessedByBooth(int boothId, boolean asEntrance, boolean asExit) throws RemoteException 
-	{
-		HashSet<Ticket> tickets = new HashSet<Ticket>();
-		
-		for(Ticket ticket : unPaidTickets)
-		{
-			if(ticket.processedBy(boothId, asEntrance, asExit))
-				tickets.add(ticket);
-		}
-		
-		for(Ticket ticket : paidTickets)
-		{
-			if(ticket.processedBy(boothId, asEntrance, asExit))
-				tickets.add(ticket);
-		}
-		
-		return tickets;
-	}
-	
-	public Set<Ticket> getTicketsByTimePeriod(Date begin, Date end) throws RemoteException
-	{
-		HashSet<Ticket> tickets = new HashSet<Ticket>();
-		for(Ticket ticket : unPaidTickets)
-		{
-			if(ticket.getTimeEntered().before(begin) || ticket.getTimeEntered().after(end))
-				continue;
-			
-			tickets.add(ticket);
-		}
-		
-		for(Ticket ticket : paidTickets)
-		{
-			if(ticket.getTimeEntered().before(begin) || ticket.getTimeEntered().after(end))
-				continue;
-			
-			tickets.add(ticket);
-		}
-
-		return tickets;
-	}
-
 	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException 
 	{
 		Object[][] data = null;
 		Calendar calendar = Calendar.getInstance();
-		Set<Ticket> tickets = getAllTickets();
+		Set<Ticket> tickets = paidTickets;
 
 		if(granularity == 0) //day
 		{
@@ -164,7 +114,4 @@ public class TicketTracker
 		
 		return data;
 	}
-	
-	
-
 }
