@@ -161,8 +161,7 @@ public class DriverDialog extends Dialog
 		{
 			try {
 				driverController.moveDriverToExit();
-			
-			
+				
 				//show dialog that says driver drove to booth, have option to push ticket button or to leave
 				int result = JOptionPane.showOptionDialog(frame, 
 						"Please Insert Your Ticket Before Exiting the Garage", 
@@ -176,10 +175,10 @@ public class DriverDialog extends Dialog
 				float amountDue;
 				if(result == JOptionPane.YES_OPTION) //driver inserts ticket
 					amountDue = BoothController.getAmountDue(driver.getTicketId(), false);
-				else if(result == JOptionPane.CANCEL_OPTION) //driver manually enters ticket id
+				else if(result == JOptionPane.CANCEL_OPTION) 
 				{
+					//driver manually enters ticket id
 					String id = JOptionPane.showInputDialog("Enter Ticket ID");
-					
 					boolean isValid = BoothController.findTicket(id);
 					
 					if(!isValid)
@@ -188,9 +187,7 @@ public class DriverDialog extends Dialog
 						amountDue = BoothController.getAmountDue(driver.getTicketId(), true);
 					}
 					else
-					{
 						amountDue = BoothController.getAmountDue(id, true);
-					}
 				}
 				else //driver lost ticket
 					amountDue = BoothController.getAmountDue(driver.getTicketId(), true);
@@ -204,12 +201,12 @@ public class DriverDialog extends Dialog
 						new String[]{"Cash", "Credit Card"},
 						"default");
 				
-				if(result == JOptionPane.YES_OPTION)
+				if(result == JOptionPane.YES_OPTION) //cash payment
 				{
 					BoothController.insertPayment(driver.getTicketId(), amountDue, false);
 					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
 				}
-				else
+				else //credit card payment
 				{
 					boolean isPaid = BoothController.insertPayment(driver.getTicketId(), amountDue, true);
 					

@@ -111,7 +111,7 @@ public class BoothImpl extends Observable implements Booth
 	
 	public boolean insertPayment(String ticketId, float amount, boolean isCreditCard) throws RemoteException
 	{
-		if(!adminMode && amount != getAmountDue(ticketId))
+		if(!adminMode && amount < getAmountDue(ticketId))
 			return false;
 		
 		if(!adminMode && !paymentProcessor.processPayment(isCreditCard))
