@@ -8,14 +8,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import javax.swing.JFrame;
-
 import common.Booth;
 import common.Driver;
 import common.Garage;
 import model.Location;
 import view.DriverDialog;
-import view.GarageView;
 import view.OverviewDialog;
 import view.ReportDialog;
 
@@ -220,5 +217,10 @@ public class GarageController implements ActionListener
 	public Driver getDriver(String license) throws RemoteException
 	{
 		return garage.getDriver(license);
+	}
+
+	public void removeVehicle(Location location, String license) throws RemoteException 
+	{
+		garage.removeVehicle(location, license);
 	}
 }

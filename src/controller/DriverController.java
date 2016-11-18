@@ -4,15 +4,17 @@ import java.rmi.RemoteException;
 
 import common.Driver;
 import common.Garage;
+import model.Location;
 
 public class DriverController 
 {	
 	private Driver driver;
-	private Garage garage;
+	private GarageController garageController;
 	
 	public DriverController(Driver driver, Garage garage)
 	{
 		this.driver = driver;
+		garageController = GarageController.getInstance();
 	}
 	
 	public void moveDriverToEntrance() throws RemoteException  
@@ -27,7 +29,9 @@ public class DriverController
 
 	public void driverPrematureExit() throws RemoteException 
 	{
-		garage.removeVehicle(driver.getLocation(), driver.getLicense());
+		Location location = driver.getLocation();
+		String license = driver.getLicense();
+		garageController.removeVehicle(location, license);
 	}
 
 	public void parkCar() throws RemoteException 

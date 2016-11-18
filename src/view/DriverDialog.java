@@ -93,7 +93,6 @@ public class DriverDialog extends Dialog
 			shutDialog();
 		updateLabels();
 		updateButtons();
-
 	}
 	
 	private void updateButtons() throws RemoteException
@@ -115,7 +114,6 @@ public class DriverDialog extends Dialog
 		public void actionPerformed(ActionEvent e)
 		{	
 			try{
-				System.out.println("going to move to entrance");
 				driverController.moveDriverToEntrance();
 				
 				//show dialog that says driver drove to booth, have option to push ticket button or to leave
@@ -138,7 +136,7 @@ public class DriverDialog extends Dialog
 								new String[]{"Wait", "Leave"},
 								"default");
 						
-						if(result == JOptionPane.NO_OPTION)
+						if(result == JOptionPane.NO_OPTION) //driver chose to leave the garage
 						{
 							driverController.driverPrematureExit();
 							shutDialog();

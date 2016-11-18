@@ -37,10 +37,7 @@ public class DriverImpl implements Driver
 			}
 		}
 		
-		if(ticket == null)
-			return;
 		myTicket = ticket;
-		System.out.println("ticket set");
 	}
 	
 	public void goToEntrance() throws RemoteException

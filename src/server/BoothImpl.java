@@ -47,7 +47,6 @@ public class BoothImpl extends Observable implements Booth
 
 	private Ticket getTicket(boolean isSimulation) throws RemoteException 
 	{
-		System.out.println("getticket start");
 		GarageImpl garage = GarageImpl.getInstance();
 		if(isExit || garage.isFull())
 			return null;
@@ -63,7 +62,7 @@ public class BoothImpl extends Observable implements Booth
 		Ticket t = new TicketImpl(date, boothId);
 		Ticket ticket = (Ticket) UnicastRemoteObject.exportObject(t, 0); 	
 		ticketTracker.addTicket(ticket);
-		System.out.println("ticket exported");
+
 		return ticket;
 	}
 	
@@ -75,8 +74,8 @@ public class BoothImpl extends Observable implements Booth
 	public Ticket ticketButtonPressed(boolean isSimulation) throws RemoteException
 	{
 		Ticket ticket = getTicket(isSimulation);
-//		if(ticket == null)
-	//		return null;
+		if(ticket == null)
+			return null;
 		openGate();
 		
 		return ticket;
@@ -90,10 +89,7 @@ public class BoothImpl extends Observable implements Booth
 	public float getAmountDue(String ticketId) throws RemoteException 
 	{
 		if(!ticketTracker.hasUnpaidTicket(ticketId))
-		{
-			System.out.println("failed to find ticket");
 			return rates.maxCharge;
-		}
 		
 		Ticket ticket = ticketTracker.findTicket(ticketId);
 		long currentTime = new Date().getTime() / 1000;
