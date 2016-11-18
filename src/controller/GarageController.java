@@ -20,16 +20,14 @@ import view.ReportDialog;
 public class GarageController implements ActionListener
 {
 	private static GarageController instance = null;
-	
-	//view
 	private static OverviewDialog overviewDialog;
-	
-	//model
 	private static Garage garage;
+	private static String url;
 	
 	public static void main(String[] args) throws RemoteException
     {
-        overviewDialog = new OverviewDialog();
+        url = "rmi://" + args[0] + ":" + args[1] + "/Garage";
+		overviewDialog = new OverviewDialog();
         
         updateOverview();
         overviewDialog.showDialog();
@@ -38,7 +36,7 @@ public class GarageController implements ActionListener
 	private GarageController()
 	{
 		try{
-			garage = (Garage) Naming.lookup("rmi://localhost:2500/Garage");
+			garage = (Garage) Naming.lookup(url);
 		} catch (MalformedURLException murle) {
             System.out.println("MalformedURLException");
             System.out.println(murle);
