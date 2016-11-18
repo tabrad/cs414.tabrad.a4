@@ -4,13 +4,12 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Observable;
 
 import common.Booth;
 import common.Location;
 import common.Ticket;
 
-public class BoothImpl extends Observable implements Booth
+public class BoothImpl implements Booth
 {
 	private int boothId;
 	private Location location;
@@ -128,15 +127,11 @@ public class BoothImpl extends Observable implements Booth
 	public void openGate()
 	{
 		isOpen = true;
-		setChanged();
-		notifyObservers();
 	}
 
 	public void closeGate() 
 	{
 		isOpen = false;
-		setChanged();
-		notifyObservers();
 	}
 
 	public boolean login(Admin admin) 

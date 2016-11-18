@@ -4,12 +4,11 @@ import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Observable;
 import java.util.Set;
 
 import common.Ticket;
 
-public class TicketTracker extends Observable
+public class TicketTracker
 {
 	private HashSet<Ticket> unPaidTickets = new HashSet<Ticket>();
 	private HashSet<Ticket> paidTickets = new HashSet<Ticket>();
@@ -17,8 +16,6 @@ public class TicketTracker extends Observable
 	public void addTicket(Ticket ticket)
 	{
 		unPaidTickets.add(ticket);
-		setChanged();
-		notifyObservers();
 	}
 	
 	public Ticket findTicket(String id) throws RemoteException
@@ -47,8 +44,6 @@ public class TicketTracker extends Observable
 	{
 		paidTickets.add(ticket);
 		unPaidTickets.remove(ticket);
-		setChanged();
-		notifyObservers();
 	}
 	
 	public int getOccupancy()
