@@ -24,7 +24,6 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 	private HashSet<Location> road;
 	private String[][] grid = new String[xSize][ySize];
 	private HashSet<Booth> activeBooths = new HashSet<Booth>();
-	private static HashSet<Admin> admins = new HashSet<Admin>();
 	private HashSet<Driver> drivers = new HashSet<Driver>();
 
 	private GarageImpl() throws RemoteException 
@@ -38,7 +37,9 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		ticketTracker = new TicketTracker();
 		try{
 			createBooth(1, new Location(2, 2), false);
-			createBooth(2, new Location(18, 2), true);
+			createBooth(2, new Location(2, 15), false);
+			createBooth(3, new Location(18, 2), true);
+			createBooth(4, new Location(18, 15), true);
 		}catch(Exception e){System.out.println("failed to create booths");}
 		
 		//setup road locations
@@ -55,6 +56,8 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		mapLocationToRow(4, 17, 2, roads);
 		mapLocationToRow(4, 17, 19, roads);
 		mapLocationToRow(4, 17, 20, roads);
+		mapLocationToRow(0, 4, 14, roads);
+		mapLocationToRow(18, 20, 14, roads);
 		road = roads;
 		
 		//setup parking stalls
@@ -84,6 +87,7 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		parkingStalls = parkingStallsNew;
 	}
 	
+	/** Garage & Grid **/
 	private static void mapLocationToColumn(int yStart, int yEnd, int xColumn, HashSet<Location> locations)
 	{
 		for(int y = yStart; y < yEnd + 1; y++)
@@ -120,6 +124,21 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return road;
 	}
 	
+	public int getOccupancy()
+	{
+		return ticketTracker.getOccupancy();
+	}
+
+	public boolean isFull() 
+	{
+		return ticketTracker.getOccupancy() >= getMaxOccupancy();
+	}
+
+	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException 
+	{
+		return ticketTracker.getTableData(granularity, isFinancialReport);
+	}	
+	
 	public boolean moveObject(String s, Location fromLocation, int toX, int toY)
 	{
 		if(grid[toX][toY] != null)
@@ -131,10 +150,10 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		return true;
 	}
 	
-	public void removeVehicle(Location location, String license) throws RemoteException
+	public void removeVehicle(Location location, String license, int boothId) throws RemoteException
 	{
 		grid[location.x][location.y] = null;
-		Booth booth = getBooth(true);
+		Booth booth = getBoothById(boothId);
 		booth.closeGate();
 		
 		//remove driver
@@ -151,6 +170,43 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 	{
 		return grid[location.x][location.y] == null;
 	}
+	
+	public Location getOpenStall() 
+	{	
+		for(Location stall : parkingStalls)
+		{	
+			if(!isClear(stall))
+				continue;
+				
+			return stall;
+		}
+		
+		return null;
+	}
+	
+	public int getMaxOccupancy() 
+	{
+		return parkingStalls.size();
+	}
+
+	public void simulate() throws RemoteException 
+	{
+		for(int i = 0; i < 100; i++)
+        {
+        	Driver driver = new DriverImpl("" + i, 0 , 0);
+        	driver.goToBooth(1);
+        	driver.pushTicketButton(1, true);
+        	driver.parkCar();
+			getBoothById(1).closeGate();
+			driver.goToBooth(3);
+			Booth booth = getBoothById(3);
+			Float amountDue = booth.getAmountDue(driver.getTicketId());
+			booth.insertPayment(driver.getTicketId(), amountDue, false);
+			driver.exitGarage(3);
+        }
+	}
+	
+	/** Driver **/
 	
 	public Driver createDriver() throws RemoteException
 	{
@@ -187,130 +243,7 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		}
 		return null;
 	}
-
-	public void createBooth(int boothId, Location location, Boolean isExit) throws RemoteException
-	{
-		Booth b = new BoothImpl(ticketTracker, boothId, location, isExit, rates);
-		Booth booth = (Booth) UnicastRemoteObject.exportObject(b, 0); 		
-		activeBooths.add(booth);
-	}
 	
-	public Booth getBooth(boolean isExit) throws RemoteException
-	{
-		for(Booth booth : activeBooths)
-		{
-			if(booth.isExit() == isExit)
-			{
-				return booth;
-			}		
-		}
-		
-		System.out.println("failed to find booth");
-		return null;
-	}
-	
-	public Set<Booth> getBooths()
-	{
-		return activeBooths;
-	}
-
-	public Location getOpenStall() 
-	{	
-		for(Location stall : parkingStalls)
-		{	
-			if(!isClear(stall))
-				continue;
-				
-			return stall;
-		}
-		
-		return null;
-	}
-
-	public void addAdmin(Admin admin)
-	{
-		admins.add(admin);
-	}
-	
-	public static boolean isAdmin(Admin admin)
-	{
-		return admins.contains(admin);
-	}
-
-	public static Admin getAdmin() 
-	{
-		if(!admins.isEmpty())
-		{
-			for(Admin admin : admins)
-			{
-				//return the first available admin for now.
-				return admin; 
-			}
-		}
-		
-		return null;
-	}
-	
-	public int getMaxOccupancy() 
-	{
-		return parkingStalls.size();
-	}
-
-	public void simulate() throws RemoteException 
-	{
-		for(int i = 0; i < 100; i++)
-        {
-        	Driver driver = new DriverImpl("" + i, 0 , 0);
-        	driver.goToEntrance();
-        	driver.pushTicketButton(getBooth(false).getId(), true);
-        	driver.parkCar();
-			getBooth(false).closeGate();
-			driver.goToExit();
-			Booth booth = getBooth(true);
-			Float amountDue = booth.getAmountDue(driver.getTicketId());
-			booth.insertPayment(driver.getTicketId(), amountDue, false);
-			driver.exitGarage();
-        }
-	}
-
-	public TicketTracker getTicketTracker() 
-	{
-		return ticketTracker;
-	}
-	
-	public int getOccupancy()
-	{
-		return ticketTracker.getOccupancy();
-	}
-
-	public boolean isFull() 
-	{
-		return ticketTracker.getOccupancy() >= getMaxOccupancy();
-	}
-
-	public void closeEntranceGate() throws RemoteException 
-	{
-		Booth booth = getBooth(false);
-		booth.closeGate();
-	}
-	
-	public boolean isEntranceOpen() throws RemoteException 
-	{
-		Booth boothEntrance = getBooth(false);
-		return boothEntrance.gateIsOpen();
-	}
-	
-	public boolean isExitOpen() throws RemoteException 
-	{
-		Booth boothExit = getBooth(true);
-		return boothExit.gateIsOpen();
-	}
-
-	public Object[][] getTableData(int granularity, boolean isFinancialReport) throws RemoteException 
-	{
-		return getTicketTracker().getTableData(granularity, isFinancialReport);
-	}
-
 	public Set<Driver> getDrivers() throws RemoteException 
 	{
 		Set<Driver> s = new HashSet<Driver>();
@@ -329,9 +262,45 @@ public class GarageImpl extends UnicastRemoteObject implements Garage
 		{
 			locations.add(d.getLocation());
 		}
-		
 		return locations;
 	}
 
+	/** Booth **/
+	public void createBooth(int boothId, Location location, Boolean isExit) throws RemoteException
+	{
+		Booth b = new BoothImpl(ticketTracker, boothId, location, isExit, rates);
+		Booth booth = (Booth) UnicastRemoteObject.exportObject(b, 0); 		
+		activeBooths.add(booth);
+	}
 	
+	public Set<Location> getBoothLocations() throws RemoteException 
+	{
+		Set<Location> l = new HashSet<Location>();
+		for(Booth booth : activeBooths)
+		{
+			l.add(booth.getLocation());
+		}
+		return l;
+	}
+
+	public Booth getBoothById(int boothId) throws RemoteException 
+	{
+		for(Booth booth : activeBooths)
+		{
+			if(booth.getId() == boothId)
+				return booth;
+		}
+		return null;
+	}
+
+	public void closeGate(int boothId) throws RemoteException 
+	{
+		Booth booth = getBoothById(boothId);
+		booth.closeGate();
+	}
+	
+	public Set<Booth> getBooths()
+	{
+		return activeBooths;
+	}
 }

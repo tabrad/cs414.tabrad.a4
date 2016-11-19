@@ -4,10 +4,9 @@ import java.rmi.RemoteException;
 
 public interface Driver extends java.rmi.Remote
 {
-	public void goToEntrance() throws RemoteException;
-	public void goToExit() throws RemoteException;
+	public void goToBooth(int boothId) throws RemoteException;
 	public void parkCar() throws RemoteException;
-	public void exitGarage() throws RemoteException;
+	public void exitGarage(int boothId) throws RemoteException;
 	public boolean isParked() throws RemoteException;
 	public int getX() throws RemoteException;
 	public int getY() throws RemoteException;

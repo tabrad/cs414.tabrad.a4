@@ -27,9 +27,6 @@ public class GarageView extends JPanel
 	private static int iconHeight = 32;
 	Set<Location> stalls = new HashSet<Location>();
 	Set<Location> roads = new HashSet<Location>();
-	Booth boothEntrance;
-	Booth boothExit;
-	Set<Booth> booths = new HashSet<Booth>();
 	
 	//images
 	BufferedImage imgBooth = null;
@@ -57,11 +54,6 @@ public class GarageView extends JPanel
 		garageController = GarageController.getInstance();
 		stalls = garageController.getParkingStalls();
 		roads = garageController.getRoad();
-		
-		boothEntrance = garageController.getBooth(false);
-		boothExit = garageController.getBooth(true);
-		booths.add(boothEntrance);
-		booths.add(boothExit);
 		
 		loadImages();
 		
@@ -131,6 +123,13 @@ public class GarageView extends JPanel
 			g.drawImage(imgCar, location.x * iconWidth - iconWidth, location.y * iconHeight - iconHeight, null);
 
 		//paint booths and gates
+		Set<Booth> booths = new HashSet<Booth>();
+		try {
+			booths = garageController.getBooths();
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		for(Booth booth : booths)
 		{
 			try{

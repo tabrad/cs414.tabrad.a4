@@ -139,11 +139,6 @@ public class GarageController implements ActionListener
 		}catch(Exception e){}
 		return null;
 	}
-	
-	public Booth getBooth(boolean isExit) throws RemoteException
-	{
-		return garage.getBooth(isExit);
-	}
 
 	public void garageClicked(int x, int y) throws RemoteException 
 	{
@@ -189,24 +184,6 @@ public class GarageController implements ActionListener
 		return 0;
 	}
 
-	public boolean isEntranceOpen() 
-	{
-		try{
-			return garage.isEntranceOpen();
-		}catch(Exception e){}
-		
-		return false;
-	}
-
-	public boolean isExitOpen() 
-	{
-		try{
-			return garage.isExitOpen();
-		}catch(Exception e){}
-		
-		return false;
-	}
-
 	public Set<Location> getDriversLocations() throws RemoteException 
 	{
 		return garage.getDriversLocations();
@@ -217,8 +194,18 @@ public class GarageController implements ActionListener
 		return garage.getDriver(license);
 	}
 
-	public void removeVehicle(Location location, String license) throws RemoteException 
+	public void removeVehicle(Location location, String license, int boothId) throws RemoteException 
 	{
-		garage.removeVehicle(location, license);
+		garage.removeVehicle(location, license, boothId);
+	}
+
+	public Set<Booth> getBooths() throws RemoteException 
+	{
+		return garage.getBooths();
+	}
+
+	public Booth getBoothById(int boothId) throws RemoteException 
+	{
+		return garage.getBoothById(boothId);
 	}
 }

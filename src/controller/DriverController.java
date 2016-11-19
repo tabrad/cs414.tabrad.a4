@@ -17,9 +17,9 @@ public class DriverController
 		garageController = GarageController.getInstance();
 	}
 	
-	public void moveDriverToEntrance() throws RemoteException  
+	public void moveDriverToBooth(int boothId) throws RemoteException  
 	{
-		driver.goToEntrance();
+		driver.goToBooth(boothId);
 	}
 
 	public void pushTicketButton(int boothId) throws RemoteException 
@@ -27,26 +27,21 @@ public class DriverController
 		driver.pushTicketButton(boothId, false);
 	}
 
-	public void driverPrematureExit() throws RemoteException 
+	public void driverPrematureExit(int boothId) throws RemoteException 
 	{
 		Location location = driver.getLocation();
 		String license = driver.getLicense();
-		garageController.removeVehicle(location, license);
+		garageController.removeVehicle(location, license, boothId);
 	}
 
 	public void parkCar() throws RemoteException 
 	{
 		driver.parkCar();
 	}
-
-	public void moveDriverToExit() throws RemoteException 
-	{
-		driver.goToExit();
-	}
 	
-	public void driverExit() throws RemoteException 
+	public void driverExit(int boothId) throws RemoteException 
 	{
-		driver.exitGarage();
+		driver.exitGarage(boothId);
 		GarageController.updateOverview();
 	}
 }

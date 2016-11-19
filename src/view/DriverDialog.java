@@ -23,7 +23,6 @@ public class DriverDialog extends Dialog
 {
 	//representation of the Driver model
 	private Driver driver;
-	private Garage garage;
 	
 	//Controller
 	private DriverController driverController; 
@@ -42,7 +41,6 @@ public class DriverDialog extends Dialog
 	public DriverDialog(Driver driver, Garage garage) throws RemoteException
 	{		
 		this.driver = driver;
-		this.garage = garage;
 		driverController = new DriverController(driver, garage);
 
 		frame = new JFrame();
@@ -58,8 +56,8 @@ public class DriverDialog extends Dialog
 		infoPanel.add(parkedLabel);
 		
 	    enterButton = new JButton("Enter Garage");
-	    enterButton.addActionListener(new EnterGarageListener()); 
 	    exitButton = new JButton("Exit Garage");
+	    enterButton.addActionListener(new EnterGarageListener());        
 	    exitButton.addActionListener(new ExitGarageListener());
 	    
 	    JPanel buttonPanel = new JPanel();
@@ -97,8 +95,9 @@ public class DriverDialog extends Dialog
 	
 	private void updateButtons() throws RemoteException
 	{
-		enterButton.setEnabled(!driver.isParked());
-		exitButton.setEnabled(driver.isParked());
+		boolean isParked = driver.isParked();
+		enterButton.setEnabled(!isParked);
+		exitButton.setEnabled(isParked);
 	}
 	
 	private void updateLabels() throws RemoteException
@@ -113,8 +112,18 @@ public class DriverDialog extends Dialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{	
+			//show dialog asking which booth to use
+			int boothId = JOptionPane.showOptionDialog(frame, 
+					"Select Booth", 
+					"Enter Garage", 
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE,
+					null,
+					new String[]{"Booth 1", "Booth 2"},
+					"default") + 1;
+			
 			try{
-				driverController.moveDriverToEntrance();
+				driverController.moveDriverToBooth(boothId);
 				
 				//show dialog that says driver drove to booth, have option to push ticket button or to leave
 				JPanel message = new JPanel();
@@ -123,7 +132,7 @@ public class DriverDialog extends Dialog
 				
 				if(result == JOptionPane.YES_OPTION)
 				{
-					driverController.pushTicketButton(garage.getBooth(false).getId());
+					driverController.pushTicketButton(boothId);
 					
 					if(!driver.hasTicket())
 					{
@@ -138,7 +147,7 @@ public class DriverDialog extends Dialog
 						
 						if(result == JOptionPane.NO_OPTION) //driver chose to leave the garage
 						{
-							driverController.driverPrematureExit();
+							driverController.driverPrematureExit(boothId);
 							shutDialog();
 						}
 					}
@@ -159,8 +168,18 @@ public class DriverDialog extends Dialog
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			//show dialog asking which booth to use
+			int boothId = JOptionPane.showOptionDialog(frame, 
+					"Select Booth", 
+					"Enter Garage", 
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE,
+					null,
+					new String[]{"Booth 3", "Booth 4"},
+					"default") + 3;
+			
 			try {
-				driverController.moveDriverToExit();
+				driverController.moveDriverToBooth(boothId);
 				
 				//show dialog that says driver drove to booth, have option to push ticket button or to leave
 				int result = JOptionPane.showOptionDialog(frame, 
@@ -200,28 +219,20 @@ public class DriverDialog extends Dialog
 						null,
 						new String[]{"Cash", "Credit Card"},
 						"default");
+
+				boolean isPaid = BoothController.insertPayment(boothId, driver.getTicketId(), amountDue, result != JOptionPane.YES_OPTION);
 				
-				if(result == JOptionPane.YES_OPTION) //cash payment
+				if(isPaid)
+					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");
+				else
 				{
-					BoothController.insertPayment(driver.getTicketId(), amountDue, false);
-					JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage.");
+					JOptionPane.showMessageDialog(frame, "Payment failed.");
+					return;
 				}
-				else //credit card payment
-				{
-					boolean isPaid = BoothController.insertPayment(driver.getTicketId(), amountDue, true);
-					
-					if(isPaid)
-						JOptionPane.showMessageDialog(frame, "Payment accepted. You may exit the garage");
-					else
-					{
-						JOptionPane.showMessageDialog(frame, "Payment failed.");
-						return;
-					}
-				}
-				driverController.driverExit();
+				
+				driverController.driverExit(boothId);
 				shutDialog();
 			} catch (RemoteException e1) {}
-		}
-		
+		}	
 	}
 }

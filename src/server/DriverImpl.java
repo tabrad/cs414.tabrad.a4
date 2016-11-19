@@ -27,31 +27,13 @@ public class DriverImpl implements Driver
 	
 	public void pushTicketButton(int boothId, boolean isSimulation) throws RemoteException 
 	{
-		Ticket ticket = null;
-		for(Booth booth : garage.getBooths())
-		{
-			if(booth.getId() == boothId)
-			{
-				ticket = booth.ticketButtonPressed(isSimulation);
-				break;
-			}
-		}
-		
-		myTicket = ticket;
+		Booth booth = garage.getBoothById(boothId);
+		myTicket = booth.ticketButtonPressed(isSimulation);
 	}
 	
-	public void goToEntrance() throws RemoteException
+	public void goToBooth(int boothId) throws RemoteException
 	{
-		Booth booth = garage.getBooth(false);
-		Location location = new Location();
-		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
-		location.x = booth.getLocation().x;
-		move(location);
-	}
-	
-	public void goToExit() throws RemoteException 
-	{
-		Booth booth = garage.getBooth(true);
+		Booth booth = garage.getBoothById(boothId);
 		Location location = new Location();
 		location.y = booth.getLocation().y - 1; //driver needs to be next to booth, not on top of it
 		location.x = booth.getLocation().x;
@@ -63,12 +45,12 @@ public class DriverImpl implements Driver
 		Location stall = garage.getOpenStall();
 		move(stall);
 		isParked = true;
-		garage.closeEntranceGate();
+		garage.closeGate(myTicket.getBoothEntered());
 	}
 	
-	public void exitGarage() throws RemoteException 
+	public void exitGarage(int boothId) throws RemoteException 
 	{
-		garage.removeVehicle(location, license);
+		garage.removeVehicle(location, license, boothId);
 		hasExited = true;
 	}
 	

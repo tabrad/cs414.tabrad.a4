@@ -10,7 +10,7 @@ public class BoothController
 	
 	public static float getAmountDue(String ticketId, boolean lostTicket) throws RemoteException 
 	{
-		Booth booth = garageController.getBooth(true);
+		Booth booth = garageController.getBoothById(1);
 		float amountDue = 0;
 		
 		if(lostTicket)
@@ -23,13 +23,13 @@ public class BoothController
 
 	public static boolean findTicket(String id) throws RemoteException 
 	{
-		Booth booth = garageController.getBooth(true);
+		Booth booth = garageController.getBoothById(1);
 		return booth.findTicket(id) != null;
 	}
 
-	public static boolean insertPayment(String ticketId, float amountDue, boolean isCreditCard) throws RemoteException 
+	public static boolean insertPayment(int boothId, String ticketId, float amountDue, boolean isCreditCard) throws RemoteException 
 	{
-		Booth booth = garageController.getBooth(true);
+		Booth booth = garageController.getBoothById(boothId);
 		return booth.insertPayment(ticketId, amountDue, isCreditCard);
 	}
 }

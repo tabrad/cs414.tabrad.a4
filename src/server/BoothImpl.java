@@ -134,27 +134,6 @@ public class BoothImpl implements Booth
 		isOpen = false;
 	}
 
-	public boolean login(Admin admin) 
-	{
-		if(!GarageImpl.isAdmin(admin))
-			return false;
-		
-		adminMode = true;
-		return true;
-	}
-	
-	public void logout() 
-	{
-		adminMode = false;
-	}
-	
-	public void requestAdmin(DriverImpl driver, Ticket ticket) 
-	{
-		Admin admin = GarageImpl.getAdmin();
-		if(!admin.accessBooth(this))
-			return;
-	}
-
 	public Ticket findTicket(String id) throws RemoteException 
 	{
 		return ticketTracker.findTicket(id);
